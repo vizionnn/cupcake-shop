@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finalizar pedido — Nuvem de Açúcar</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">Nuvem de Açúcar <span>cupcakes gourmet</span></a>
+      <nav class="nav">
+        <a href="index.html">Cardápio</a>
+        <a href="cart.html" class="cart-link">
+          🛒 Carrinho <span class="cart-badge" data-cart-badge>0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-title">
+      <h1 class="display">Finalizar pedido</h1>
+      <p>Preencha seus dados de entrega e pagamento.</p>
+    </div>
+
+    <div class="checkout-grid">
+      <form id="checkoutForm" class="form-card">
+        <div class="error-banner" id="errorBanner"></div>
+
+        <div class="field">
+          <label for="name">Nome completo</label>
+          <input id="name" type="text" required placeholder="Seu nome">
+        </div>
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" type="email" required placeholder="voce@email.com">
+        </div>
+        <div class="field">
+          <label for="address">Endereço de entrega</label>
+          <textarea id="address" rows="3" required placeholder="Rua, número, bairro, cidade"></textarea>
+        </div>
+        <div class="field">
+          <label>Forma de pagamento</label>
+          <div class="payment-options">
+            <div class="payment-option selected" data-method="Pix">Pix</div>
+            <div class="payment-option" data-method="Cartão">Cartão</div>
+            <div class="payment-option" data-method="Dinheiro na entrega">Na entrega</div>
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn btn-primary btn-block">Confirmar pedido</button>
+      </form>
+
+      <div id="checkoutSummary"></div>
+    </div>
+  </main>
+
+  <script src="js/cart.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>
