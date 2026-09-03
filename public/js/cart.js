@@ -25,6 +25,7 @@ function addToCart(product) {
     });
   }
   saveCart(cart);
+  triggerCartBump();
 }
 
 function updateQuantity(productId, delta) {
@@ -57,12 +58,64 @@ function cartCount() {
 }
 
 function updateCartBadge() {
-  const badge = document.querySelector('[data-cart-badge]');
-  if (badge) badge.textContent = cartCount();
+  const badges = document.querySelectorAll('[data-cart-badge]');
+  badges.forEach((b) => {
+    b.textContent = cartCount();
+  });
+}
+
+function triggerCartBump() {
+  const targets = document.querySelectorAll('.cart-link, .floating-cart, .cart-badge');
+  targets.forEach((el) => {
+    el.classList.remove('cart-bump');
+    void el.offsetWidth; // Força reflow para reiniciar animação
+    el.classList.add('cart-bump');
+  });
+}
+
+function initFloatingCart() {
+  const header = document.querySelector('.site-header');
+  const floatingCart = document.querySelector('.floating-cart');
+  if (!header || !floatingCart) return;
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Se o header saiu da tela (rolagem para baixo), exibe o carrinho flutuante
+        if (!entry.isIntersecting) {
+          floatingCart.classList.add('visible');
+        } else {
+          // Se o header voltou para a tela (rolagem para cima), recolhe o carrinho
+          floatingCart.classList.remove('visible');
+        }
+      },
+      {
+        root: null,
+        threshold: 0
+      }
+    );
+    observer.observe(header);
+  } else {
+    window.addEventListener(
+      'scroll',
+      () => {
+        const threshold = header.offsetHeight || 80;
+        if (window.scrollY > threshold) {
+          floatingCart.classList.add('visible');
+        } else {
+          floatingCart.classList.remove('visible');
+        }
+      },
+      { passive: true }
+    );
+  }
 }
 
 function formatBRL(value) {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
-document.addEventListener('DOMContentLoaded', updateCartBadge);
+document.addEventListener('DOMContentLoaded', () => {
+  updateCartBadge();
+  initFloatingCart();
+});
