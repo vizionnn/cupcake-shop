@@ -1,5 +1,6 @@
 let allProducts = [];
 let activeFilter = 'Todos';
+let scrollObserver = null;
 
 async function loadProducts() {
   const res = await fetch('/api/products');
@@ -8,9 +9,47 @@ async function loadProducts() {
   renderProducts();
 }
 
+function initScrollReveal() {
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.reveal-on-scroll').forEach((el) => el.classList.add('is-revealed'));
+    return;
+  }
+
+  if (scrollObserver) {
+    scrollObserver.disconnect();
+  }
+
+  scrollObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          entry.target.addEventListener(
+            'transitionend',
+            () => {
+              entry.target.style.transitionDelay = '0s';
+            },
+            { once: true }
+          );
+          scrollObserver.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.06,
+      rootMargin: '0px 0px -20px 0px'
+    }
+  );
+
+  document.querySelectorAll('.reveal-on-scroll:not(.is-revealed)').forEach((el) => {
+    scrollObserver.observe(el);
+  });
+}
+
 function renderFilters() {
   const tags = ['Todos', ...new Set(allProducts.map((p) => p.flavor_tag))];
   const row = document.getElementById('filterRow');
+  row.classList.add('reveal-on-scroll');
   row.innerHTML = tags
     .map(
       (tag) => `<button class="filter-chip ${tag === activeFilter ? 'active' : ''}" data-tag="${tag}">${tag}</button>`
@@ -24,7 +63,10 @@ function renderFilters() {
       renderProducts();
     });
   });
+
+  initScrollReveal();
 }
+
 // Função auxiliar para decidir se renderiza foto ou emoji:
 function renderPhoto(photoOrEmoji, name) {
   if (photoOrEmoji.includes('.') || photoOrEmoji.startsWith('http')) {
@@ -32,6 +74,7 @@ function renderPhoto(photoOrEmoji, name) {
   }
   return photoOrEmoji;
 }
+
 function renderProducts() {
   const grid = document.getElementById('productGrid');
   const list = activeFilter === 'Todos'
@@ -40,8 +83,8 @@ function renderProducts() {
 
   grid.innerHTML = list
     .map(
-      (p) => `
-      <div class="product-card">
+      (p, index) => `
+      <div class="product-card reveal-on-scroll" style="transition-delay: ${(index % 6) * 0.07}s;">
         <a href="produto.html?id=${p.id}" class="product-card-link" aria-label="Ver detalhes de ${p.name}">
           <div class="product-photo">${renderPhoto(p.image_emoji, p.name)}</div>
         </a>
@@ -83,6 +126,8 @@ function renderProducts() {
     card.addEventListener('pointercancel', clearTouch, { passive: true });
     card.addEventListener('pointerleave', clearTouch, { passive: true });
   });
+
+  initScrollReveal();
 }
 
 document.addEventListener('DOMContentLoaded', loadProducts);
