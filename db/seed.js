@@ -42,12 +42,28 @@ const products = [
     stock: 22
   },
   {
+    name: 'Chocolate Belga com Creme de Avelã',
+    description: 'Massa intensa de cacau, recheio trufado de avelã e ganache de chocolate belga.',
+    price: 15.9,
+    flavor_tag: 'Premium',
+    image_emoji: '🍫',
+    stock: 25
+  },
+  {
     name: 'Pistache',
     description: 'Massa amanteigada com creme de pistache importado e lascas crocantes.',
     price: 16.9,
     flavor_tag: 'Premium',
     image_emoji: '🌰',
     stock: 15
+  },
+  {
+    name: 'Caramelo Salgado',
+    description: 'Massa de baunilha Bourbon, recheio de caramelo toffee artesanal e toque de flor de sal.',
+    price: 14.9,
+    flavor_tag: 'Sofisticado',
+    image_emoji: '🍮',
+    stock: 20
   }
 ];
 
