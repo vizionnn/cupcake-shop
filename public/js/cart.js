@@ -13,7 +13,7 @@ function saveCart(cart) {
   }
 }
 
-function showToast({ title, message, photoOrEmoji, actionText, actionCallback, duration = 3500 }) {
+function showToast({ title, message, photoOrEmoji, actionText, actionCallback, duration = 3000 }) {
   let container = document.getElementById('toastContainer');
   if (!container) {
     container = document.createElement('div');
@@ -51,7 +51,7 @@ function showToast({ title, message, photoOrEmoji, actionText, actionCallback, d
     setTimeout(() => {
       toast.remove();
       if (container.children.length === 0) container.remove();
-    }, 260);
+    }, 420);
   };
 
   if (actionText && actionCallback) {
@@ -72,7 +72,7 @@ function showToast({ title, message, photoOrEmoji, actionText, actionCallback, d
   let timeoutId = setTimeout(removeToast, duration);
   toast.addEventListener('mouseenter', () => clearTimeout(timeoutId));
   toast.addEventListener('mouseleave', () => {
-    timeoutId = setTimeout(removeToast, 1500);
+    timeoutId = setTimeout(removeToast, 1200);
   });
 }
 
@@ -94,7 +94,7 @@ function addToCart(product, quantity = 1) {
   saveCart(cart);
   triggerCartBump();
 
-  // Toast elegante com thumbnail e botão para ver a sacola
+  // Toast elegante com miniatura, esmaecimento em 3s e botão opcional para abrir a sacola
   showToast({
     title: 'Adicionado à sua sacola! 🧁',
     message: `${qtyToAdd > 1 ? `${qtyToAdd}x ` : ''}${product.name}`,
@@ -102,13 +102,9 @@ function addToCart(product, quantity = 1) {
     actionText: 'Ver sacola',
     actionCallback: () => {
       if (typeof openCartDrawer === 'function') openCartDrawer();
-    }
+    },
+    duration: 3000
   });
-
-  // Abre a gaveta lateral automaticamente ao adicionar
-  if (typeof openCartDrawer === 'function') {
-    openCartDrawer();
-  }
 }
 
 function updateQuantity(productId, delta) {

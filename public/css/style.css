@@ -2274,7 +2274,7 @@ body.drawer-open {
   animation: toastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   position: relative;
   overflow: hidden;
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes toastSlideIn {
@@ -2290,7 +2290,8 @@ body.drawer-open {
 
 .toast-item.toast-hiding {
   opacity: 0;
-  transform: translateY(15px) scale(0.95);
+  transform: translateY(12px) scale(0.96);
+  pointer-events: none;
 }
 
 .toast-thumb {
