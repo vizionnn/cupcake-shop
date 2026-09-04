@@ -43,15 +43,31 @@
 
   <main class="container">
     <section class="hero">
-      <div>
-        <h1>Cupcakes feitos à mão, entregues no mesmo dia.</h1>
-        <p>Oito sabores autorais, ingredientes selecionados e uma vitrine que você monta do seu jeito. Escolha, adicione
+      <div class="hero-content">
+        <span class="hero-eyebrow">✨ Confeitaria Artesanal Autoral</span>
+        <h1 class="hero-title">Cupcakes <span class="text-highlight">feitos à mão</span>, <span class="text-delivery">entregues no mesmo dia.</span></h1>
+        <p class="hero-desc">Oito sabores autorais, ingredientes selecionados e uma vitrine que você monta do seu jeito. Escolha, adicione
           ao carrinho e finalize em poucos passos.</p>
+        <div class="hero-cta-group">
+          <a href="#filterRow" class="btn btn-primary hero-btn">
+            Explorar Sabores 🧁
+          </a>
+          <div class="hero-badge-pill">
+            <span class="pulse-dot"></span> Fornadas frescas do dia
+          </div>
+        </div>
       </div>
-      <div class="hero-cluster">
-        <div class="puff">🧁</div>
-        <div class="puff">🍓</div>
-        <div class="puff">🍫</div>
+      <div class="hero-cluster" aria-hidden="true">
+        <div class="puff puff-main" title="Cupcake Artesanal">
+          <span class="puff-emoji">🧁</span>
+          <span class="puff-tag">100% Artesanal</span>
+        </div>
+        <div class="puff puff-sub-1" title="Morangos Frescos">
+          <span class="puff-emoji">🍓</span>
+        </div>
+        <div class="puff puff-sub-2" title="Cacau Puro">
+          <span class="puff-emoji">🍫</span>
+        </div>
       </div>
     </section>
 
