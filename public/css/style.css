@@ -1013,6 +1013,15 @@ body.drawer-open {
   display: block;
 }
 
+.detail-photo-card .photo-disclaimer {
+  margin-top: 12px;
+  margin-bottom: 4px;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  opacity: 0.8;
+  text-align: center;
+}
+
 .detail-info-col {
   display: flex;
   flex-direction: column;
