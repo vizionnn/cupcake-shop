@@ -14,9 +14,14 @@ db.exec(`
     price REAL NOT NULL,
     flavor_tag TEXT NOT NULL,
     image_emoji TEXT NOT NULL,
-    stock INTEGER NOT NULL DEFAULT 20
+    stock INTEGER NOT NULL DEFAULT 20,
+    ingredients TEXT,
+    details TEXT
   )
 `);
+
+try { db.exec('ALTER TABLE products ADD COLUMN ingredients TEXT'); } catch (e) {}
+try { db.exec('ALTER TABLE products ADD COLUMN details TEXT'); } catch (e) {}
 
 // Tabela de pedidos
 db.exec(`

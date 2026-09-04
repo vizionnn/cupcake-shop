@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do Cupcake — Nuvem de Açúcar</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">Nuvem de Açúcar <span>cupcakes gourmet</span></a>
+      <nav class="nav">
+        <a href="index.html">Cardápio</a>
+        <a href="cart.html" class="cart-link">
+          🛒 Carrinho <span class="cart-badge" data-cart-badge>0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container product-detail-page">
+    <!-- Atalho de Retorno à Vitrine -->
+    <div class="breadcrumb-bar">
+      <a href="index.html" class="back-link">
+        <span class="back-arrow">←</span>
+        <span>Voltar ao cardápio completo</span>
+      </a>
+    </div>
+
+    <!-- Grid de Detalhes do Produto (2 Colunas) -->
+    <div class="product-detail-grid" id="productDetailContent">
+      <div class="detail-gallery-col">
+        <div class="detail-photo-card" id="productPhotoWrap">
+          <img id="productImage" src="" alt="" loading="eager">
+          <span class="photo-disclaimer">*Imagem meramente ilustrativa</span>
+        </div>
+      </div>
+
+      <div class="detail-info-col">
+        <div class="detail-header-meta">
+          <span class="product-tag" id="productTag"></span>
+          <span class="detail-stock-badge" id="productStockBadge"></span>
+        </div>
+
+        <h1 class="detail-title" id="productName">Carregando...</h1>
+        <div class="detail-price" id="productPrice">R$ 0,00</div>
+
+        <p class="detail-description" id="productDetails"></p>
+
+        <!-- Ficha de Ingredientes Nobres -->
+        <div class="info-card ingredients-card">
+          <div class="info-card-header">
+            <span class="info-card-icon">🌾</span>
+            <h4>Ingredientes Selecionados</h4>
+          </div>
+          <p id="productIngredients"></p>
+        </div>
+
+        <!-- Conservação e Alérgenos -->
+        <div class="info-card allergens-card">
+          <div class="info-card-header">
+            <span class="info-card-icon">❄️</span>
+            <h4>Conservação & Alérgenos</h4>
+          </div>
+          <p>Manter sob refrigeração e consumir em até 3 dias. <strong>Alérgicos:</strong> contém ovos, trigo, leite e derivados. Pode conter traços de castanhas e nozes.</p>
+        </div>
+
+        <!-- Barra de Ação (Seletor de Quantidade + Adicionar ao Carrinho) -->
+        <div class="detail-action-bar">
+          <div class="detail-qty-picker">
+            <button type="button" id="qtyDec" aria-label="Diminuir quantidade">−</button>
+            <span id="qtyVal">1</span>
+            <button type="button" id="qtyInc" aria-label="Aumentar quantidade">+</button>
+          </div>
+          <button type="button" class="btn btn-primary btn-add-detail" id="btnAddToCart">
+            <span>Adicionar ao Carrinho</span>
+            <span id="btnAddPricePreview"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção Inferior: Carrossel Horizontal de Produtos Recomendados -->
+    <section class="recommended-section">
+      <div class="recommended-header">
+        <div>
+          <h2>Você também vai amar</h2>
+          <p>Outros sabores artesanais irresistíveis preparados hoje para você.</p>
+        </div>
+        <div class="carousel-nav-buttons">
+          <button type="button" class="carousel-nav-btn" id="carouselPrev" aria-label="Ver produtos anteriores">‹</button>
+          <button type="button" class="carousel-nav-btn" id="carouselNext" aria-label="Ver próximos produtos">›</button>
+        </div>
+      </div>
+
+      <div class="carousel-viewport" id="carouselViewport">
+        <div class="carousel-track" id="recommendedTrack">
+          <!-- Preenchido dinamicamente via JS -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Botão Flutuante do Carrinho -->
+  <a href="cart.html" class="floating-cart" id="floatingCart" aria-label="Ver carrinho de compras">
+    🛒 Carrinho <span class="cart-badge" data-cart-badge>0</span>
+  </a>
+
+  <!-- Drawer Lateral Interativo do Carrinho -->
+  <div class="cart-drawer-overlay" id="cartDrawerOverlay" aria-hidden="true"></div>
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Seu Carrinho">
+    <div class="cart-drawer-header">
+      <div class="cart-drawer-title-wrap">
+        <h2>Seu Carrinho</h2>
+        <span class="cart-drawer-count" id="cartDrawerCount">0 itens</span>
+      </div>
+      <button class="cart-drawer-close" id="cartDrawerClose" aria-label="Fechar carrinho">
+        <span>✕</span>
+        <span class="close-text">Continuar</span>
+      </button>
+    </div>
+
+    <div class="cart-drawer-body" id="cartDrawerList">
+      <!-- Itens do carrinho renderizados via JS -->
+    </div>
+
+    <div class="cart-drawer-footer" id="cartDrawerFooter">
+      <!-- Resumo financeiro e botão de finalizar -->
+    </div>
+  </aside>
+
+  <footer>
+    <div class="container">Nuvem de Açúcar · Projeto acadêmico desenvolvido para fins de estudo.</div>
+  </footer>
+
+  <script src="js/cart.js"></script>
+  <script src="js/product-page.js"></script>
+</body>
+</html>

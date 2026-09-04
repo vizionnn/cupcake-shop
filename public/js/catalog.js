@@ -42,10 +42,14 @@ function renderProducts() {
     .map(
       (p) => `
       <div class="product-card">
-        <div class="product-photo">${renderPhoto(p.image_emoji, p.name)}</div>
+        <a href="produto.html?id=${p.id}" class="product-card-link" aria-label="Ver detalhes de ${p.name}">
+          <div class="product-photo">${renderPhoto(p.image_emoji, p.name)}</div>
+        </a>
         <span class="photo-disclaimer">*Imagem meramente ilustrativa</span>
         <span class="product-tag">${p.flavor_tag}</span>
-        <h3>${p.name}</h3>
+        <a href="produto.html?id=${p.id}" class="product-title-link">
+          <h3>${p.name}</h3>
+        </a>
         <p>${p.description}</p>
         <div class="product-footer">
           <span class="price">${formatBRL(p.price)}</span>
