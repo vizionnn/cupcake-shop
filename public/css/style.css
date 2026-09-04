@@ -309,6 +309,16 @@ a {
   display: block;
 }
 
+.photo-disclaimer {
+  font-size: 0.68rem;
+  color: var(--ink-soft);
+  opacity: 0.75;
+  font-style: italic;
+  margin-top: -6px;
+  margin-bottom: -2px;
+  display: block;
+}
+
 .product-tag {
   align-self: flex-start;
   background: var(--butter);

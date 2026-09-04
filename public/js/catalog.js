@@ -43,6 +43,7 @@ function renderProducts() {
       (p) => `
       <div class="product-card">
         <div class="product-photo">${renderPhoto(p.image_emoji, p.name)}</div>
+        <span class="photo-disclaimer">*Imagem meramente ilustrativa</span>
         <span class="product-tag">${p.flavor_tag}</span>
         <h3>${p.name}</h3>
         <p>${p.description}</p>
