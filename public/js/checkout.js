@@ -153,6 +153,179 @@ function renderCheckoutSummary() {
   }
 }
 
+let selectedPayment = 'Pix';
+let appliedCoupon = null;
+let currentEstimatedDelivery = 'Hoje mesmo (em até 3 horas) — Sede Recife/PE';
+
+function getDeliveryEstimateByCep(cleanCep) {
+  const num = parseInt(cleanCep.substring(0, 5), 10);
+
+  // Recife e Região Metropolitana de Recife (50000 a 54999)
+  if (num >= 50000 && num <= 54999) {
+    return {
+      title: 'Entrega Expressa no Mesmo Dia',
+      desc: 'Previsão de entrega: Hoje em até 3 horas',
+      badge: 'Sede Recife & RMR 🚀',
+      icon: '🚀',
+      text: 'Hoje (em até 3 horas)'
+    };
+  }
+  // Demais cidades de Pernambuco (55000 a 56999)
+  if (num >= 55000 && num <= 56999) {
+    return {
+      title: 'Entrega Regional Rápida',
+      desc: 'Previsão de entrega: 1 a 2 dias úteis',
+      badge: 'Interior de Pernambuco 📦',
+      icon: '📦',
+      text: '1 a 2 dias úteis'
+    };
+  }
+  // Demais estados do Nordeste (40000 a 49999 e 57000 a 65999)
+  if ((num >= 40000 && num <= 49999) || (num >= 57000 && num <= 65999)) {
+    return {
+      title: 'Envio Expresso Nordeste',
+      desc: 'Previsão de entrega: 1 a 2 dias úteis',
+      badge: 'Região Nordeste 📦',
+      icon: '📦',
+      text: '1 a 2 dias úteis'
+    };
+  }
+  // Sudeste (01000 a 39999)
+  if (num >= 1000 && num <= 39999) {
+    return {
+      title: 'Envio Especial Aéreo',
+      desc: 'Previsão de entrega: 2 a 4 dias úteis',
+      badge: 'Região Sudeste 🚚',
+      icon: '🚚',
+      text: '2 a 4 dias úteis'
+    };
+  }
+  // Centro-Oeste / DF (70000 a 78999) e Sul (80000 a 99999)
+  if ((num >= 70000 && num <= 78999) || (num >= 80000 && num <= 99999)) {
+    return {
+      title: 'Envio Seguro Climatizado',
+      desc: 'Previsão de entrega: 3 a 5 dias úteis',
+      badge: 'Centro-Oeste e Sul 🚚',
+      icon: '🚚',
+      text: '3 a 5 dias úteis'
+    };
+  }
+  // Norte (66000 a 69999)
+  if (num >= 66000 && num <= 69999) {
+    return {
+      title: 'Envio Prioritário',
+      desc: 'Previsão de entrega: 4 a 6 dias úteis',
+      badge: 'Região Norte ✈️',
+      icon: '✈️',
+      text: '4 a 6 dias úteis'
+    };
+  }
+
+  return {
+    title: 'Entrega Padrão Nuvem',
+    desc: 'Previsão de entrega: 2 a 4 dias úteis',
+    badge: 'Nacional 🚚',
+    icon: '🚚',
+    text: '2 a 4 dias úteis'
+  };
+}
+
+function setupCepLookup() {
+  const cepInput = document.getElementById('cep');
+  const searchBtn = document.getElementById('btnSearchCep');
+  const feedback = document.getElementById('cepFeedback');
+  const card = document.getElementById('deliveryEstimateCard');
+  const icon = document.getElementById('estimateIcon');
+  const title = document.getElementById('estimateTitle');
+  const desc = document.getElementById('estimateDesc');
+  const badge = document.getElementById('estimateBadge');
+  const addressInput = document.getElementById('address');
+
+  if (!cepInput || !searchBtn) return;
+
+  const applyMask = (val) => {
+    val = val.replace(/\D/g, '').substring(0, 8);
+    if (val.length > 5) {
+      val = val.replace(/^(\d{5})(\d)/, '$1-$2');
+    }
+    return val;
+  };
+
+  cepInput.addEventListener('input', (e) => {
+    e.target.value = applyMask(e.target.value);
+    const raw = e.target.value.replace(/\D/g, '');
+    if (raw.length === 8) {
+      performLookup(raw);
+    }
+  });
+
+  searchBtn.addEventListener('click', () => {
+    const raw = cepInput.value.replace(/\D/g, '');
+    if (raw.length !== 8) {
+      feedback.textContent = 'Digite um CEP válido com 8 números.';
+      feedback.className = 'cep-feedback error';
+      return;
+    }
+    performLookup(raw);
+  });
+
+  async function performLookup(rawCep) {
+    feedback.textContent = 'Consultando ViaCEP...';
+    feedback.className = 'cep-feedback';
+    searchBtn.disabled = true;
+
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${rawCep}/json/`);
+      const data = await res.json();
+
+      if (data.erro) {
+        feedback.textContent = 'CEP não localizado. Complete seu endereço manualmente abaixo.';
+        feedback.className = 'cep-feedback error';
+        searchBtn.disabled = false;
+        return;
+      }
+
+      // Autocomplete amigável de endereço
+      const parts = [];
+      if (data.logradouro) parts.push(data.logradouro);
+      if (data.bairro) parts.push(data.bairro);
+      parts.push(`${data.localidade} - ${data.uf}`);
+      addressInput.value = parts.join(', ');
+      addressInput.focus();
+
+      // Cálculo de estimativa
+      const est = getDeliveryEstimateByCep(rawCep);
+      currentEstimatedDelivery = `${est.text} (${data.localidade}/${data.uf})`;
+
+      if (card && icon && title && desc && badge) {
+        icon.textContent = est.icon;
+        title.textContent = est.title;
+        desc.textContent = `${est.desc} (${data.localidade}/${data.uf})`;
+        badge.textContent = est.badge;
+        card.style.display = 'flex';
+      }
+
+      feedback.textContent = `✓ Endereço localizado: ${data.localidade} - ${data.uf}`;
+      feedback.className = 'cep-feedback success';
+    } catch (err) {
+      console.warn('Erro ao consultar ViaCEP:', err);
+      const est = getDeliveryEstimateByCep(rawCep);
+      currentEstimatedDelivery = est.text;
+      if (card && icon && title && desc && badge) {
+        icon.textContent = est.icon;
+        title.textContent = est.title;
+        desc.textContent = est.desc;
+        badge.textContent = est.badge;
+        card.style.display = 'flex';
+      }
+      feedback.textContent = 'Previsão calculada para sua região.';
+      feedback.className = 'cep-feedback success';
+    } finally {
+      searchBtn.disabled = false;
+    }
+  }
+}
+
 function setupPaymentOptions() {
   document.querySelectorAll('.payment-option').forEach((opt) => {
     opt.addEventListener('click', () => {
@@ -169,10 +342,14 @@ async function submitOrder(e) {
   errorBanner.classList.remove('show');
 
   const cart = getCart();
+  const cepVal = document.getElementById('cep') ? document.getElementById('cep').value.trim() : '';
+
   const payload = {
     customer_name: document.getElementById('name').value.trim(),
     customer_email: document.getElementById('email').value.trim(),
     delivery_address: document.getElementById('address').value.trim(),
+    customer_cep: cepVal,
+    estimated_delivery: currentEstimatedDelivery,
     payment_method: selectedPayment,
     coupon_code: appliedCoupon,
     items: cart.map((i) => ({ product_id: i.product_id, quantity: i.quantity }))
@@ -205,5 +382,6 @@ async function submitOrder(e) {
 document.addEventListener('DOMContentLoaded', () => {
   renderCheckoutSummary();
   setupPaymentOptions();
+  setupCepLookup();
   document.getElementById('checkoutForm').addEventListener('submit', submitOrder);
 });

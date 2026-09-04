@@ -25,7 +25,7 @@ app.get('/api/products/:id', (req, res) => {
 
 // POST /api/orders - cria um pedido (fluxo de pedidos + pagamento)
 app.post('/api/orders', (req, res) => {
-  const { customer_name, customer_email, delivery_address, payment_method, items, coupon_code } = req.body;
+  const { customer_name, customer_email, delivery_address, customer_cep, estimated_delivery, payment_method, items, coupon_code } = req.body;
 
   if (!customer_name || !customer_email || !delivery_address || !payment_method) {
     return res.status(400).json({ error: 'Dados do cliente incompletos.' });
@@ -74,13 +74,15 @@ app.post('/api/orders', (req, res) => {
 
   const createOrder = db.transaction(() => {
     const insertOrder = db.prepare(`
-      INSERT INTO orders (customer_name, customer_email, delivery_address, payment_method, subtotal, discount, shipping_fee, coupon_code, total)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO orders (customer_name, customer_email, delivery_address, customer_cep, estimated_delivery, payment_method, subtotal, discount, shipping_fee, coupon_code, total)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     const info = insertOrder.run(
       customer_name,
       customer_email,
       delivery_address,
+      customer_cep || null,
+      estimated_delivery || null,
       payment_method,
       subtotal,
       discount,

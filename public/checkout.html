@@ -59,8 +59,26 @@
           <input id="email" type="email" required placeholder="voce@email.com">
         </div>
         <div class="field">
-          <label for="address">Endereço de entrega</label>
-          <textarea id="address" rows="3" required placeholder="Rua, número, bairro, cidade"></textarea>
+          <label for="cep">CEP de entrega</label>
+          <div class="cep-input-group">
+            <input id="cep" type="text" maxlength="9" placeholder="Ex: 50010-000" autocomplete="postal-code">
+            <button type="button" id="btnSearchCep" class="btn-cep">Buscar CEP</button>
+          </div>
+          <div id="cepFeedback" class="cep-feedback"></div>
+          
+          <div id="deliveryEstimateCard" class="delivery-estimate-card" style="display: none;">
+            <div class="delivery-estimate-icon" id="estimateIcon">🚀</div>
+            <div class="delivery-estimate-info">
+              <h5 id="estimateTitle">Entrega Expressa</h5>
+              <p id="estimateDesc">Previsão de entrega para sua região.</p>
+              <span class="delivery-estimate-badge" id="estimateBadge">Sede Recife/PE</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="address">Endereço completo (Rua, Número, Bairro, Cidade - UF)</label>
+          <textarea id="address" rows="3" required placeholder="Ex: Av. Boa Viagem, 1000, Apto 201 - Boa Viagem, Recife - PE"></textarea>
         </div>
         <div class="field">
           <label>Forma de pagamento</label>

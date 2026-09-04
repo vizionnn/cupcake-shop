@@ -45,6 +45,8 @@ try { db.exec('ALTER TABLE orders ADD COLUMN subtotal REAL DEFAULT 0'); } catch 
 try { db.exec('ALTER TABLE orders ADD COLUMN discount REAL DEFAULT 0'); } catch (e) {}
 try { db.exec('ALTER TABLE orders ADD COLUMN shipping_fee REAL DEFAULT 0'); } catch (e) {}
 try { db.exec('ALTER TABLE orders ADD COLUMN coupon_code TEXT'); } catch (e) {}
+try { db.exec('ALTER TABLE orders ADD COLUMN customer_cep TEXT'); } catch (e) {}
+try { db.exec('ALTER TABLE orders ADD COLUMN estimated_delivery TEXT'); } catch (e) {}
 
 // Itens de cada pedido
 db.exec(`

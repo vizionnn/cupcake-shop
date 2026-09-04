@@ -2074,3 +2074,400 @@ body.drawer-open {
   font-size: 0.95rem;
   flex-shrink: 0;
 }
+
+/* ========================================================
+   Fundo Animado Festivo na Confirmação (Floating Sweets)
+   ======================================================== */
+.floating-sweets-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.floating-sweet {
+  position: absolute;
+  user-select: none;
+  will-change: transform, opacity;
+  animation: floatDrift linear infinite;
+  filter: drop-shadow(0 4px 10px rgba(214, 51, 108, 0.15));
+}
+
+@keyframes floatDrift {
+  0% {
+    transform: translateY(105vh) translateX(0) rotate(0deg) scale(0.85);
+    opacity: 0;
+  }
+  15% {
+    opacity: var(--sweet-opacity, 0.45);
+  }
+  50% {
+    transform: translateY(50vh) translateX(25px) rotate(180deg) scale(1.05);
+  }
+  85% {
+    opacity: var(--sweet-opacity, 0.45);
+  }
+  100% {
+    transform: translateY(-15vh) translateX(-20px) rotate(360deg) scale(0.9);
+    opacity: 0;
+  }
+}
+
+/* Glassmorphism e posicionamento na tela de confirmação */
+.confirmation {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(235, 218, 205, 0.85);
+  box-shadow: 0 20px 45px rgba(214, 51, 108, 0.08), 0 4px 15px rgba(0, 0, 0, 0.03);
+  border-radius: 28px;
+  padding: 40px 28px;
+  max-width: 600px;
+  margin: 40px auto 60px;
+  text-align: center;
+}
+
+.confirmation-badge-delivery {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #E8F5E9;
+  border: 1px solid #C8E6C9;
+  color: #2E7D32;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 8px 16px;
+  border-radius: 999px;
+  margin: 12px 0 20px;
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.08);
+}
+
+.confirm-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.btn-print {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-print:hover {
+  background: #FFF;
+  border-color: var(--ink);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+/* ========================================================
+   Folha de Estilos para Impressão / Salvar PDF (@media print)
+   ======================================================== */
+@media print {
+  body {
+    background: #FFF !important;
+    color: #000 !important;
+    font-size: 12pt;
+  }
+
+  .site-header,
+  .announcement-bar,
+  .floating-sweets-bg,
+  .confirm-actions,
+  .cart-drawer,
+  .cart-drawer-overlay,
+  .floating-cart,
+  .toast-container,
+  button {
+    display: none !important;
+  }
+
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .confirmation {
+    box-shadow: none !important;
+    border: 1px solid #CCC !important;
+    background: #FFF !important;
+    border-radius: 0 !important;
+    padding: 24px !important;
+    margin: 0 auto !important;
+    max-width: 100% !important;
+  }
+
+  .confirm-summary-box {
+    box-shadow: none !important;
+    border: 1px solid #E0E0E0 !important;
+    background: #FAFAFA !important;
+  }
+
+  .stamp {
+    font-size: 2rem !important;
+  }
+
+  h2 {
+    color: #000 !important;
+    font-size: 18pt !important;
+  }
+
+  .summary-row.total {
+    border-top: 2px solid #000 !important;
+    font-size: 13pt !important;
+  }
+}
+
+/* ========================================================
+   Sistema de Toasts Elegantes (Feedback ao adicionar item)
+   ======================================================== */
+.toast-container {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+@media (max-width: 600px) {
+  .toast-container {
+    bottom: 20px;
+    right: 16px;
+    left: 16px;
+  }
+}
+
+.toast-item {
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(214, 51, 108, 0.2);
+  box-shadow: 0 12px 32px rgba(214, 51, 108, 0.16), 0 4px 12px rgba(0, 0, 0, 0.06);
+  border-radius: 18px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 320px;
+  max-width: 420px;
+  animation: toastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.toast-item.toast-hiding {
+  opacity: 0;
+  transform: translateY(15px) scale(0.95);
+}
+
+.toast-thumb {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.toast-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.toast-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--raspberry-dark);
+  margin: 0 0 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.toast-text {
+  font-size: 0.82rem;
+  color: var(--ink);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toast-action {
+  background: none;
+  border: none;
+  color: var(--raspberry);
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+
+.toast-action:hover {
+  background: rgba(214, 51, 108, 0.08);
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  border-radius: 6px;
+  transition: color 0.15s ease;
+}
+
+.toast-close:hover {
+  color: var(--ink);
+}
+
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--raspberry), var(--caramel));
+  width: 100%;
+  animation: toastProgress linear forwards;
+}
+
+@keyframes toastProgress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+/* ========================================================
+   Checkout: CEP & Estimador Dinâmico de Entrega
+   ======================================================== */
+.cep-input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.cep-input-group input {
+  flex: 1;
+}
+
+.btn-cep {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 0 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-cep:hover {
+  background: #FFF;
+  border-color: var(--raspberry);
+  color: var(--raspberry);
+}
+
+.cep-feedback {
+  font-size: 0.82rem;
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+.cep-feedback.error {
+  color: #D32F2F;
+}
+
+.cep-feedback.success {
+  color: #2E7D32;
+}
+
+.delivery-estimate-card {
+  margin-top: 14px;
+  background: #F8FBF8;
+  border: 1px solid #D1E7D3;
+  border-radius: 14px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+}
+
+.delivery-estimate-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.delivery-estimate-info h5 {
+  margin: 0 0 2px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1B5E20;
+}
+
+.delivery-estimate-info p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #2E7D32;
+}
+
+.delivery-estimate-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #C8E6C9;
+  color: #1B5E20;
+  padding: 2px 8px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-top: 4px;
+}

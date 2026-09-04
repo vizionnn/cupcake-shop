@@ -13,24 +13,99 @@ function saveCart(cart) {
   }
 }
 
-function addToCart(product) {
+function showToast({ title, message, photoOrEmoji, actionText, actionCallback, duration = 3500 }) {
+  let container = document.getElementById('toastContainer');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toastContainer';
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = 'toast-item';
+
+  let thumbHtml = '🧁';
+  if (photoOrEmoji && (photoOrEmoji.includes('.') || photoOrEmoji.startsWith('http'))) {
+    thumbHtml = `<img src="${photoOrEmoji}" alt="" loading="lazy">`;
+  } else if (photoOrEmoji) {
+    thumbHtml = photoOrEmoji;
+  }
+
+  toast.innerHTML = `
+    <div class="toast-thumb">${thumbHtml}</div>
+    <div class="toast-body">
+      <div class="toast-title">
+        <span>${title || 'Item adicionado!'}</span>
+      </div>
+      <p class="toast-text">${message || ''}</p>
+    </div>
+    ${actionText ? `<button type="button" class="toast-action">${actionText}</button>` : ''}
+    <button type="button" class="toast-close" aria-label="Fechar notificação">✕</button>
+    <div class="toast-progress" style="animation-duration: ${duration}ms;"></div>
+  `;
+
+  const removeToast = () => {
+    if (toast.classList.contains('toast-hiding')) return;
+    toast.classList.add('toast-hiding');
+    setTimeout(() => {
+      toast.remove();
+      if (container.children.length === 0) container.remove();
+    }, 260);
+  };
+
+  if (actionText && actionCallback) {
+    const actionBtn = toast.querySelector('.toast-action');
+    if (actionBtn) {
+      actionBtn.addEventListener('click', () => {
+        actionCallback();
+        removeToast();
+      });
+    }
+  }
+
+  const closeBtn = toast.querySelector('.toast-close');
+  if (closeBtn) closeBtn.addEventListener('click', removeToast);
+
+  container.appendChild(toast);
+
+  let timeoutId = setTimeout(removeToast, duration);
+  toast.addEventListener('mouseenter', () => clearTimeout(timeoutId));
+  toast.addEventListener('mouseleave', () => {
+    timeoutId = setTimeout(removeToast, 1500);
+  });
+}
+
+function addToCart(product, quantity = 1) {
   const cart = getCart();
+  const qtyToAdd = typeof quantity === 'number' && quantity > 0 ? quantity : 1;
   const existing = cart.find((i) => i.product_id === product.id);
   if (existing) {
-    existing.quantity += 1;
+    existing.quantity += qtyToAdd;
   } else {
     cart.push({
       product_id: product.id,
       name: product.name,
       price: product.price,
       emoji: product.image_emoji,
-      quantity: 1
+      quantity: qtyToAdd
     });
   }
   saveCart(cart);
   triggerCartBump();
 
-  // Opção A: Abre a gaveta lateral automaticamente ao adicionar!
+  // Toast elegante com thumbnail e botão para ver a sacola
+  showToast({
+    title: 'Adicionado à sua sacola! 🧁',
+    message: `${qtyToAdd > 1 ? `${qtyToAdd}x ` : ''}${product.name}`,
+    photoOrEmoji: product.image_emoji,
+    actionText: 'Ver sacola',
+    actionCallback: () => {
+      if (typeof openCartDrawer === 'function') openCartDrawer();
+    }
+  });
+
+  // Abre a gaveta lateral automaticamente ao adicionar
   if (typeof openCartDrawer === 'function') {
     openCartDrawer();
   }

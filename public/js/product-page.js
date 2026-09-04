@@ -132,31 +132,11 @@ function setupQuantityControls() {
   addBtn.addEventListener('click', () => {
     if (!currentProduct || currentProduct.stock <= 0) return;
 
-    // Adiciona a quantidade selecionada ao carrinho
-    const cart = getCart();
-    const existing = cart.find((i) => i.product_id === currentProduct.id);
-    if (existing) {
-      existing.quantity += currentQuantity;
-    } else {
-      cart.push({
-        product_id: currentProduct.id,
-        name: currentProduct.name,
-        price: currentProduct.price,
-        emoji: currentProduct.image_emoji,
-        quantity: currentQuantity
-      });
-    }
+    addToCart(currentProduct, currentQuantity);
 
-    saveCart(cart);
-    triggerCartBump();
-
-    // Feedback visual e abre o Drawer automaticamente
+    // Feedback visual
     addBtn.classList.add('added');
     setTimeout(() => addBtn.classList.remove('added'), 1200);
-
-    if (typeof openCartDrawer === 'function') {
-      openCartDrawer();
-    }
   });
 }
 
