@@ -1,5 +1,43 @@
 let currentProduct = null;
 let currentQuantity = 1;
+let scrollObserver = null;
+
+function initScrollReveal() {
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.reveal-on-scroll').forEach((el) => el.classList.add('is-revealed'));
+    return;
+  }
+
+  if (scrollObserver) {
+    scrollObserver.disconnect();
+  }
+
+  scrollObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          entry.target.addEventListener(
+            'transitionend',
+            () => {
+              entry.target.style.transitionDelay = '0s';
+            },
+            { once: true }
+          );
+          scrollObserver.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.06,
+      rootMargin: '0px 0px -20px 0px'
+    }
+  );
+
+  document.querySelectorAll('.reveal-on-scroll:not(.is-revealed)').forEach((el) => {
+    scrollObserver.observe(el);
+  });
+}
 
 function renderPhoto(photoOrEmoji, name) {
   if (photoOrEmoji && (photoOrEmoji.includes('.') || photoOrEmoji.startsWith('http'))) {
@@ -51,6 +89,7 @@ async function loadProductDetails() {
 
     updatePricePreview();
     setupQuantityControls();
+    initScrollReveal();
     loadRecommendedCarousel(currentProduct.id);
   } catch (err) {
     console.error(err);
@@ -134,8 +173,8 @@ async function loadRecommendedCarousel(currentId) {
 
     track.innerHTML = recommended
       .map(
-        (p) => `
-        <div class="carousel-card">
+        (p, index) => `
+        <div class="carousel-card reveal-on-scroll" style="transition-delay: ${(index % 4) * 0.08}s;">
           <a href="produto.html?id=${p.id}" class="carousel-card-photo-link" aria-label="Ver detalhes de ${p.name}">
             <div class="product-photo">${renderPhoto(p.image_emoji, p.name)}</div>
           </a>
@@ -155,6 +194,8 @@ async function loadRecommendedCarousel(currentId) {
       `
       )
       .join('');
+
+    initScrollReveal();
 
     // Controles de clique das setas
     prevBtn.addEventListener('click', () => {

@@ -1317,8 +1317,8 @@ body.drawer-open {
   transform: translateX(-3px);
 }
 
-.back-arrow {
-  font-size: 1.1rem;
+.breadcrumb-bar {
+  animation: heroFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .product-detail-grid {
@@ -1327,6 +1327,14 @@ body.drawer-open {
   gap: 48px;
   align-items: start;
   padding: 12px 0 54px;
+}
+
+.detail-gallery-col {
+  animation: heroFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+}
+
+.detail-info-col {
+  animation: heroFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both;
 }
 
 .detail-photo-card {
@@ -1601,10 +1609,11 @@ body.drawer-open {
   flex-direction: column;
   gap: 10px;
   scroll-snap-align: center;
-  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
               box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1),
               border-color 0.3s ease;
-  will-change: transform;
+  will-change: transform, opacity;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
@@ -1645,6 +1654,7 @@ body.drawer-open {
     transform: translateY(-8px) scale(1.04);
     box-shadow: 0 20px 42px -8px rgba(59, 35, 24, 0.18), 0 8px 18px rgba(59, 35, 24, 0.08);
     border-color: rgba(232, 93, 117, 0.4);
+    transition-delay: 0s !important;
   }
 
   .carousel-card:hover .product-photo img {
