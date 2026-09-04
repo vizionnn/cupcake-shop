@@ -176,6 +176,55 @@ async function loadRecommendedCarousel(currentId) {
         }
       });
     });
+
+    // Destaque dinâmico de ampliação do card central ao deslizar o dedo (mobile/touch)
+    const updateActiveCarouselCard = () => {
+      const cards = track.querySelectorAll('.carousel-card');
+      if (!cards.length) return;
+
+      const viewportRect = viewport.getBoundingClientRect();
+      const viewportCenter = viewportRect.left + viewportRect.width / 2;
+
+      let closestCard = null;
+      let minDistance = Infinity;
+
+      cards.forEach((card) => {
+        const cardRect = card.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        const dist = Math.abs(viewportCenter - cardCenter);
+
+        if (dist < minDistance) {
+          minDistance = dist;
+          closestCard = card;
+        }
+      });
+
+      cards.forEach((card) => {
+        if (card === closestCard) {
+          card.classList.add('is-active');
+        } else {
+          card.classList.remove('is-active');
+        }
+      });
+    };
+
+    let scrollTicking = false;
+    viewport.addEventListener(
+      'scroll',
+      () => {
+        if (!scrollTicking) {
+          requestAnimationFrame(() => {
+            updateActiveCarouselCard();
+            scrollTicking = false;
+          });
+          scrollTicking = true;
+        }
+      },
+      { passive: true }
+    );
+
+    // Inicializa o card central ativo assim que renderizar
+    setTimeout(updateActiveCarouselCard, 100);
   } catch (err) {
     console.error('Erro ao carregar recomendados:', err);
   }

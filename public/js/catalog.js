@@ -70,6 +70,19 @@ function renderProducts() {
       setTimeout(() => { btn.textContent = 'Adicionar'; }, 900);
     });
   });
+
+  // Feedback tátil com resposta instantânea em telas touch/mobile
+  grid.querySelectorAll('.product-card').forEach((card) => {
+    card.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('[data-add]')) return;
+      card.classList.add('touch-active');
+    }, { passive: true });
+
+    const clearTouch = () => card.classList.remove('touch-active');
+    card.addEventListener('pointerup', clearTouch, { passive: true });
+    card.addEventListener('pointercancel', clearTouch, { passive: true });
+    card.addEventListener('pointerleave', clearTouch, { passive: true });
+  });
 }
 
 document.addEventListener('DOMContentLoaded', loadProducts);
