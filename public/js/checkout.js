@@ -1,5 +1,6 @@
 let selectedPayment = 'Pix';
 let appliedCoupon = null;
+let currentEstimatedDelivery = 'Hoje mesmo (em até 3 horas) — Sede Recife/PE';
 
 function renderPhoto(photoOrEmoji, name) {
   if (photoOrEmoji && (photoOrEmoji.includes('.') || photoOrEmoji.startsWith('http'))) {
@@ -153,10 +154,6 @@ function renderCheckoutSummary() {
   }
 }
 
-let selectedPayment = 'Pix';
-let appliedCoupon = null;
-let currentEstimatedDelivery = 'Hoje mesmo (em até 3 horas) — Sede Recife/PE';
-
 function getDeliveryEstimateByCep(cleanCep) {
   const num = parseInt(cleanCep.substring(0, 5), 10);
 
@@ -256,6 +253,19 @@ function setupCepLookup() {
     const raw = e.target.value.replace(/\D/g, '');
     if (raw.length === 8) {
       performLookup(raw);
+    }
+  });
+
+  cepInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const raw = cepInput.value.replace(/\D/g, '');
+      if (raw.length === 8) {
+        performLookup(raw);
+      } else {
+        feedback.textContent = 'Digite um CEP válido com 8 números.';
+        feedback.className = 'cep-feedback error';
+      }
     }
   });
 
