@@ -8,6 +8,9 @@ function getCart() {
 function saveCart(cart) {
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
   updateCartBadge();
+  if (typeof renderCartDrawer === 'function') {
+    renderCartDrawer();
+  }
 }
 
 function addToCart(product) {
@@ -26,6 +29,11 @@ function addToCart(product) {
   }
   saveCart(cart);
   triggerCartBump();
+
+  // Opção A: Abre a gaveta lateral automaticamente ao adicionar!
+  if (typeof openCartDrawer === 'function') {
+    openCartDrawer();
+  }
 }
 
 function updateQuantity(productId, delta) {
@@ -115,7 +123,157 @@ function formatBRL(value) {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
+/* ========================================================
+   Gerenciamento do Carrinho Lateral (Slide-over Drawer)
+   ======================================================== */
+
+function renderDrawerPhoto(photoOrEmoji, name) {
+  if (photoOrEmoji && (photoOrEmoji.includes('.') || photoOrEmoji.startsWith('http'))) {
+    return `<img src="${photoOrEmoji}" alt="${name}" loading="lazy">`;
+  }
+  return photoOrEmoji || '🧁';
+}
+
+function openCartDrawer() {
+  const drawer = document.getElementById('cartDrawer');
+  const overlay = document.getElementById('cartDrawerOverlay');
+  if (!drawer || !overlay) return;
+
+  renderCartDrawer();
+  drawer.classList.add('open');
+  overlay.classList.add('open');
+  document.body.classList.add('drawer-open');
+}
+
+function closeCartDrawer() {
+  const drawer = document.getElementById('cartDrawer');
+  const overlay = document.getElementById('cartDrawerOverlay');
+  if (!drawer || !overlay) return;
+
+  drawer.classList.remove('open');
+  overlay.classList.remove('open');
+  document.body.classList.remove('drawer-open');
+}
+
+function renderCartDrawer() {
+  const listEl = document.getElementById('cartDrawerList');
+  const footerEl = document.getElementById('cartDrawerFooter');
+  const countEl = document.getElementById('cartDrawerCount');
+  if (!listEl || !footerEl) return;
+
+  const cart = getCart();
+  const count = cartCount();
+  const total = cartTotal();
+
+  if (countEl) {
+    countEl.textContent = `${count} ${count === 1 ? 'item' : 'itens'}`;
+  }
+
+  if (cart.length === 0) {
+    listEl.innerHTML = `
+      <div class="drawer-empty">
+        <div class="drawer-empty-icon">🧁</div>
+        <p style="font-weight: 700; color: var(--ink); margin: 0;">Seu carrinho está vazio</p>
+        <p style="font-size: 0.88rem; color: var(--ink-soft); margin-top: 6px;">Escolha seus sabores favoritos na vitrine!</p>
+      </div>
+    `;
+    footerEl.innerHTML = `
+      <button class="drawer-checkout-btn" style="opacity: 0.5; cursor: not-allowed;" disabled>
+        Carrinho vazio
+      </button>
+    `;
+    return;
+  }
+
+  listEl.innerHTML = cart
+    .map(
+      (item) => `
+      <div class="drawer-item">
+        <div class="drawer-item-thumb">
+          ${renderDrawerPhoto(item.emoji, item.name)}
+        </div>
+        <div class="drawer-item-info">
+          <h4>${item.name}</h4>
+          <div class="drawer-item-price">${formatBRL(item.price)}</div>
+          <button class="drawer-item-remove" data-drawer-remove="${item.product_id}">remover</button>
+        </div>
+        <div class="drawer-qty-control">
+          <button data-drawer-dec="${item.product_id}" aria-label="Diminuir quantidade">−</button>
+          <span>${item.quantity}</span>
+          <button data-drawer-inc="${item.product_id}" aria-label="Aumentar quantidade">+</button>
+        </div>
+      </div>
+    `
+    )
+    .join('');
+
+  footerEl.innerHTML = `
+    <div class="drawer-summary-row">
+      <span>Subtotal</span>
+      <span>${formatBRL(total)}</span>
+    </div>
+    <div class="drawer-summary-row">
+      <span>Entrega</span>
+      <span style="color: #2E7D32; font-weight: 700;">Grátis</span>
+    </div>
+    <div class="drawer-summary-row total">
+      <span>Total</span>
+      <span>${formatBRL(total)}</span>
+    </div>
+    <a href="checkout.html" class="drawer-checkout-btn">
+      <span>Finalizar Pedido</span>
+      <span>→</span>
+    </a>
+  `;
+
+  // Vincula eventos dos botões internos do Drawer
+  listEl.querySelectorAll('[data-drawer-inc]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      updateQuantity(Number(btn.dataset.drawerInc), 1);
+    });
+  });
+
+  listEl.querySelectorAll('[data-drawer-dec]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      updateQuantity(Number(btn.dataset.drawerDec), -1);
+    });
+  });
+
+  listEl.querySelectorAll('[data-drawer-remove]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      removeFromCart(Number(btn.dataset.drawerRemove));
+    });
+  });
+}
+
+function initCartDrawer() {
+  const drawer = document.getElementById('cartDrawer');
+  const overlay = document.getElementById('cartDrawerOverlay');
+  const closeBtn = document.getElementById('cartDrawerClose');
+  if (!drawer) return;
+
+  if (closeBtn) closeBtn.addEventListener('click', closeCartDrawer);
+  if (overlay) overlay.addEventListener('click', closeCartDrawer);
+
+  // Fecha com a tecla Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeCartDrawer();
+  });
+
+  // Intercepta os cliques nos botões de carrinho da vitrine para abrir o Drawer
+  document.querySelectorAll('.cart-link, #floatingCart').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      openCartDrawer();
+    });
+  });
+
+  renderCartDrawer();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   updateCartBadge();
   initFloatingCart();
+  initCartDrawer();
 });
+
