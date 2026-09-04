@@ -1,3 +1,10 @@
+function renderPhoto(photoOrEmoji, name) {
+  if (photoOrEmoji && (photoOrEmoji.includes('.') || photoOrEmoji.startsWith('http'))) {
+    return `<img src="${photoOrEmoji}" alt="${name}" loading="lazy">`;
+  }
+  return photoOrEmoji || '🧁';
+}
+
 function renderCartPage() {
   const cart = getCart();
   const listEl = document.getElementById('cartList');
@@ -13,7 +20,7 @@ function renderCartPage() {
     .map(
       (item) => `
       <div class="cart-item">
-        <div class="emoji">${item.emoji}</div>
+        <div class="emoji">${renderPhoto(item.emoji, item.name)}</div>
         <div class="info">
           <h3>${item.name}</h3>
           <span class="price">${formatBRL(item.price)}</span>

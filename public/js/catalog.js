@@ -25,7 +25,13 @@ function renderFilters() {
     });
   });
 }
-
+// Função auxiliar para decidir se renderiza foto ou emoji:
+function renderPhoto(photoOrEmoji, name) {
+  if (photoOrEmoji.includes('.') || photoOrEmoji.startsWith('http')) {
+    return `<img src="${photoOrEmoji}" alt="${name}" loading="lazy">`;
+  }
+  return photoOrEmoji;
+}
 function renderProducts() {
   const grid = document.getElementById('productGrid');
   const list = activeFilter === 'Todos'
@@ -36,7 +42,7 @@ function renderProducts() {
     .map(
       (p) => `
       <div class="product-card">
-        <div class="product-photo">${p.image_emoji}</div>
+        <div class="product-photo">${renderPhoto(p.image_emoji, p.name)}</div>
         <span class="product-tag">${p.flavor_tag}</span>
         <h3>${p.name}</h3>
         <p>${p.description}</p>

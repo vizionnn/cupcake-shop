@@ -13,7 +13,9 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Karla:wght@400;500;700&display=swap');
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 :root {
   --bg: #FDF6F0;
@@ -34,14 +36,20 @@ body {
   line-height: 1.5;
 }
 
-h1, h2, h3, .display {
+h1,
+h2,
+h3,
+.display {
   font-family: 'Fraunces', serif;
   font-weight: 600;
   letter-spacing: -0.01em;
   margin: 0;
 }
 
-a { color: inherit; text-decoration: none; }
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
 .container {
   max-width: 1080px;
@@ -137,10 +145,10 @@ a { color: inherit; text-decoration: none; }
   visibility: hidden;
   transform: translateY(60px) scale(0.9);
   transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-              opacity 0.25s ease,
-              visibility 0.25s ease,
-              box-shadow 0.2s ease,
-              background 0.2s ease;
+    opacity 0.25s ease,
+    visibility 0.25s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
 /* Ativado quando o usuário rola a página além do header */
@@ -163,10 +171,21 @@ a { color: inherit; text-decoration: none; }
 
 /* Animação suave de pulso ao adicionar cupcakes ao carrinho */
 @keyframes cartBump {
-  0% { transform: scale(1); }
-  40% { transform: scale(1.18); }
-  70% { transform: scale(0.95); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  40% {
+    transform: scale(1.18);
+  }
+
+  70% {
+    transform: scale(0.95);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .cart-bump {
@@ -209,9 +228,21 @@ a { color: inherit; text-decoration: none; }
   font-size: 2.4rem;
 }
 
-.hero-cluster .puff:nth-child(1) { background: var(--raspberry); grid-row: span 2; align-self: stretch; font-size: 3.2rem; }
-.hero-cluster .puff:nth-child(2) { background: var(--butter); }
-.hero-cluster .puff:nth-child(3) { background: var(--surface); border: 1px solid var(--line); }
+.hero-cluster .puff:nth-child(1) {
+  background: var(--raspberry);
+  grid-row: span 2;
+  align-self: stretch;
+  font-size: 3.2rem;
+}
+
+.hero-cluster .puff:nth-child(2) {
+  background: var(--butter);
+}
+
+.hero-cluster .puff:nth-child(3) {
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
 
 /* Filtro de sabores */
 .filter-row {
@@ -257,13 +288,25 @@ a { color: inherit; text-decoration: none; }
 }
 
 .product-photo {
-  height: 120px;
+  height: 140px;
+  /* altura da foto */
   border-radius: 14px;
   background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 3rem;
+  overflow: hidden;
+  /* Corta a imagem nas bordas arredondadas */
+}
+
+/* Regra nova para a foto: */
+.product-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Preenche o card sem esticar ou achatar a foto */
+  display: block;
 }
 
 .product-tag {
@@ -276,7 +319,9 @@ a { color: inherit; text-decoration: none; }
   border-radius: 999px;
 }
 
-.product-card h3 { font-size: 1.15rem; }
+.product-card h3 {
+  font-size: 1.15rem;
+}
 
 .product-card p {
   color: var(--ink-soft);
@@ -314,7 +359,9 @@ a { color: inherit; text-decoration: none; }
   color: white;
 }
 
-.btn-primary:hover { background: var(--raspberry-dark); }
+.btn-primary:hover {
+  background: var(--raspberry-dark);
+}
 
 .btn-outline {
   background: transparent;
@@ -322,7 +369,9 @@ a { color: inherit; text-decoration: none; }
   color: var(--ink);
 }
 
-.btn-block { width: 100%; }
+.btn-block {
+  width: 100%;
+}
 
 .btn:disabled {
   background: var(--line);
@@ -335,7 +384,10 @@ a { color: inherit; text-decoration: none; }
   padding: 40px 0 8px;
 }
 
-.page-title p { color: var(--ink-soft); margin-top: 6px; }
+.page-title p {
+  color: var(--ink-soft);
+  margin-top: 6px;
+}
 
 .cart-list {
   display: flex;
@@ -354,11 +406,17 @@ a { color: inherit; text-decoration: none; }
   gap: 16px;
 }
 
-.cart-item .emoji { font-size: 1.8rem; }
+.cart-item .emoji {
+  font-size: 1.8rem;
+}
 
-.cart-item .info { flex-grow: 1; }
+.cart-item .info {
+  flex-grow: 1;
+}
 
-.cart-item .info h3 { font-size: 1rem; }
+.cart-item .info h3 {
+  font-size: 1rem;
+}
 
 .qty-control {
   display: flex;
@@ -434,7 +492,9 @@ a { color: inherit; text-decoration: none; }
   padding: 28px;
 }
 
-.field { margin-bottom: 18px; }
+.field {
+  margin-bottom: 18px;
+}
 
 .field label {
   display: block;
@@ -443,7 +503,8 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 6px;
 }
 
-.field input, .field textarea {
+.field input,
+.field textarea {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -485,9 +546,15 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 16px;
 }
 
-.confirmation h2 { font-size: 1.8rem; margin-bottom: 8px; }
+.confirmation h2 {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
 
-.confirmation p { color: var(--ink-soft); margin-bottom: 28px; }
+.confirmation p {
+  color: var(--ink-soft);
+  margin-bottom: 28px;
+}
 
 .error-banner {
   background: #FCEEF0;
@@ -500,7 +567,9 @@ a { color: inherit; text-decoration: none; }
   display: none;
 }
 
-.error-banner.show { display: block; }
+.error-banner.show {
+  display: block;
+}
 
 footer {
   border-top: 1px solid var(--line);
@@ -510,14 +579,28 @@ footer {
 }
 
 @media (max-width: 760px) {
-  .hero { grid-template-columns: 1fr; }
-  .product-grid { grid-template-columns: 1fr 1fr; }
-  .checkout-grid { grid-template-columns: 1fr; }
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .checkout-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 520px) {
-  .product-grid { grid-template-columns: 1fr; }
-  .nav { gap: 14px; }
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nav {
+    gap: 14px;
+  }
+
   .floating-cart {
     bottom: 18px;
     right: 18px;
