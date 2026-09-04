@@ -198,6 +198,79 @@ function formatBRL(value) {
    Gerenciamento do Carrinho Lateral (Slide-over Drawer)
    ======================================================== */
 
+function getDeliveryEstimateByCep(cleanCep) {
+  const num = parseInt(cleanCep.substring(0, 5), 10);
+
+  // Recife e Região Metropolitana de Recife (50000 a 54999)
+  if (num >= 50000 && num <= 54999) {
+    return {
+      title: 'Entrega Expressa no Mesmo Dia',
+      desc: 'Previsão: Hoje em até 3 horas',
+      badge: 'Sede Recife & RMR 🚀',
+      icon: '🚀',
+      text: 'Hoje (em até 3 horas)'
+    };
+  }
+  // Demais cidades de Pernambuco (55000 a 56999)
+  if (num >= 55000 && num <= 56999) {
+    return {
+      title: 'Entrega Regional Rápida',
+      desc: 'Previsão: 1 a 2 dias úteis',
+      badge: 'Interior de Pernambuco 📦',
+      icon: '📦',
+      text: '1 a 2 dias úteis'
+    };
+  }
+  // Demais estados do Nordeste (40000 a 49999 e 57000 a 65999)
+  if ((num >= 40000 && num <= 49999) || (num >= 57000 && num <= 65999)) {
+    return {
+      title: 'Envio Expresso Nordeste',
+      desc: 'Previsão: 1 a 2 dias úteis',
+      badge: 'Região Nordeste 📦',
+      icon: '📦',
+      text: '1 a 2 dias úteis'
+    };
+  }
+  // Sudeste (01000 a 39999)
+  if (num >= 1000 && num <= 39999) {
+    return {
+      title: 'Envio Especial Aéreo',
+      desc: 'Previsão: 2 a 4 dias úteis',
+      badge: 'Região Sudeste 🚚',
+      icon: '🚚',
+      text: '2 a 4 dias úteis'
+    };
+  }
+  // Centro-Oeste / DF (70000 a 78999) e Sul (80000 a 99999)
+  if ((num >= 70000 && num <= 78999) || (num >= 80000 && num <= 99999)) {
+    return {
+      title: 'Envio Seguro Climatizado',
+      desc: 'Previsão: 3 a 5 dias úteis',
+      badge: 'Centro-Oeste e Sul 🚚',
+      icon: '🚚',
+      text: '3 a 5 dias úteis'
+    };
+  }
+  // Norte (66000 a 69999)
+  if (num >= 66000 && num <= 69999) {
+    return {
+      title: 'Envio Prioritário',
+      desc: 'Previsão: 4 a 6 dias úteis',
+      badge: 'Região Norte ✈️',
+      icon: '✈️',
+      text: '4 a 6 dias úteis'
+    };
+  }
+
+  return {
+    title: 'Entrega Padrão Nuvem',
+    desc: 'Previsão: 2 a 4 dias úteis',
+    badge: 'Nacional 🚚',
+    icon: '🚚',
+    text: '2 a 4 dias úteis'
+  };
+}
+
 function renderDrawerPhoto(photoOrEmoji, name) {
   if (photoOrEmoji && (photoOrEmoji.includes('.') || photoOrEmoji.startsWith('http'))) {
     return `<img src="${photoOrEmoji}" alt="${name}" loading="lazy">`;
@@ -287,6 +360,19 @@ function renderCartDrawer() {
   const grandTotal = subtotal + shipping;
   const diffForFree = 49.90 - subtotal;
 
+  const savedCep = localStorage.getItem('cupcake_user_cep') || '';
+  const savedCity = localStorage.getItem('cupcake_user_city') || '';
+  let savedEstimateHtml = '';
+  if (savedCep && savedCep.length === 8) {
+    const est = getDeliveryEstimateByCep(savedCep);
+    savedEstimateHtml = `
+      <div class="drawer-cep-estimate-badge">
+        <span>${est.icon} ${est.desc}${savedCity ? ` (${savedCity})` : ''}</span>
+      </div>
+    `;
+  }
+  const savedCepFormatted = savedCep.length > 5 ? savedCep.replace(/^(\d{5})(\d)/, '$1-$2') : savedCep;
+
   const shippingHtml = shipping === 0
     ? `<span style="color: #2E7D32; font-weight: 700;">Grátis</span>`
     : `<span>${formatBRL(shipping)}</span>`;
@@ -297,6 +383,18 @@ function renderCartDrawer() {
 
   footerEl.innerHTML = `
     ${freeShippingBadge}
+
+    <div class="drawer-cep-section">
+      <div class="drawer-cep-header">
+        <span>🚚 Calcular entrega e prazo</span>
+      </div>
+      <div class="drawer-cep-input-group">
+        <input type="text" id="drawerCepInput" placeholder="Ex: 50010-000" maxlength="9" value="${savedCepFormatted}" autocomplete="postal-code">
+        <button type="button" id="drawerCepBtn" class="btn-drawer-cep">Calcular</button>
+      </div>
+      <div id="drawerCepFeedback" class="drawer-cep-feedback">${savedEstimateHtml}</div>
+    </div>
+
     <div class="drawer-summary-row">
       <span>Subtotal</span>
       <span>${formatBRL(subtotal)}</span>
@@ -314,6 +412,81 @@ function renderCartDrawer() {
       <span>→</span>
     </a>
   `;
+
+  // Configuração do cálculo de CEP no Drawer
+  const drawerCepInput = footerEl.querySelector('#drawerCepInput');
+  const drawerCepBtn = footerEl.querySelector('#drawerCepBtn');
+  const drawerCepFeedback = footerEl.querySelector('#drawerCepFeedback');
+
+  if (drawerCepInput && drawerCepBtn) {
+    const handleDrawerCepLookup = async () => {
+      const rawCep = drawerCepInput.value.replace(/\D/g, '');
+      if (rawCep.length !== 8) {
+        drawerCepFeedback.textContent = 'Digite um CEP válido com 8 números.';
+        drawerCepFeedback.className = 'drawer-cep-feedback error';
+        return;
+      }
+      drawerCepFeedback.textContent = 'Calculando prazo...';
+      drawerCepFeedback.className = 'drawer-cep-feedback';
+      drawerCepBtn.disabled = true;
+
+      try {
+        const res = await fetch(`https://viacep.com.br/ws/${rawCep}/json/`);
+        const data = await res.json();
+        if (data.erro) {
+          drawerCepFeedback.textContent = 'CEP não encontrado.';
+          drawerCepFeedback.className = 'drawer-cep-feedback error';
+          return;
+        }
+
+        const est = getDeliveryEstimateByCep(rawCep);
+        localStorage.setItem('cupcake_user_cep', rawCep);
+        localStorage.setItem('cupcake_user_city', `${data.localidade}/${data.uf}`);
+        if (data.logradouro) {
+          const parts = [data.logradouro];
+          if (data.bairro) parts.push(data.bairro);
+          parts.push(`${data.localidade} - ${data.uf}`);
+          localStorage.setItem('cupcake_user_address', parts.join(', '));
+        }
+
+        drawerCepFeedback.innerHTML = `
+          <div class="drawer-cep-estimate-badge">
+            <span>${est.icon} ${est.desc} (${data.localidade}/${data.uf})</span>
+          </div>
+        `;
+        drawerCepFeedback.className = 'drawer-cep-feedback success';
+      } catch (err) {
+        const est = getDeliveryEstimateByCep(rawCep);
+        localStorage.setItem('cupcake_user_cep', rawCep);
+        drawerCepFeedback.innerHTML = `
+          <div class="drawer-cep-estimate-badge">
+            <span>${est.icon} ${est.desc}</span>
+          </div>
+        `;
+        drawerCepFeedback.className = 'drawer-cep-feedback success';
+      } finally {
+        drawerCepBtn.disabled = false;
+      }
+    };
+
+    drawerCepInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '').substring(0, 8);
+      if (val.length > 5) val = val.replace(/^(\d{5})(\d)/, '$1-$2');
+      e.target.value = val;
+      if (val.replace(/\D/g, '').length === 8) {
+        handleDrawerCepLookup();
+      }
+    });
+
+    drawerCepInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleDrawerCepLookup();
+      }
+    });
+
+    drawerCepBtn.addEventListener('click', handleDrawerCepLookup);
+  }
 
   // Vincula clique para fechar a gaveta caso o usuário já esteja na página daquele cupcake
   listEl.querySelectorAll('.drawer-item-thumb-link, .drawer-item-title-link').forEach((link) => {

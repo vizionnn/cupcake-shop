@@ -154,79 +154,6 @@ function renderCheckoutSummary() {
   }
 }
 
-function getDeliveryEstimateByCep(cleanCep) {
-  const num = parseInt(cleanCep.substring(0, 5), 10);
-
-  // Recife e Região Metropolitana de Recife (50000 a 54999)
-  if (num >= 50000 && num <= 54999) {
-    return {
-      title: 'Entrega Expressa no Mesmo Dia',
-      desc: 'Previsão de entrega: Hoje em até 3 horas',
-      badge: 'Sede Recife & RMR 🚀',
-      icon: '🚀',
-      text: 'Hoje (em até 3 horas)'
-    };
-  }
-  // Demais cidades de Pernambuco (55000 a 56999)
-  if (num >= 55000 && num <= 56999) {
-    return {
-      title: 'Entrega Regional Rápida',
-      desc: 'Previsão de entrega: 1 a 2 dias úteis',
-      badge: 'Interior de Pernambuco 📦',
-      icon: '📦',
-      text: '1 a 2 dias úteis'
-    };
-  }
-  // Demais estados do Nordeste (40000 a 49999 e 57000 a 65999)
-  if ((num >= 40000 && num <= 49999) || (num >= 57000 && num <= 65999)) {
-    return {
-      title: 'Envio Expresso Nordeste',
-      desc: 'Previsão de entrega: 1 a 2 dias úteis',
-      badge: 'Região Nordeste 📦',
-      icon: '📦',
-      text: '1 a 2 dias úteis'
-    };
-  }
-  // Sudeste (01000 a 39999)
-  if (num >= 1000 && num <= 39999) {
-    return {
-      title: 'Envio Especial Aéreo',
-      desc: 'Previsão de entrega: 2 a 4 dias úteis',
-      badge: 'Região Sudeste 🚚',
-      icon: '🚚',
-      text: '2 a 4 dias úteis'
-    };
-  }
-  // Centro-Oeste / DF (70000 a 78999) e Sul (80000 a 99999)
-  if ((num >= 70000 && num <= 78999) || (num >= 80000 && num <= 99999)) {
-    return {
-      title: 'Envio Seguro Climatizado',
-      desc: 'Previsão de entrega: 3 a 5 dias úteis',
-      badge: 'Centro-Oeste e Sul 🚚',
-      icon: '🚚',
-      text: '3 a 5 dias úteis'
-    };
-  }
-  // Norte (66000 a 69999)
-  if (num >= 66000 && num <= 69999) {
-    return {
-      title: 'Envio Prioritário',
-      desc: 'Previsão de entrega: 4 a 6 dias úteis',
-      badge: 'Região Norte ✈️',
-      icon: '✈️',
-      text: '4 a 6 dias úteis'
-    };
-  }
-
-  return {
-    title: 'Entrega Padrão Nuvem',
-    desc: 'Previsão de entrega: 2 a 4 dias úteis',
-    badge: 'Nacional 🚚',
-    icon: '🚚',
-    text: '2 a 4 dias úteis'
-  };
-}
-
 function setupCepLookup() {
   const cepInput = document.getElementById('cep');
   const searchBtn = document.getElementById('btnSearchCep');
@@ -333,6 +260,13 @@ function setupCepLookup() {
     } finally {
       searchBtn.disabled = false;
     }
+  }
+
+  // Auto-preenche se o cliente já calculou o CEP no carrinho
+  const savedCep = localStorage.getItem('cupcake_user_cep');
+  if (savedCep && savedCep.length === 8 && !cepInput.value) {
+    cepInput.value = applyMask(savedCep);
+    performLookup(savedCep);
   }
 }
 

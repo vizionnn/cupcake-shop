@@ -2472,3 +2472,95 @@ body.drawer-open {
   display: inline-block;
   margin-top: 4px;
 }
+
+/* ========================================================
+   Carrinho / Drawer: Calculadora de CEP e Prazo
+   ======================================================== */
+.drawer-cep-section {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+
+.drawer-cep-header {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.drawer-cep-input-group {
+  display: flex;
+  gap: 6px;
+}
+
+.drawer-cep-input-group input {
+  flex: 1;
+  padding: 7px 10px;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #FFF;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.drawer-cep-input-group input:focus {
+  border-color: var(--raspberry);
+}
+
+.btn-drawer-cep {
+  background: var(--raspberry);
+  color: #FFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.btn-drawer-cep:hover {
+  background: var(--raspberry-dark);
+}
+
+.btn-drawer-cep:active {
+  transform: scale(0.97);
+}
+
+.drawer-cep-feedback {
+  font-size: 0.8rem;
+  margin-top: 6px;
+  line-height: 1.35;
+}
+
+.drawer-cep-feedback.success {
+  color: #2E7D32;
+  font-weight: 600;
+}
+
+.drawer-cep-feedback.error {
+  color: #D32F2F;
+}
+
+.drawer-cep-estimate-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #E8F5E9;
+  border: 1px solid #C8E6C9;
+  color: #1B5E20;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 8px;
+  margin-top: 4px;
+}

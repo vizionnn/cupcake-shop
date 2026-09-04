@@ -53,15 +53,114 @@ function renderCartPage() {
     ? `<div class="drawer-shipping-notice reached" style="margin-bottom: 12px;">🎉 Parabéns! Você ganhou <strong>Frete Grátis</strong>!</div>`
     : `<div class="drawer-shipping-notice" style="margin-bottom: 12px;">Adicione mais <strong>${formatBRL(diffForFree)}</strong> para ter <strong>Frete Grátis</strong>!</div>`;
 
+  const savedCep = localStorage.getItem('cupcake_user_cep') || '';
+  const savedCity = localStorage.getItem('cupcake_user_city') || '';
+  let savedEstimateHtml = '';
+  if (savedCep && savedCep.length === 8 && typeof getDeliveryEstimateByCep === 'function') {
+    const est = getDeliveryEstimateByCep(savedCep);
+    savedEstimateHtml = `
+      <div class="drawer-cep-estimate-badge">
+        <span>${est.icon} ${est.desc}${savedCity ? ` (${savedCity})` : ''}</span>
+      </div>
+    `;
+  }
+  const savedCepFormatted = savedCep.length > 5 ? savedCep.replace(/^(\d{5})(\d)/, '$1-$2') : savedCep;
+
   summaryEl.innerHTML = `
     <div class="summary-box">
       ${freeShippingBadge}
+
+      <div class="drawer-cep-section">
+        <div class="drawer-cep-header">
+          <span>🚚 Calcular entrega e prazo</span>
+        </div>
+        <div class="drawer-cep-input-group">
+          <input type="text" id="pageCepInput" placeholder="Ex: 50010-000" maxlength="9" value="${savedCepFormatted}" autocomplete="postal-code">
+          <button type="button" id="pageCepBtn" class="btn-drawer-cep">Calcular</button>
+        </div>
+        <div id="pageCepFeedback" class="drawer-cep-feedback">${savedEstimateHtml}</div>
+      </div>
+
       <div class="summary-row"><span>Subtotal</span><span>${formatBRL(subtotal)}</span></div>
       <div class="summary-row"><span>Entrega ${shipping === 0 ? '' : '<small style="color:var(--ink-soft);font-size:0.75rem;">(acima de R$ 49,90 é grátis)</small>'}</span>${shippingHtml}</div>
       <div class="summary-row total"><span>Total</span><span>${formatBRL(grandTotal)}</span></div>
       <a href="checkout.html"><button class="btn btn-primary btn-block" style="margin-top:16px;">Finalizar pedido</button></a>
     </div>
   `;
+
+  const pageCepInput = summaryEl.querySelector('#pageCepInput');
+  const pageCepBtn = summaryEl.querySelector('#pageCepBtn');
+  const pageCepFeedback = summaryEl.querySelector('#pageCepFeedback');
+
+  if (pageCepInput && pageCepBtn) {
+    const handlePageCepLookup = async () => {
+      const rawCep = pageCepInput.value.replace(/\D/g, '');
+      if (rawCep.length !== 8) {
+        pageCepFeedback.textContent = 'Digite um CEP válido com 8 números.';
+        pageCepFeedback.className = 'drawer-cep-feedback error';
+        return;
+      }
+      pageCepFeedback.textContent = 'Calculando prazo...';
+      pageCepFeedback.className = 'drawer-cep-feedback';
+      pageCepBtn.disabled = true;
+
+      try {
+        const res = await fetch(`https://viacep.com.br/ws/${rawCep}/json/`);
+        const data = await res.json();
+        if (data.erro) {
+          pageCepFeedback.textContent = 'CEP não encontrado.';
+          pageCepFeedback.className = 'drawer-cep-feedback error';
+          return;
+        }
+
+        const est = typeof getDeliveryEstimateByCep === 'function' ? getDeliveryEstimateByCep(rawCep) : { icon: '🚚', desc: 'Previsão calculada' };
+        localStorage.setItem('cupcake_user_cep', rawCep);
+        localStorage.setItem('cupcake_user_city', `${data.localidade}/${data.uf}`);
+        if (data.logradouro) {
+          const parts = [data.logradouro];
+          if (data.bairro) parts.push(data.bairro);
+          parts.push(`${data.localidade} - ${data.uf}`);
+          localStorage.setItem('cupcake_user_address', parts.join(', '));
+        }
+
+        pageCepFeedback.innerHTML = `
+          <div class="drawer-cep-estimate-badge">
+            <span>${est.icon} ${est.desc} (${data.localidade}/${data.uf})</span>
+          </div>
+        `;
+        pageCepFeedback.className = 'drawer-cep-feedback success';
+      } catch (err) {
+        const est = typeof getDeliveryEstimateByCep === 'function' ? getDeliveryEstimateByCep(rawCep) : { icon: '🚚', desc: 'Previsão calculada' };
+        localStorage.setItem('cupcake_user_cep', rawCep);
+        pageCepFeedback.innerHTML = `
+          <div class="drawer-cep-estimate-badge">
+            <span>${est.icon} ${est.desc}</span>
+          </div>
+        `;
+        pageCepFeedback.className = 'drawer-cep-feedback success';
+      } finally {
+        pageCepBtn.disabled = false;
+      }
+    };
+
+    pageCepInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '').substring(0, 8);
+      if (val.length > 5) val = val.replace(/^(\d{5})(\d)/, '$1-$2');
+      e.target.value = val;
+      if (val.replace(/\D/g, '').length === 8) {
+        handlePageCepLookup();
+      }
+    });
+
+    pageCepInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handlePageCepLookup();
+      }
+    });
+
+    pageCepBtn.addEventListener('click', handlePageCepLookup);
+  }
 
   listEl.querySelectorAll('[data-inc]').forEach((b) =>
     b.addEventListener('click', () => { updateQuantity(Number(b.dataset.inc), 1); renderCartPage(); })
