@@ -18,8 +18,28 @@
           🛒 Carrinho <span class="cart-badge" data-cart-badge>0</span>
         </a>
       </nav>
-    </div>
   </header>
+
+  <div class="announcement-bar">
+    <div class="container announcement-inner">
+      <div class="announcement-item">
+        <span class="announcement-badge">PROMO</span>
+        <span>Cupom 10% OFF:</span>
+        <button type="button" class="coupon-chip" onclick="copyCouponCode('NUVEM10', this)" title="Clique para copiar">
+          <code>NUVEM10</code>
+          <span class="chip-copy-icon">📋</span>
+        </button>
+      </div>
+      <div class="announcement-sep">•</div>
+      <div class="announcement-item">
+        <span>🚚 <strong>Frete Grátis</strong> para pedidos acima de R$ 49,90</span>
+      </div>
+      <div class="announcement-sep hidden-mobile">•</div>
+      <div class="announcement-item hidden-mobile">
+        <span>🧁 Fornadas artesanais frescas do dia</span>
+      </div>
+    </div>
+  </div>
 
   <main class="container">
     <section class="hero">

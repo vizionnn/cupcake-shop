@@ -31,11 +31,20 @@ db.exec(`
     customer_email TEXT NOT NULL,
     delivery_address TEXT NOT NULL,
     payment_method TEXT NOT NULL,
+    subtotal REAL NOT NULL DEFAULT 0,
+    discount REAL NOT NULL DEFAULT 0,
+    shipping_fee REAL NOT NULL DEFAULT 0,
+    coupon_code TEXT,
     total REAL NOT NULL,
     status TEXT NOT NULL DEFAULT 'confirmado',
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   )
 `);
+
+try { db.exec('ALTER TABLE orders ADD COLUMN subtotal REAL DEFAULT 0'); } catch (e) {}
+try { db.exec('ALTER TABLE orders ADD COLUMN discount REAL DEFAULT 0'); } catch (e) {}
+try { db.exec('ALTER TABLE orders ADD COLUMN shipping_fee REAL DEFAULT 0'); } catch (e) {}
+try { db.exec('ALTER TABLE orders ADD COLUMN coupon_code TEXT'); } catch (e) {}
 
 // Itens de cada pedido
 db.exec(`

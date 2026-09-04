@@ -40,12 +40,25 @@ function renderCartPage() {
     )
     .join('');
 
-  const total = cartTotal();
+  const subtotal = cartTotal();
+  const shipping = subtotal >= 49.90 ? 0 : 9.90;
+  const grandTotal = subtotal + shipping;
+  const diffForFree = 49.90 - subtotal;
+
+  const shippingHtml = shipping === 0
+    ? `<span style="color: #2E7D32; font-weight: 700;">Grátis</span>`
+    : `<span>${formatBRL(shipping)}</span>`;
+
+  const freeShippingBadge = shipping === 0
+    ? `<div class="drawer-shipping-notice reached" style="margin-bottom: 12px;">🎉 Parabéns! Você ganhou <strong>Frete Grátis</strong>!</div>`
+    : `<div class="drawer-shipping-notice" style="margin-bottom: 12px;">Adicione mais <strong>${formatBRL(diffForFree)}</strong> para ter <strong>Frete Grátis</strong>!</div>`;
+
   summaryEl.innerHTML = `
     <div class="summary-box">
-      <div class="summary-row"><span>Subtotal</span><span>${formatBRL(total)}</span></div>
-      <div class="summary-row"><span>Entrega</span><span>Grátis</span></div>
-      <div class="summary-row total"><span>Total</span><span>${formatBRL(total)}</span></div>
+      ${freeShippingBadge}
+      <div class="summary-row"><span>Subtotal</span><span>${formatBRL(subtotal)}</span></div>
+      <div class="summary-row"><span>Entrega ${shipping === 0 ? '' : '<small style="color:var(--ink-soft);font-size:0.75rem;">(acima de R$ 49,90 é grátis)</small>'}</span>${shippingHtml}</div>
+      <div class="summary-row total"><span>Total</span><span>${formatBRL(grandTotal)}</span></div>
       <a href="checkout.html"><button class="btn btn-primary btn-block" style="margin-top:16px;">Finalizar pedido</button></a>
     </div>
   `;

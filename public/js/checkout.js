@@ -1,4 +1,16 @@
 let selectedPayment = 'Pix';
+let appliedCoupon = null;
+
+function renderPhoto(photoOrEmoji, name) {
+  if (photoOrEmoji && (photoOrEmoji.includes('.') || photoOrEmoji.startsWith('http'))) {
+    return `<img src="${photoOrEmoji}" alt="${name}" loading="lazy">`;
+  }
+  return photoOrEmoji || '🧁';
+}
+
+function formatBRL(value) {
+  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
 
 function renderCheckoutSummary() {
   const cart = getCart();
@@ -10,16 +22,135 @@ function renderCheckoutSummary() {
     return;
   }
 
-  const rows = cart
-    .map((i) => `<div class="summary-row"><span>${i.quantity}x ${i.name}</span><span>${formatBRL(i.price * i.quantity)}</span></div>`)
+  const itemsHtml = cart
+    .map(
+      (i) => `
+      <div class="checkout-item">
+        <a href="produto.html?id=${i.product_id}" class="checkout-item-thumb-link" aria-label="Ver detalhes de ${i.name}">
+          <div class="checkout-item-thumb">
+            ${renderPhoto(i.emoji, i.name)}
+          </div>
+        </a>
+        <div class="checkout-item-info">
+          <a href="produto.html?id=${i.product_id}" class="checkout-item-title-link">
+            <h4>${i.name}</h4>
+          </a>
+          <span class="checkout-item-meta">${i.quantity}x ${formatBRL(i.price)}</span>
+        </div>
+        <div class="checkout-item-total">
+          ${formatBRL(i.price * i.quantity)}
+        </div>
+      </div>
+    `
+    )
     .join('');
+
+  const subtotal = cartTotal();
+  const shipping = subtotal >= 49.90 ? 0 : 9.90;
+  const discount = appliedCoupon === 'NUVEM10' ? Number((subtotal * 0.10).toFixed(2)) : 0;
+  const grandTotal = Number((subtotal - discount + shipping).toFixed(2));
+  const diffForFree = 49.90 - subtotal;
+
+  const freeShippingNotice = shipping === 0
+    ? `<div class="drawer-shipping-notice reached" style="margin-bottom: 14px;">🎉 Parabéns! Você ganhou <strong>Frete Grátis</strong>!</div>`
+    : `<div class="drawer-shipping-notice" style="margin-bottom: 14px;">Adicione mais <strong>${formatBRL(diffForFree)}</strong> para ter <strong>Frete Grátis</strong>!</div>`;
+
+  const couponHtml = appliedCoupon
+    ? `
+      <div class="coupon-section">
+        <div class="coupon-applied-badge">
+          <span>🎟️ Cupom <strong>${appliedCoupon}</strong> (-10%) aplicado!</span>
+          <button type="button" id="removeCouponBtn" class="btn-remove-coupon" title="Remover cupom">✕</button>
+        </div>
+      </div>
+    `
+    : `
+      <div class="coupon-section">
+        <div class="coupon-input-group">
+          <input type="text" id="couponInput" placeholder="Código do cupom (ex: NUVEM10)" autocomplete="off">
+          <button type="button" id="applyCouponBtn" class="btn btn-secondary btn-sm">Aplicar</button>
+        </div>
+        <div id="couponFeedback" class="coupon-feedback"></div>
+      </div>
+    `;
+
+  const discountRow = discount > 0
+    ? `
+      <div class="summary-row discount">
+        <span>Desconto (${appliedCoupon} - 10%)</span>
+        <span style="color: #2E7D32; font-weight: 700;">-${formatBRL(discount)}</span>
+      </div>
+    `
+    : '';
+
+  const shippingHtml = shipping === 0
+    ? `<span style="color: #2E7D32; font-weight: 700;">Grátis</span>`
+    : `<span>${formatBRL(shipping)}</span>`;
 
   el.innerHTML = `
     <div class="summary-box">
-      ${rows}
-      <div class="summary-row total"><span>Total</span><span>${formatBRL(cartTotal())}</span></div>
+      <h3 class="checkout-summary-title">Resumo do Pedido</h3>
+      <div class="checkout-items-list">
+        ${itemsHtml}
+      </div>
+
+      ${freeShippingNotice}
+      ${couponHtml}
+
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span>${formatBRL(subtotal)}</span>
+      </div>
+      ${discountRow}
+      <div class="summary-row">
+        <span>Entrega ${shipping === 0 ? '' : '<small style="color:var(--ink-soft);font-size:0.75rem;">(acima de R$ 49,90 é grátis)</small>'}</span>
+        ${shippingHtml}
+      </div>
+      <div class="summary-row total">
+        <span>Total</span>
+        <span>${formatBRL(grandTotal)}</span>
+      </div>
     </div>
   `;
+
+  // Eventos de Cupom
+  const applyBtn = document.getElementById('applyCouponBtn');
+  const couponInput = document.getElementById('couponInput');
+  const removeBtn = document.getElementById('removeCouponBtn');
+
+  if (applyBtn && couponInput) {
+    const handleApply = () => {
+      const code = couponInput.value.trim().toUpperCase();
+      const feedback = document.getElementById('couponFeedback');
+      if (!code) {
+        feedback.textContent = 'Digite o código do cupom.';
+        feedback.className = 'coupon-feedback error';
+        return;
+      }
+      if (code === 'NUVEM10') {
+        appliedCoupon = 'NUVEM10';
+        renderCheckoutSummary();
+      } else {
+        feedback.textContent = 'Cupom inválido ou expirado.';
+        feedback.className = 'coupon-feedback error';
+      }
+    };
+
+    applyBtn.addEventListener('click', handleApply);
+    couponInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleApply();
+      }
+    });
+  }
+
+  if (removeBtn) {
+    removeBtn.addEventListener('click', () => {
+      appliedCoupon = null;
+      renderCheckoutSummary();
+    });
+  }
 }
 
 function setupPaymentOptions() {
@@ -43,6 +174,7 @@ async function submitOrder(e) {
     customer_email: document.getElementById('email').value.trim(),
     delivery_address: document.getElementById('address').value.trim(),
     payment_method: selectedPayment,
+    coupon_code: appliedCoupon,
     items: cart.map((i) => ({ product_id: i.product_id, quantity: i.quantity }))
   };
 

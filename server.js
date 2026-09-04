@@ -25,7 +25,7 @@ app.get('/api/products/:id', (req, res) => {
 
 // POST /api/orders - cria um pedido (fluxo de pedidos + pagamento)
 app.post('/api/orders', (req, res) => {
-  const { customer_name, customer_email, delivery_address, payment_method, items } = req.body;
+  const { customer_name, customer_email, delivery_address, payment_method, items, coupon_code } = req.body;
 
   if (!customer_name || !customer_email || !delivery_address || !payment_method) {
     return res.status(400).json({ error: 'Dados do cliente incompletos.' });
@@ -44,13 +44,13 @@ app.post('/api/orders', (req, res) => {
     return res.status(400).json({ error: 'Um ou mais produtos do carrinho não existem mais.' });
   }
 
-  let total = 0;
+  let subtotal = 0;
   const resolvedItems = items.map((item) => {
     const product = dbProducts.find((p) => p.id === item.product_id);
     if (item.quantity > product.stock) {
       throw new Error(`Estoque insuficiente para ${product.name}`);
     }
-    total += product.price * item.quantity;
+    subtotal += product.price * item.quantity;
     return {
       product_id: product.id,
       product_name: product.name,
@@ -59,16 +59,33 @@ app.post('/api/orders', (req, res) => {
     };
   });
 
+  // Regra de Frete Dinâmico: Grátis para subtotal >= 49.90, senão R$ 9.90
+  const shipping_fee = subtotal >= 49.90 ? 0 : 9.90;
+
+  // Cupom de Desconto NUVEM10 (10% OFF no subtotal)
+  let discount = 0;
+  let normalizedCoupon = null;
+  if (coupon_code && coupon_code.trim().toUpperCase() === 'NUVEM10') {
+    normalizedCoupon = 'NUVEM10';
+    discount = Number((subtotal * 0.10).toFixed(2));
+  }
+
+  const total = Number((subtotal - discount + shipping_fee).toFixed(2));
+
   const createOrder = db.transaction(() => {
     const insertOrder = db.prepare(`
-      INSERT INTO orders (customer_name, customer_email, delivery_address, payment_method, total)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO orders (customer_name, customer_email, delivery_address, payment_method, subtotal, discount, shipping_fee, coupon_code, total)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     const info = insertOrder.run(
       customer_name,
       customer_email,
       delivery_address,
       payment_method,
+      subtotal,
+      discount,
+      shipping_fee,
+      normalizedCoupon,
       total
     );
     const orderId = info.lastInsertRowid;
@@ -89,7 +106,7 @@ app.post('/api/orders', (req, res) => {
 
   try {
     const orderId = createOrder();
-    res.status(201).json({ order_id: orderId, total });
+    res.status(201).json({ order_id: orderId, subtotal, discount, shipping_fee, total });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -100,7 +117,12 @@ app.get('/api/orders/:id', (req, res) => {
   const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
   if (!order) return res.status(404).json({ error: 'Pedido não encontrado' });
 
-  const items = db.prepare('SELECT * FROM order_items WHERE order_id = ?').all(req.params.id);
+  const items = db.prepare(`
+    SELECT oi.*, p.image_emoji 
+    FROM order_items oi 
+    LEFT JOIN products p ON oi.product_id = p.id 
+    WHERE oi.order_id = ?
+  `).all(req.params.id);
   res.json({ ...order, items });
 });
 

@@ -89,8 +89,10 @@ const insert = db.prepare(`
 `);
 
 const clearAndSeed = db.transaction((items) => {
+  db.exec('DELETE FROM order_items');
+  db.exec('DELETE FROM orders');
   db.exec('DELETE FROM products');
-  try { db.exec("DELETE FROM sqlite_sequence WHERE name = 'products'"); } catch (e) {}
+  try { db.exec("DELETE FROM sqlite_sequence WHERE name IN ('products', 'orders', 'order_items')"); } catch (e) {}
   for (const item of items) insert.run(item);
 });
 

@@ -211,18 +211,32 @@ function renderCartDrawer() {
     )
     .join('');
 
+  const subtotal = cartTotal();
+  const shipping = subtotal >= 49.90 ? 0 : 9.90;
+  const grandTotal = subtotal + shipping;
+  const diffForFree = 49.90 - subtotal;
+
+  const shippingHtml = shipping === 0
+    ? `<span style="color: #2E7D32; font-weight: 700;">Grátis</span>`
+    : `<span>${formatBRL(shipping)}</span>`;
+
+  const freeShippingBadge = shipping === 0
+    ? `<div class="drawer-shipping-notice reached">🎉 Parabéns! Você ganhou <strong>Frete Grátis</strong>!</div>`
+    : `<div class="drawer-shipping-notice">Adicione mais <strong>${formatBRL(diffForFree)}</strong> para ter <strong>Frete Grátis</strong>!</div>`;
+
   footerEl.innerHTML = `
+    ${freeShippingBadge}
     <div class="drawer-summary-row">
       <span>Subtotal</span>
-      <span>${formatBRL(total)}</span>
+      <span>${formatBRL(subtotal)}</span>
     </div>
     <div class="drawer-summary-row">
-      <span>Entrega</span>
-      <span style="color: #2E7D32; font-weight: 700;">Grátis</span>
+      <span>Entrega ${shipping === 0 ? '' : '<small style="color:var(--ink-soft);font-size:0.75rem;">(acima de R$ 49,90 é grátis)</small>'}</span>
+      ${shippingHtml}
     </div>
     <div class="drawer-summary-row total">
       <span>Total</span>
-      <span>${formatBRL(total)}</span>
+      <span>${formatBRL(grandTotal)}</span>
     </div>
     <a href="checkout.html" class="drawer-checkout-btn">
       <span>Finalizar Pedido</span>
@@ -287,6 +301,18 @@ function initCartDrawer() {
   });
 
   renderCartDrawer();
+}
+
+function copyCouponCode(code, btnEl) {
+  navigator.clipboard.writeText(code).then(() => {
+    const originalContent = btnEl.innerHTML;
+    btnEl.innerHTML = `<code>${code}</code> <span style="font-size:0.75rem; color:#2E7D32; font-weight:700;">Copiado! 🎉</span>`;
+    setTimeout(() => {
+      btnEl.innerHTML = originalContent;
+    }, 2500);
+  }).catch(() => {
+    prompt('Copie o código do cupom:', code);
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {

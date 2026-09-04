@@ -1368,3 +1368,369 @@ body.drawer-open {
     width: 240px;
   }
 }
+
+/* ========================================================
+   Faixa Promocional (Announcement Bar)
+   ======================================================== */
+
+.announcement-bar {
+  background: #FBF0E6;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  z-index: 900;
+}
+
+.announcement-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 8px 16px;
+  font-size: 0.83rem;
+  color: var(--ink);
+  flex-wrap: wrap;
+}
+
+.announcement-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.announcement-badge {
+  background: var(--raspberry);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
+}
+
+.coupon-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: white;
+  border: 1px dashed var(--raspberry);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--raspberry-dark);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.coupon-chip:hover {
+  background: #FCEEF0;
+  transform: scale(1.04);
+}
+
+.chip-copy-icon {
+  font-size: 0.78rem;
+}
+
+.announcement-sep {
+  color: #D4BBAA;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 680px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+
+  .announcement-inner {
+    gap: 8px;
+    font-size: 0.76rem;
+    padding: 6px 12px;
+  }
+}
+
+/* ========================================================
+   Avisos de Frete Dinâmico (Drawer, Carrinho e Checkout)
+   ======================================================== */
+
+.drawer-shipping-notice {
+  background: #FDF4EC;
+  border: 1px solid #EED8C6;
+  color: var(--ink);
+  padding: 9px 12px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  text-align: center;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.drawer-shipping-notice.reached {
+  background: #E8F5E9;
+  border-color: #C8E6C9;
+  color: #2E7D32;
+}
+
+/* ========================================================
+   Resumo do Pedido no Checkout (Itens com foto e link)
+   ======================================================== */
+
+.checkout-summary-title {
+  margin: 0 0 16px;
+  font-size: 1.15rem;
+  font-family: 'Fraunces', serif;
+  color: var(--ink);
+}
+
+.checkout-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.checkout-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.checkout-item-thumb-link {
+  display: block;
+  flex-shrink: 0;
+  text-decoration: none;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.15s ease;
+}
+
+.checkout-item-thumb-link:hover {
+  transform: scale(1.04);
+}
+
+.checkout-item-thumb {
+  width: 64px;
+  height: 64px;
+  min-width: 64px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+}
+
+.checkout-item-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.checkout-item-info {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.checkout-item-title-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.checkout-item-title-link:hover h4 {
+  color: var(--raspberry);
+}
+
+.checkout-item-info h4 {
+  margin: 0;
+  font-family: 'Karla', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.15s ease;
+}
+
+.checkout-item-meta {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  margin-top: 3px;
+}
+
+.checkout-item-total {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+/* ========================================================
+   Seção de Cupom de Desconto no Checkout
+   ======================================================== */
+
+.coupon-section {
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.coupon-input-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.coupon-input-group input {
+  flex-grow: 1;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 0.86rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: inherit;
+  background: var(--bg);
+}
+
+.coupon-input-group input:focus {
+  border-color: var(--raspberry);
+  outline: none;
+  background: white;
+}
+
+.coupon-input-group button {
+  padding: 9px 16px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  background: var(--ink);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+
+.coupon-input-group button:hover {
+  background: var(--raspberry);
+}
+
+.coupon-feedback {
+  font-size: 0.78rem;
+  margin-top: 5px;
+}
+
+.coupon-feedback.error {
+  color: var(--raspberry-dark);
+  font-weight: 600;
+}
+
+.coupon-applied-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #E8F5E9;
+  border: 1px solid #C8E6C9;
+  color: #2E7D32;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.btn-remove-coupon {
+  background: none;
+  border: none;
+  color: #C62828;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.summary-row.discount {
+  color: #2E7D32;
+  font-weight: 600;
+}
+
+/* ========================================================
+   Tela de Confirmação do Pedido (Itens com Foto, SEM link)
+   ======================================================== */
+
+.confirm-summary-box {
+  text-align: left;
+  max-width: 480px;
+  margin: 0 auto 28px;
+}
+
+.confirm-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.confirm-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.confirm-item-thumb {
+  width: 58px;
+  height: 58px;
+  min-width: 58px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.confirm-item-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.confirm-item-info {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.confirm-item-info h4 {
+  margin: 0;
+  font-family: 'Karla', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.confirm-item-meta {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  margin-top: 3px;
+  display: block;
+}
+
+.confirm-item-total {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
