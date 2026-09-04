@@ -20,9 +20,13 @@ function renderCartPage() {
     .map(
       (item) => `
       <div class="cart-item">
-        <div class="emoji">${renderPhoto(item.emoji, item.name)}</div>
+        <a href="produto.html?id=${item.product_id}" class="cart-item-photo-link" aria-label="Ver detalhes de ${item.name}">
+          <div class="emoji">${renderPhoto(item.emoji, item.name)}</div>
+        </a>
         <div class="info">
-          <h3>${item.name}</h3>
+          <a href="produto.html?id=${item.product_id}" class="cart-item-title-link">
+            <h3>${item.name}</h3>
+          </a>
           <span class="price">${formatBRL(item.price)}</span>
         </div>
         <div class="qty-control">

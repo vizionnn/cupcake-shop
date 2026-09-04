@@ -443,6 +443,31 @@ a {
 
 .cart-item .info h3 {
   font-size: 1rem;
+  transition: color 0.15s ease;
+}
+
+.cart-item-photo-link {
+  text-decoration: none;
+  display: block;
+  flex-shrink: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.cart-item-photo-link:hover {
+  transform: scale(1.04);
+  opacity: 0.92;
+}
+
+.cart-item-title-link {
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+}
+
+.cart-item-title-link:hover h3 {
+  color: var(--raspberry);
 }
 
 .qty-control {
@@ -798,6 +823,31 @@ body.drawer-open {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: color 0.15s ease;
+}
+
+.drawer-item-thumb-link {
+  text-decoration: none;
+  display: block;
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.drawer-item-thumb-link:hover {
+  transform: scale(1.05);
+  opacity: 0.92;
+}
+
+.drawer-item-title-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.drawer-item-title-link:hover h4 {
+  color: var(--raspberry);
 }
 
 .drawer-item-price {

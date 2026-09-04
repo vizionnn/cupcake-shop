@@ -189,11 +189,15 @@ function renderCartDrawer() {
     .map(
       (item) => `
       <div class="drawer-item">
-        <div class="drawer-item-thumb">
-          ${renderDrawerPhoto(item.emoji, item.name)}
-        </div>
+        <a href="produto.html?id=${item.product_id}" class="drawer-item-thumb-link" aria-label="Ver detalhes de ${item.name}">
+          <div class="drawer-item-thumb">
+            ${renderDrawerPhoto(item.emoji, item.name)}
+          </div>
+        </a>
         <div class="drawer-item-info">
-          <h4>${item.name}</h4>
+          <a href="produto.html?id=${item.product_id}" class="drawer-item-title-link">
+            <h4>${item.name}</h4>
+          </a>
           <div class="drawer-item-price">${formatBRL(item.price)}</div>
           <button class="drawer-item-remove" data-drawer-remove="${item.product_id}">remover</button>
         </div>
@@ -225,6 +229,20 @@ function renderCartDrawer() {
       <span>→</span>
     </a>
   `;
+
+  // Vincula clique para fechar a gaveta caso o usuário já esteja na página daquele cupcake
+  listEl.querySelectorAll('.drawer-item-thumb-link, .drawer-item-title-link').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      const url = new URL(link.href, window.location.origin);
+      const targetId = url.searchParams.get('id');
+      const currentParams = new URLSearchParams(window.location.search);
+      const currentId = currentParams.get('id');
+      if (window.location.pathname.includes('produto.html') && targetId === currentId) {
+        e.preventDefault();
+        closeCartDrawer();
+      }
+    });
+  });
 
   // Vincula eventos dos botões internos do Drawer
   listEl.querySelectorAll('[data-drawer-inc]').forEach((btn) => {
