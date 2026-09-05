@@ -1,10 +1,11 @@
 import React from "react";
 import { supabase } from "@/lib/supabase";
+import { getProductById, getRecommendedProducts } from "@/lib/products-data";
 import { Product } from "@/types";
 import { formatBRL } from "@/lib/utils";
-import { PhotoOrEmoji } from "@/components/PhotoOrEmoji";
+import { ProductImageGallery } from "@/components/ProductImageGallery";
+import { RecommendedCarousel } from "@/components/RecommendedCarousel";
 import { ProductDetailClient } from "@/components/ProductDetailClient";
-import { ProductCard } from "@/components/ProductCard";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
@@ -22,11 +23,15 @@ export async function generateMetadata({ params }: ProductPageProps) {
   const id = parseInt(rawId, 10);
   if (isNaN(id)) return { title: "Cupcake não encontrado" };
 
-  const { data: product } = await supabase
+  let product: { name: string; description: string } | undefined;
+
+  const { data } = await supabase
     .from("products")
     .select("name, description")
     .eq("id", id)
     .single();
+
+  product = data || getProductById(id);
 
   if (!product) return { title: "Cupcake não encontrado — Nuvem de Açúcar" };
 
@@ -41,11 +46,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const id = parseInt(rawId, 10);
   if (isNaN(id)) notFound();
 
-  const { data: product } = await supabase
+  let product: Product | null = null;
+
+  const { data: dbProduct } = await supabase
     .from("products")
     .select("*")
     .eq("id", id)
     .single();
+
+  product = (dbProduct as Product) || getProductById(id) || null;
 
   if (!product) {
     return (
@@ -68,14 +77,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
     );
   }
 
-  // Busca 4 cupcakes recomendados (excluindo o atual)
+  // Busca cupcakes recomendados (excluindo o atual) via Supabase ou fallback
+  let recommended: Product[] = [];
   const { data: recData } = await supabase
     .from("products")
     .select("*")
     .neq("id", product.id)
-    .limit(4);
+    .limit(6);
 
-  const recommended: Product[] = (recData as Product[]) || [];
+  if (recData && recData.length > 0) {
+    recommended = recData as Product[];
+  } else {
+    recommended = getRecommendedProducts(product.id, 6);
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-16">
@@ -94,19 +108,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
       {/* Grid Principal do Produto */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
-        {/* Foto em Destaque */}
+        {/* Carrossel de Fotos do Produto em Destaque */}
         <div className="md:col-span-6">
-          <div className="aspect-square w-full rounded-4xl bg-gradient-to-b from-[#FDF0E9] to-white border border-border flex items-center justify-center overflow-hidden shadow-lg shadow-primary/5 p-8 relative">
-            <PhotoOrEmoji
-              photoOrEmoji={product.image_emoji}
-              name={product.name}
-              className="w-full h-full object-contain drop-shadow-md"
-              emojiClassName="text-9xl"
-            />
-            <span className="absolute bottom-4 left-4 text-xs text-muted-foreground bg-white/80 backdrop-blur-xs px-3 py-1 rounded-full border border-border">
-              ✨ Assado na data de hoje
-            </span>
-          </div>
+          <ProductImageGallery
+            imageEmoji={product.image_emoji}
+            name={product.name}
+          />
         </div>
 
         {/* Informações e Compra */}
@@ -143,7 +150,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           {/* Ações de Quantidade e Adição */}
           <ProductDetailClient product={product} />
 
-          {/* Card de Conservação e Alérgenos (Destaque UX elogiado!) */}
+          {/* Card de Conservação e Alérgenos */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
             <Card className="rounded-2xl border-border bg-card shadow-xs">
               <CardContent className="p-4 space-y-1">
@@ -172,9 +179,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
       </div>
 
-      {/* Carrossel de Recomendados */}
+      {/* Carrossel Interativo de Recomendados ("Você também vai amar") */}
       {recommended.length > 0 && (
-        <section className="space-y-6 pt-10 border-t border-border">
+        <section className="space-y-6 pt-10 border-t border-border relative">
           <div className="flex items-center justify-between">
             <div>
               <span className="text-xs font-bold uppercase tracking-widest text-primary">
@@ -186,17 +193,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
             <Link
               href="/#cardapio"
-              className="text-xs sm:text-sm font-semibold text-primary hover:underline"
+              className="text-xs sm:text-sm font-semibold text-primary hover:underline hidden sm:inline-block mr-24"
             >
               Ver cardápio completo →
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {recommended.map((item) => (
-              <ProductCard key={item.id} product={item} />
-            ))}
-          </div>
+          <RecommendedCarousel products={recommended} />
         </section>
       )}
     </div>

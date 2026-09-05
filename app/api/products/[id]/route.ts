@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { getProductById } from "@/lib/products-data";
 import { Product } from "@/types";
 
 export async function GET(
@@ -16,13 +17,15 @@ export async function GET(
       );
     }
 
-    const { data: product, error } = await supabase
+    const { data: dbProduct } = await supabase
       .from("products")
       .select("*")
       .eq("id", id)
       .single();
 
-    if (error || !product) {
+    const product = dbProduct || getProductById(id);
+
+    if (!product) {
       return NextResponse.json(
         { error: "Produto não encontrado." },
         { status: 404 }

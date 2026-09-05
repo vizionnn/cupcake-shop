@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { getRecommendedProducts } from "@/lib/products-data";
 import { Product } from "@/types";
 
 export async function GET(
@@ -16,11 +17,16 @@ export async function GET(
       query = query.neq("id", currentId);
     }
 
-    const { data: recommended, error } = await query;
+    const { data: recommended } = await query;
 
-    if (error) throw error;
+    if (recommended && recommended.length > 0) {
+      return NextResponse.json(recommended);
+    }
 
-    return NextResponse.json(recommended || []);
+    return NextResponse.json(
+      getRecommendedProducts(isNaN(currentId) ? 0 : currentId, 4)
+    );
+
   } catch (error) {
     console.error("Erro ao buscar recomendados:", error);
     return NextResponse.json(

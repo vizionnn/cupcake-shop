@@ -1,5 +1,6 @@
 import React from "react";
 import { supabase } from "@/lib/supabase";
+import { INITIAL_PRODUCTS } from "@/lib/products-data";
 import { Product } from "@/types";
 import { CatalogClient } from "@/components/CatalogClient";
 import Link from "next/link";
@@ -13,7 +14,11 @@ export default async function HomePage() {
     .select("*")
     .order("id", { ascending: true });
 
-  const products: Product[] = (productsData as Product[]) || [];
+  const products: Product[] =
+    productsData && productsData.length > 0
+      ? (productsData as Product[])
+      : INITIAL_PRODUCTS;
+
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-16 py-6 sm:py-10">
