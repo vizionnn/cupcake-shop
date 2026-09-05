@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import db from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 import { Product } from "@/types";
 
 export async function GET(request: NextRequest) {
@@ -7,18 +7,22 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const tag = searchParams.get("tag");
 
-    let products: Product[];
+    let query = supabase
+      .from("products")
+      .select("*")
+      .order("id", { ascending: true });
+
     if (tag && tag !== "Todos") {
-      products = db
-        .prepare("SELECT * FROM products WHERE flavor_tag = ? ORDER BY id ASC")
-        .all(tag) as Product[];
-    } else {
-      products = db
-        .prepare("SELECT * FROM products ORDER BY id ASC")
-        .all() as Product[];
+      query = query.eq("flavor_tag", tag);
     }
 
-    return NextResponse.json(products);
+    const { data, error } = await query;
+
+    if (error) {
+      throw error;
+    }
+
+    return NextResponse.json(data || []);
   } catch (error) {
     console.error("Erro ao buscar produtos:", error);
     return NextResponse.json(

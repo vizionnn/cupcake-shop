@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import db from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 import { CheckoutPayload, Product } from "@/types";
 
 export async function POST(request: NextRequest) {
@@ -31,7 +31,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 2. Recálculo seguro no servidor (prevenção contra manipulação de preço no front)
+    // 2. Busca os produtos no Supabase para recálculo seguro no servidor
+    const productIds = items.map((i) => i.product_id);
+    const { data: dbProducts, error: prodErr } = await supabase
+      .from("products")
+      .select("*")
+      .in("id", productIds);
+
+    if (prodErr || !dbProducts) {
+      console.error("Erro ao buscar produtos para checkout:", prodErr);
+      return NextResponse.json(
+        { error: "Erro ao consultar produtos no banco de dados." },
+        { status: 500 }
+      );
+    }
+
     let calculatedSubtotal = 0;
     const validatedItems: {
       product_id: number;
@@ -42,9 +56,7 @@ export async function POST(request: NextRequest) {
     }[] = [];
 
     for (const item of items) {
-      const product = db
-        .prepare("SELECT * FROM products WHERE id = ?")
-        .get(item.product_id) as Product | undefined;
+      const product = dbProducts.find((p) => p.id === item.product_id) as Product | undefined;
 
       if (!product) {
         return NextResponse.json(
@@ -62,14 +74,14 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const itemTotal = product.price * item.quantity;
+      const itemTotal = Number(product.price) * item.quantity;
       calculatedSubtotal += itemTotal;
 
       validatedItems.push({
         product_id: product.id,
         product_name: product.name,
         quantity: item.quantity,
-        unit_price: product.price,
+        unit_price: Number(product.price),
         image_emoji: product.image_emoji,
       });
     }
@@ -85,50 +97,71 @@ export async function POST(request: NextRequest) {
       (calculatedSubtotal - discount + shipping_fee).toFixed(2)
     );
 
-    // 4. Transação atômica no SQLite
-    const insertOrderTx = db.transaction(() => {
-      const orderStmt = db.prepare(`
-        INSERT INTO orders (
-          customer_name, customer_email, delivery_address,
-          customer_cep, estimated_delivery, payment_method,
-          subtotal, discount, shipping_fee, coupon_code, total
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `);
-
-      const result = orderStmt.run(
-        customer_name.trim(),
-        customer_email.trim(),
-        delivery_address.trim(),
-        customer_cep?.trim() || null,
-        estimated_delivery?.trim() || null,
-        payment_method.trim(),
-        calculatedSubtotal,
+    // 4. Inserção do pedido na tabela orders do Supabase
+    const { data: orderData, error: orderErr } = await supabase
+      .from("orders")
+      .insert({
+        customer_name: customer_name.trim(),
+        customer_email: customer_email.trim(),
+        delivery_address: delivery_address.trim(),
+        customer_cep: customer_cep?.trim() || null,
+        estimated_delivery: estimated_delivery?.trim() || null,
+        payment_method: payment_method.trim(),
+        subtotal: calculatedSubtotal,
         discount,
         shipping_fee,
-        coupon_code?.trim().toUpperCase() || null,
-        total
+        coupon_code: coupon_code?.trim().toUpperCase() || null,
+        total,
+        status: "confirmado",
+      })
+      .select("id")
+      .single();
+
+    if (orderErr || !orderData) {
+      console.error("Erro ao registrar pedido no Supabase:", orderErr);
+      return NextResponse.json(
+        { error: "Não foi possível registrar o pedido no banco de dados." },
+        { status: 500 }
       );
+    }
 
-      const orderId = result.lastInsertRowid;
+    const orderId = orderData.id;
 
-      const itemStmt = db.prepare(`
-        INSERT INTO order_items (order_id, product_id, product_name, unit_price, quantity)
-        VALUES (?, ?, ?, ?, ?)
-      `);
+    // 5. Inserção dos itens na tabela order_items
+    const orderItemsPayload = validatedItems.map((item) => ({
+      order_id: orderId,
+      product_id: item.product_id,
+      product_name: item.product_name,
+      unit_price: item.unit_price,
+      quantity: item.quantity,
+    }));
 
-      const updateStockStmt = db.prepare(`
-        UPDATE products SET stock = stock - ? WHERE id = ?
-      `);
+    const { error: itemsErr } = await supabase
+      .from("order_items")
+      .insert(orderItemsPayload);
 
-      for (const item of validatedItems) {
-        itemStmt.run(orderId, item.product_id, item.product_name, item.unit_price, item.quantity);
-        updateStockStmt.run(item.quantity, item.product_id);
+    if (itemsErr) {
+      console.error("Erro ao registrar itens do pedido:", itemsErr);
+    }
+
+    // 6. Atualização de estoque dos produtos
+    for (const item of validatedItems) {
+      const { error: rpcErr } = await supabase.rpc("decrement_stock", {
+        p_product_id: item.product_id,
+        p_quantity: item.quantity,
+      });
+
+      if (rpcErr) {
+        // Fallback caso a função RPC ainda não esteja instalada no Supabase
+        const current = dbProducts.find((p) => p.id === item.product_id);
+        if (current) {
+          await supabase
+            .from("products")
+            .update({ stock: Math.max(0, current.stock - item.quantity) })
+            .eq("id", item.product_id);
+        }
       }
-
-      return orderId;
-    });
-
-    const orderId = insertOrderTx();
+    }
 
     return NextResponse.json({
       success: true,
@@ -144,3 +177,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+

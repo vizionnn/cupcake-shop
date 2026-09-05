@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import db from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 import { Product } from "@/types";
 
 export async function GET(
@@ -10,13 +10,17 @@ export async function GET(
     const { id: rawId } = await context.params;
     const currentId = parseInt(rawId, 10);
 
-    const recommended = db
-      .prepare(
-        "SELECT * FROM products WHERE id != ? ORDER BY RANDOM() LIMIT 4"
-      )
-      .all(isNaN(currentId) ? 0 : currentId) as Product[];
+    let query = supabase.from("products").select("*").limit(4);
 
-    return NextResponse.json(recommended);
+    if (!isNaN(currentId)) {
+      query = query.neq("id", currentId);
+    }
+
+    const { data: recommended, error } = await query;
+
+    if (error) throw error;
+
+    return NextResponse.json(recommended || []);
   } catch (error) {
     console.error("Erro ao buscar recomendados:", error);
     return NextResponse.json(

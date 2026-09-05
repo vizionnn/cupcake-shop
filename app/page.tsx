@@ -1,16 +1,19 @@
 import React from "react";
-import db from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 import { Product } from "@/types";
 import { CatalogClient } from "@/components/CatalogClient";
 import Link from "next/link";
 import { ArrowDown, Sparkles } from "lucide-react";
 
-export const revalidate = 0; // Dynamic data from SQLite
+export const revalidate = 0; // Dados dinâmicos do Supabase
 
 export default async function HomePage() {
-  const products = db
-    .prepare("SELECT * FROM products ORDER BY id ASC")
-    .all() as Product[];
+  const { data: productsData } = await supabase
+    .from("products")
+    .select("*")
+    .order("id", { ascending: true });
+
+  const products: Product[] = (productsData as Product[]) || [];
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-16 py-6 sm:py-10">

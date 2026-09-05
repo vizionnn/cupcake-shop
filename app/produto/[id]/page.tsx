@@ -1,5 +1,5 @@
 import React from "react";
-import db from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 import { Product } from "@/types";
 import { formatBRL } from "@/lib/utils";
 import { PhotoOrEmoji } from "@/components/PhotoOrEmoji";
@@ -22,9 +22,11 @@ export async function generateMetadata({ params }: ProductPageProps) {
   const id = parseInt(rawId, 10);
   if (isNaN(id)) return { title: "Cupcake não encontrado" };
 
-  const product = db
-    .prepare("SELECT name, description FROM products WHERE id = ?")
-    .get(id) as { name: string; description: string } | undefined;
+  const { data: product } = await supabase
+    .from("products")
+    .select("name, description")
+    .eq("id", id)
+    .single();
 
   if (!product) return { title: "Cupcake não encontrado — Nuvem de Açúcar" };
 
@@ -39,9 +41,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const id = parseInt(rawId, 10);
   if (isNaN(id)) notFound();
 
-  const product = db
-    .prepare("SELECT * FROM products WHERE id = ?")
-    .get(id) as Product | undefined;
+  const { data: product } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", id)
+    .single();
 
   if (!product) {
     return (
@@ -65,9 +69,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   // Busca 4 cupcakes recomendados (excluindo o atual)
-  const recommended = db
-    .prepare("SELECT * FROM products WHERE id != ? ORDER BY RANDOM() LIMIT 4")
-    .all(product.id) as Product[];
+  const { data: recData } = await supabase
+    .from("products")
+    .select("*")
+    .neq("id", product.id)
+    .limit(4);
+
+  const recommended: Product[] = (recData as Product[]) || [];
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-16">
