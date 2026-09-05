@@ -1,80 +1,103 @@
 # Nuvem de Açúcar — E-commerce de Cupcakes Gourmet
 
-Aplicação web responsiva desenvolvida como continuação do Projeto de Intervenção (PIT), implementando as histórias de usuário definidas na etapa de documentação (PIT 1): vitrine virtual, carrinho, pedidos e pagamento.
+Aplicação web moderna, responsiva e acessível desenvolvida com **Next.js (App Router)**, **TypeScript**, **Shadcn UI** e integrada com **Supabase (PostgreSQL)** para deploy com zero tempo de inatividade na **Vercel**.
 
-## Stack
+---
 
-- **Back-end:** Node.js + Express
-- **Banco de dados:** SQLite (via `better-sqlite3`)
-- **Front-end:** HTML, CSS e JavaScript puro (sem framework), servido como arquivos estáticos pelo próprio Express
-- **Modo de codificação:** Tradicional
+## 🛠️ Stack Tecnológica Moderna
 
-## Estrutura do projeto
+- **Framework Fullstack:** [Next.js](https://nextjs.org/) (App Router, Server Components para SEO e performance de ponta).
+- **Linguagem:** [TypeScript](https://www.typescriptlang.org/) estrito (`strict: true`).
+- **Design System & UI:** [Tailwind CSS](https://tailwindcss.com/) + [Shadcn UI](https://ui.shadcn.com/) (baseada em primitivos acessíveis do Radix UI).
+- **Componentes Essenciais:** `Button`, `Card`, `Sheet` (Cart Drawer), `Badge`, `Input`, `Textarea`, `RadioGroup`, `Skeleton`, `Separator`, `Sonner` (Toasts).
+- **Banco de Dados em Nuvem:** [Supabase](https://supabase.com/) (PostgreSQL gerenciado, 24/7 online, sem "sleep mode").
+- **Hospedagem & Deploy:** [Vercel](https://vercel.com/) (Rede Edge global com recarregamento instantâneo).
+
+---
+
+## 📁 Estrutura do Projeto
 
 ```
 cupcake-shop/
-├── server.js           # servidor Express e rotas da API
+├── app/                        # App Router do Next.js
+│   ├── api/                    # Route Handlers (endpoints de API)
+│   │   ├── coupon/             # Validação de cupons
+│   │   ├── orders/             # Criação e consulta de pedidos
+│   │   └── products/           # Vitrine e recomendados
+│   ├── carrinho/               # Página dedicada do carrinho
+│   ├── checkout/               # Checkout acessível (WCAG) com ViaCEP
+│   ├── confirmacao/[orderId]/  # Recibo comercial com animação e impressão limpa
+│   ├── produto/[id]/           # Detalhes do cupcake com SSR
+│   ├── globals.css             # Design tokens e paleta artesanal
+│   ├── layout.tsx              # Shell global com Header, AnnouncementBar e Sonner
+│   └── page.tsx                # Vitrine principal com busca e filtros
+├── components/                 # Componentes React e Shadcn UI
+│   ├── ui/                     # Primitivos Shadcn (button, sheet, card, etc.)
+│   ├── CartDrawer.tsx          # Drawer lateral do carrinho com frete regional
+│   ├── CatalogClient.tsx       # Filtros reativos e busca da vitrine
+│   └── Header.tsx              # Cabeçalho com indicador de itens no carrinho
+├── context/                    # Estado global da aplicação
+│   └── CartContext.tsx         # Carrinho reativo com persistência no localStorage
 ├── db/
-│   ├── database.js      # conexão e criação das tabelas
-│   └── seed.js           # popula o catálogo inicial
-└── public/                # front-end estático
-    ├── index.html          # vitrine
-    ├── cart.html            # carrinho
-    ├── checkout.html         # pagamento
-    ├── confirmacao.html       # confirmação do pedido
-    ├── css/style.css
-    └── js/
-        ├── cart.js            # lógica de carrinho (localStorage)
-        ├── catalog.js
-        ├── cart-page.js
-        ├── checkout.js
-        └── confirmation.js
+│   └── supabase_schema.sql     # Schema SQL completo e Seed dos 8 cupcakes gourmet
+├── lib/
+│   ├── supabase.ts             # Cliente de conexão Supabase resiliente
+│   └── utils.ts                # Utilitários de formatação (BRL, CN, etc.)
+├── public/                     # Ativos estáticos públicos
+│   └── images/                 # Fotos reais dos cupcakes gourmet
+└── types/                      # Contratos e tipagens TypeScript
+    └── index.ts                # Tipos de Produto, Pedido, Carrinho e Checkout
 ```
 
-## Rodando localmente
+---
 
-```bash
-npm install
-npm run seed      # popula o banco com os produtos
-npm start          # inicia o servidor em http://localhost:3000
-```
+## 🚀 Como Rodar Localmente
 
-## Rotas da API
+1. **Clone o repositório:**
+   ```bash
+   git clone https://github.com/vizionnn/cupcake-shop.git
+   cd cupcake-shop
+   ```
 
-| Método | Rota                | Descrição                          |
-|--------|----------------------|--------------------------------------|
-| GET    | /api/products         | Lista os produtos da vitrine          |
-| GET    | /api/products/:id      | Detalhe de um produto                  |
-| POST   | /api/orders             | Cria um pedido (baixa estoque)          |
-| GET    | /api/orders/:id          | Consulta um pedido e seus itens          |
+2. **Instale as dependências:**
+   ```bash
+   npm install
+   ```
 
-## Deploy (Render, camada gratuita)
+3. **Configure o arquivo de variáveis de ambiente:**
+   Copie o arquivo `.env.example` para `.env.local` e preencha com suas chaves do Supabase:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=sua-chave-anon-publica-aqui
+   ```
 
-1. Suba o projeto para um repositório no GitHub (veja passo a passo abaixo).
-2. Crie uma conta em render.com e clique em **New > Web Service**.
-3. Conecte o repositório do GitHub.
-4. Configure:
-   - **Build Command:** `npm install && npm run seed`
-   - **Start Command:** `npm start`
-5. O Render vai gerar uma URL pública (ex: `https://nuvem-de-acucar.onrender.com`) — esse é o link da "solução em funcionamento" para preencher no PIT 2.
+4. **Inicie o servidor de desenvolvimento:**
+   ```bash
+   npm run dev
+   ```
+   Acesse [http://localhost:3000](http://localhost:3000) no seu navegador.
 
-> Atenção: o SQLite salva o arquivo no disco do servidor. No plano gratuito do Render, o disco não é persistente entre deploys — para o propósito do PIT (demonstração funcional) isso não é um problema, mas não use esse banco para produção real.
+5. **Para testar o build de produção:**
+   ```bash
+   npm run build
+   npm start
+   ```
 
-## Subindo para o GitHub
+---
 
-```bash
-cd cupcake-shop
-git init
-git add .
-git commit -m "Implementação inicial do e-commerce de cupcakes (PIT 2)"
-git branch -M main
-git remote add origin https://github.com/SEU_USUARIO/cupcake-shop.git
-git push -u origin main
-```
+## 🗄️ Configuração do Banco de Dados no Supabase
 
-## Ligação com as histórias de usuário do PIT 1
+1. Acesse o [Supabase Dashboard](https://supabase.com/dashboard).
+2. Vá no **SQL Editor** (`>_`) e clique em **New query**.
+3. Copie todo o conteúdo do arquivo `db/supabase_schema.sql` e execute com **Run**.
+4. Suas tabelas e os 8 cupcakes artesanais estarão prontos para uso imediatamente.
 
-- **Vitrine virtual:** `GET /api/products` + `index.html`, com filtro por sabor.
-- **Carrinho:** `cart.js` (estado local) + `cart.html`, com ajuste de quantidade e remoção.
-- **Pedidos:** `POST /api/orders`, que valida estoque, calcula total e grava o pedido com seus itens.
-- **Pagamentos:** seleção de forma de pagamento (Pix, Cartão, Dinheiro na entrega) no checkout — simulado, sem gateway real, adequado ao escopo acadêmico do PIT.
+---
+
+## 🌐 Deploy na Vercel
+
+1. Importe o repositório na [Vercel](https://vercel.com).
+2. Adicione as variáveis de ambiente em **Settings > Environment Variables**:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+3. A Vercel executará o `next build` e fará o deploy automático a cada push no GitHub!

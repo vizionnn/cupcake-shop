@@ -1,7 +1,12 @@
 node_modules/
+.next/
+*.tsbuildinfo
 db/*.sqlite
 db/*.sqlite-journal
 db/*.sqlite-wal
 db/*.sqlite-shm
 .env
+.env*.local
+.env.local
 AGENTS.md
+
