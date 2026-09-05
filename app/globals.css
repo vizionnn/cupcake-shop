@@ -20,7 +20,7 @@
     --secondary-foreground: 20 42% 16%;
 
     --muted: 24 35% 86%; /* #EBD9CC linha suave */
-    --muted-foreground: 18 21% 39%; /* #7A5C4F cacau soft */
+    --muted-foreground: 18 25% 32%; /* #674336 cacau legível WCAG AA > 5.5:1 */
 
     --accent: 349 74% 96%;
     --accent-foreground: 349 74% 45%;

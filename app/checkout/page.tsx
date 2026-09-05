@@ -14,6 +14,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { PhotoOrEmoji } from "@/components/PhotoOrEmoji";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   ShieldCheck,
   Truck,
@@ -23,13 +24,14 @@ import {
   MapPin,
   Check,
   ArrowLeft,
+  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, subtotal, shippingFee, clearCart } = useCart();
+  const { items, subtotal, shippingFee, isLoaded, clearCart } = useCart();
 
   // Campos do formulário
   const [name, setName] = useState("");
@@ -172,6 +174,30 @@ export default function CheckoutPage() {
     }
   };
 
+  // Skeleton intermediário para prevenir o Hydration Flash de "Sacola vazia"
+  if (!isLoaded) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8 animate-fade-in" aria-busy="true" aria-label="Carregando checkout seguro...">
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-9 w-48 rounded-xl" />
+            <Skeleton className="h-4 w-72 rounded-md" />
+          </div>
+          <Skeleton className="h-5 w-40 rounded-md" />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="lg:col-span-7 space-y-6">
+            <Skeleton className="h-72 w-full rounded-3xl" />
+            <Skeleton className="h-64 w-full rounded-3xl" />
+          </div>
+          <div className="lg:col-span-5">
+            <Skeleton className="h-96 w-full rounded-3xl" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (items.length === 0) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-20 text-center space-y-6">
@@ -283,9 +309,16 @@ export default function CheckoutPage() {
                     variant="outline"
                     onClick={handleSearchCep}
                     disabled={loadingCep}
-                    className="h-11 px-5 shrink-0 font-semibold"
+                    className="h-11 px-5 shrink-0 font-semibold gap-1.5"
                   >
-                    {loadingCep ? "Buscando..." : "Buscar CEP"}
+                    {loadingCep ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                        <span>Buscando...</span>
+                      </>
+                    ) : (
+                      "Buscar CEP"
+                    )}
                   </Button>
                 </div>
               </div>
@@ -479,7 +512,11 @@ export default function CheckoutPage() {
 
               <Separator className="my-1" />
 
-              <div className="flex justify-between text-lg font-bold text-foreground pt-1">
+              <div
+                aria-live="polite"
+                aria-atomic="true"
+                className="flex justify-between text-lg font-bold text-foreground pt-1"
+              >
                 <span>Total a Pagar</span>
                 <span className="text-primary font-display text-2xl">{formatBRL(grandTotal)}</span>
               </div>

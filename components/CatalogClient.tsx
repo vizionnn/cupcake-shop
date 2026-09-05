@@ -30,7 +30,7 @@ export function CatalogClient({ initialProducts }: CatalogClientProps) {
               key={tag}
               type="button"
               onClick={() => setActiveFilter(tag)}
-              className={`rounded-full px-5 py-2 text-sm font-semibold transition-all cursor-pointer ${
+              className={`rounded-full px-5 py-2.5 min-h-[44px] flex items-center justify-center text-sm font-semibold transition-all cursor-pointer ${
                 isActive
                   ? "bg-primary text-white shadow-md shadow-primary/25 scale-105"
                   : "bg-card border border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:bg-muted/40 active:scale-95"

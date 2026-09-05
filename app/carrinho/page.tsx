@@ -9,6 +9,7 @@ import { CepCalculator } from "@/components/CepCalculator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, Minus, Trash2, ArrowRight, ShoppingBag, ArrowLeft } from "lucide-react";
 
 export default function CartPage() {
@@ -19,9 +20,35 @@ export default function CartPage() {
     shippingFee,
     diffForFreeShipping,
     grandTotal,
+    isLoaded,
     updateQuantity,
     removeFromCart,
   } = useCart();
+
+  // Skeleton intermediário para evitar Hydration Flash de "Sacola Vazia"
+  if (!isLoaded) {
+    return (
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8 animate-fade-in" aria-busy="true" aria-label="Carregando sua sacola...">
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-9 w-40 rounded-xl" />
+            <Skeleton className="h-4 w-64 rounded-md" />
+          </div>
+          <Skeleton className="h-5 w-36 rounded-md" />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="lg:col-span-7 space-y-4">
+            <Skeleton className="h-16 w-full rounded-2xl" />
+            <Skeleton className="h-24 w-full rounded-2xl" />
+            <Skeleton className="h-24 w-full rounded-2xl" />
+          </div>
+          <div className="lg:col-span-5">
+            <Skeleton className="h-64 w-full rounded-3xl" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
@@ -44,7 +71,7 @@ export default function CartPage() {
       </div>
 
       {items.length === 0 ? (
-        /* Empty State Enriquecido (Resolvendo o apontamento da auditoria de UX!) */
+        /* Empty State Enriquecido */
         <Card className="rounded-3xl border-border bg-card p-8 sm:p-16 text-center space-y-5">
           <div className="w-24 h-24 rounded-full bg-primary/10 mx-auto flex items-center justify-center text-5xl shadow-inner">
             🧁
@@ -118,15 +145,17 @@ export default function CartPage() {
                     </div>
                   </div>
 
-                  {/* Controles de Quantidade */}
-                  <div className="flex items-center gap-2 bg-muted/60 border border-border rounded-full p-1 shrink-0">
+                  {/* Controles de Quantidade acessíveis (Touch target 44×44px conforme WCAG 2.5.8) */}
+                  <div className="flex items-center gap-1 bg-muted/60 border border-border rounded-full p-0.5 shrink-0">
                     <button
                       type="button"
                       onClick={() => updateQuantity(item.product_id, -1)}
-                      className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-foreground hover:bg-muted active:scale-95 transition-all text-xs font-bold shadow-2xs"
-                      aria-label="Diminuir quantidade"
+                      className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground hover:text-primary active:scale-95 transition-all text-xs font-bold"
+                      aria-label={`Diminuir quantidade de ${item.name}`}
                     >
-                      <Minus className="w-3.5 h-3.5" />
+                      <span className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-2xs hover:bg-muted">
+                        <Minus className="w-3.5 h-3.5" />
+                      </span>
                     </button>
                     <span className="w-6 text-center text-xs font-bold text-foreground">
                       {item.quantity}
@@ -134,18 +163,20 @@ export default function CartPage() {
                     <button
                       type="button"
                       onClick={() => updateQuantity(item.product_id, 1)}
-                      className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-foreground hover:bg-muted active:scale-95 transition-all text-xs font-bold shadow-2xs"
-                      aria-label="Aumentar quantidade"
+                      className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground hover:text-primary active:scale-95 transition-all text-xs font-bold"
+                      aria-label={`Aumentar quantidade de ${item.name}`}
                     >
-                      <Plus className="w-3.5 h-3.5" />
+                      <span className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-2xs hover:bg-muted">
+                        <Plus className="w-3.5 h-3.5" />
+                      </span>
                     </button>
                   </div>
 
                   <button
                     type="button"
                     onClick={() => removeFromCart(item.product_id)}
-                    className="p-2 text-muted-foreground hover:text-destructive transition-colors shrink-0"
-                    aria-label={`Remover ${item.name}`}
+                    className="min-w-[44px] min-h-[44px] flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors shrink-0"
+                    aria-label={`Remover ${item.name} da sacola`}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -180,7 +211,11 @@ export default function CartPage() {
                   )}
                 </div>
                 <Separator className="my-2" />
-                <div className="flex justify-between text-lg font-bold text-foreground">
+                <div
+                  aria-live="polite"
+                  aria-atomic="true"
+                  className="flex justify-between text-lg font-bold text-foreground"
+                >
                   <span>Total estimado</span>
                   <span className="text-primary font-display text-2xl">{formatBRL(grandTotal)}</span>
                 </div>
