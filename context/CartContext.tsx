@@ -119,10 +119,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clearCart = () => {
     setItems([]);
+    setIsDrawerOpen(false);
     try {
       localStorage.removeItem(CART_KEY);
     } catch (_) {}
   };
+
 
   return (
     <CartContext.Provider

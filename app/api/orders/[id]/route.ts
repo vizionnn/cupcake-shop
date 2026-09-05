@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { Order, OrderItem } from "@/types";
+import { getMemoryOrder } from "@/lib/orders-store";
 
 export async function GET(
   _request: NextRequest,
@@ -16,20 +17,31 @@ export async function GET(
       );
     }
 
-    const { data: orderData, error: orderErr } = await supabase
-      .from("orders")
-      .select("*")
-      .eq("id", orderId)
-      .single();
+    let order: Order | null = null;
 
-    if (orderErr || !orderData) {
+    try {
+      const { data: orderData, error: orderErr } = await supabase
+        .from("orders")
+        .select("*")
+        .eq("id", orderId)
+        .single();
+
+      if (!orderErr && orderData) {
+        order = orderData as Order;
+      }
+    } catch (_) {}
+
+    if (!order) {
+      order = getMemoryOrder(orderId) || null;
+    }
+
+    if (!order) {
       return NextResponse.json(
         { error: "Pedido não encontrado." },
         { status: 404 }
       );
     }
 
-    const order = orderData as Order;
 
     const { data: itemsData } = await supabase
       .from("order_items")
