@@ -132,12 +132,12 @@ export default async function ConfirmationPage({ params }: ConfirmationPageProps
           <Card className="receipt-card w-full rounded-4xl border-border bg-card/95 backdrop-blur-md shadow-2xl p-6 sm:p-10 space-y-6 print:shadow-none print:border-none print:p-0">
             {/* Topo do Recibo */}
             <div className="text-center space-y-3">
-              <div className="success-badge-icon w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center shadow-xs">
+              <div className="success-badge-icon w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-300 mx-auto flex items-center justify-center shadow-xs">
                 <CheckCircle2 className="w-9 h-9" />
               </div>
 
               <div>
-                <span className="text-xs font-bold uppercase tracking-widest text-emerald-700">
+                <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">
                   Pedido Realizado com Sucesso
                 </span>
                 <h1 className="font-display font-bold text-3xl sm:text-4xl text-foreground mt-1">
@@ -203,7 +203,7 @@ export default async function ConfirmationPage({ params }: ConfirmationPageProps
                   return (
                     <div key={item.id} className="receipt-item-row py-2.5 flex items-center justify-between gap-3 text-sm">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-10 h-10 rounded-xl bg-[#FDF0E9] flex items-center justify-center shrink-0 overflow-hidden">
+                        <div className="w-10 h-10 rounded-xl bg-[#FDF0E9] dark:bg-[#342219] flex items-center justify-center shrink-0 overflow-hidden">
                           <PhotoOrEmoji
                             photoOrEmoji={imageSrc}
                             name={item.product_name}
@@ -239,7 +239,7 @@ export default async function ConfirmationPage({ params }: ConfirmationPageProps
             </div>
 
             {order.discount > 0 && (
-              <div className="flex justify-between text-emerald-700 font-semibold">
+              <div className="flex justify-between text-emerald-700 dark:text-emerald-400 font-semibold">
                 <span>Desconto ({order.coupon_code || "Cupom"})</span>
                 <span>-{formatBRL(order.discount)}</span>
               </div>
@@ -248,7 +248,7 @@ export default async function ConfirmationPage({ params }: ConfirmationPageProps
             <div className="flex justify-between text-muted-foreground">
               <span>Taxa de Entrega</span>
               {order.shipping_fee === 0 ? (
-                <span className="text-emerald-700 font-bold">Grátis</span>
+                <span className="text-emerald-700 dark:text-emerald-400 font-bold">Grátis</span>
               ) : (
                 <span className="font-medium text-foreground">{formatBRL(order.shipping_fee)}</span>
               )}

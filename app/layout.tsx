@@ -23,6 +23,19 @@ export const metadata: Metadata = {
   title: "Nuvem de Açúcar — Cupcakes Artesanais Gourmet",
   description:
     "Cupcakes feitos à mão com ingredientes nobres e entregues no mesmo dia. Monte sua caixinha exclusiva com receitas artesanais.",
+  icons: {
+    icon: [
+      {
+        url: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧁</text></svg>",
+        type: "image/svg+xml",
+      },
+    ],
+    apple: [
+      {
+        url: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧁</text></svg>",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -31,7 +44,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${fraunces.variable} ${karla.variable} scroll-smooth`}>
+    <html
+      lang="pt-BR"
+      suppressHydrationWarning
+      className={`${fraunces.variable} ${karla.variable} scroll-smooth`}
+    >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var stored = localStorage.getItem('theme');
+                  var supportDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  if (stored === 'dark' || (!stored && supportDark)) {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col bg-background font-sans text-foreground antialiased selection:bg-primary/20 selection:text-primary">
         <a
           href="#main-content"

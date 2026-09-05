@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function Header() {
   const { count, openDrawer } = useCart();
@@ -22,14 +23,18 @@ export function Header() {
           </span>
         </Link>
 
-        {/* Navegação e Botão da Sacola */}
-        <div className="flex items-center gap-3 sm:gap-6">
+        {/* Navegação, Switch iOS de Tema e Botão da Sacola */}
+        <div className="flex items-center gap-2.5 sm:gap-5">
           <Link
             href="/#cardapio"
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden sm:inline-block"
           >
             Cardápio
           </Link>
+
+          {/* Chave seletora de Modo Escuro/Claro estilo iOS com Anime.js */}
+          <ThemeToggle />
+
           <Link
             href="/carrinho"
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden md:inline-block"

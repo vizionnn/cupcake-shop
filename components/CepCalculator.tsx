@@ -105,7 +105,7 @@ export function CepCalculator({ onEstimateChange, compact = false }: CepCalculat
           onChange={handleCepChange}
           onKeyDown={(e) => e.key === "Enter" && handleSearch()}
           placeholder="Ex: 50010-000"
-          className="h-10 text-sm bg-white"
+          className="h-10 text-sm bg-card dark:bg-[#20150f] text-foreground"
           maxLength={9}
           aria-label="CEP para cálculo de entrega"
         />
@@ -122,12 +122,12 @@ export function CepCalculator({ onEstimateChange, compact = false }: CepCalculat
       </div>
 
       {estimate && (
-        <div className="mt-3 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 flex items-start gap-2.5 animate-in fade-in-50">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+        <div className="mt-3 p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-xl text-emerald-900 dark:text-emerald-200 flex items-start gap-2.5 animate-in fade-in-50">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
           <div className="flex-1 text-xs">
             <div className="font-bold flex items-center justify-between">
               <span>{estimate.title}</span>
-              <span className="text-[11px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-semibold">
+              <span className="text-[11px] bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 px-2 py-0.5 rounded-full font-semibold">
                 {estimate.badge}
               </span>
             </div>

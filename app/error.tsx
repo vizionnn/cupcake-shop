@@ -27,7 +27,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
         </div>
 
         <div className="space-y-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-700 text-xs font-semibold border border-red-200">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 text-xs font-semibold border border-red-200 dark:border-red-900/40">
             <AlertCircle className="w-3.5 h-3.5" />
             <span>Ops! Algo saiu do ponto</span>
           </span>

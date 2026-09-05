@@ -267,7 +267,7 @@ export default function CheckoutPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ex: Maria Silva"
-                  className="h-11 bg-white"
+                  className="h-11 bg-card dark:bg-[#20150f] text-foreground"
                 />
               </div>
 
@@ -282,7 +282,7 @@ export default function CheckoutPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="voce@email.com"
-                  className="h-11 bg-white"
+                  className="h-11 bg-card dark:bg-[#20150f] text-foreground"
                 />
               </div>
 
@@ -302,7 +302,7 @@ export default function CheckoutPage() {
                       setCep(val);
                     }}
                     placeholder="Ex: 50010-000"
-                    className="h-11 bg-white"
+                    className="h-11 bg-card dark:bg-[#20150f] text-foreground"
                   />
                   <Button
                     type="button"
@@ -324,12 +324,12 @@ export default function CheckoutPage() {
               </div>
 
               {estimate && (
-                <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl text-emerald-900 text-xs flex items-center justify-between">
+                <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl text-emerald-900 dark:text-emerald-200 text-xs flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-lg">{estimate.icon}</span>
                     <div>
                       <div className="font-bold">{estimate.title}</div>
-                      <div className="text-emerald-700">{estimate.desc}</div>
+                      <div className="text-emerald-700 dark:text-emerald-300">{estimate.desc}</div>
                     </div>
                   </div>
                   <Badge variant="success">{estimate.badge}</Badge>
@@ -347,7 +347,7 @@ export default function CheckoutPage() {
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="Ex: Av. Boa Viagem, 1500, Apto 402 - Boa Viagem, Recife - PE"
-                  className="bg-white"
+                  className="bg-card dark:bg-[#20150f] text-foreground"
                 />
               </div>
             </div>
@@ -417,7 +417,7 @@ export default function CheckoutPage() {
             <div className="max-h-60 overflow-y-auto space-y-3 pr-1">
               {items.map((item) => (
                 <div key={item.product_id} className="flex items-center gap-3 text-sm">
-                  <div className="w-10 h-10 rounded-xl bg-[#FDF0E9] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#FDF0E9] dark:bg-[#342219] flex items-center justify-center shrink-0">
                     <PhotoOrEmoji
                       photoOrEmoji={item.emoji}
                       name={item.name}
@@ -452,7 +452,7 @@ export default function CheckoutPage() {
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                   placeholder="Ex: NUVEM10"
-                  className="h-10 bg-white font-mono uppercase text-sm"
+                  className="h-10 bg-card dark:bg-[#20150f] text-foreground font-mono uppercase text-sm"
                   disabled={appliedCoupon !== null}
                 />
                 {appliedCoupon ? (

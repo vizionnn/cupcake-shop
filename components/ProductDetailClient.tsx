@@ -54,7 +54,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           </button>
         </div>
         {product.stock > 0 && product.stock <= 5 && (
-          <span className="text-xs font-semibold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
+          <span className="text-xs font-semibold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1 rounded-full border border-amber-200 dark:border-amber-800/40">
             Restam apenas {product.stock} unidades!
           </span>
         )}

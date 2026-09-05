@@ -43,7 +43,7 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* Foto / Imagem */}
       <Link
         href={`/produto/${product.id}`}
-        className="block relative aspect-4/3 w-full bg-[#FDF0E9] overflow-hidden"
+        className="block relative aspect-4/3 w-full bg-[#FDF0E9] dark:bg-[#251812] overflow-hidden"
         aria-label={`Ver detalhes do ${product.name}`}
       >
         <div className="w-full h-full flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
@@ -54,7 +54,7 @@ export function ProductCard({ product }: ProductCardProps) {
             emojiClassName="text-6xl"
           />
         </div>
-        <span className="absolute bottom-2 left-3 text-[10px] text-muted-foreground/80 bg-white/70 backdrop-blur-xs px-2 py-0.5 rounded-full">
+        <span className="absolute bottom-2 left-3 text-[10px] text-muted-foreground/80 bg-card/80 backdrop-blur-xs px-2 py-0.5 rounded-full border border-border/40">
           *Foto ilustrativa
         </span>
       </Link>
@@ -69,7 +69,7 @@ export function ProductCard({ product }: ProductCardProps) {
               Esgotado
             </Badge>
           ) : (
-            <span className="text-[11px] text-emerald-700 font-medium">
+            <span className="text-[11px] text-emerald-700 dark:text-emerald-400 font-medium">
               Disponível hoje
             </span>
           )}
@@ -79,7 +79,7 @@ export function ProductCard({ product }: ProductCardProps) {
           href={`/produto/${product.id}`}
           className="group-hover:text-primary transition-colors block"
         >
-          <h3 className="font-display font-semibold text-lg text-foreground line-clamp-1">
+          <h3 className="font-display font-semibold text-base sm:text-lg text-foreground line-clamp-2 min-h-[3rem] sm:min-h-[3.5rem] flex items-center leading-snug">
             {product.name}
           </h3>
         </Link>

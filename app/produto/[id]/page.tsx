@@ -130,7 +130,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   {product.flavor_tag}
                 </Badge>
                 {product.stock > 0 ? (
-                  <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                  <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800/40">
                     ✓ Em estoque hoje
                   </span>
                 ) : (

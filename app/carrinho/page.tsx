@@ -96,18 +96,18 @@ export default function CartPage() {
           <div className="lg:col-span-7 space-y-4">
             {/* Aviso de Frete Grátis */}
             {shippingFee === 0 ? (
-              <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-2xl text-sm font-medium flex items-center gap-2.5">
+              <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 text-emerald-900 dark:text-emerald-200 rounded-2xl text-sm font-medium flex items-center gap-2.5">
                 <span className="text-xl">🎉</span>
                 <span>Parabéns! Você atingiu o valor mínimo e ganhou <strong>Frete Grátis</strong>!</span>
               </div>
             ) : (
-              <div className="p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-2xl text-sm space-y-2">
+              <div className="p-4 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 text-amber-900 dark:text-amber-200 rounded-2xl text-sm space-y-2">
                 <div className="flex justify-between font-medium">
                   <span>Adicione mais <strong>{formatBRL(diffForFreeShipping)}</strong> para ganhar <strong>Frete Grátis</strong>!</span>
                 </div>
-                <div className="w-full bg-amber-200/60 rounded-full h-2 overflow-hidden">
+                <div className="w-full bg-amber-200/60 dark:bg-amber-900/50 rounded-full h-2 overflow-hidden">
                   <div
-                    className="bg-amber-500 h-full rounded-full transition-all duration-300"
+                    className="bg-amber-500 dark:bg-amber-400 h-full rounded-full transition-all duration-300"
                     style={{ width: `${Math.min(100, (subtotal / 49.9) * 100)}%` }}
                   />
                 </div>
@@ -123,7 +123,7 @@ export default function CartPage() {
                 >
                   <Link
                     href={`/produto/${item.product_id}`}
-                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#FDF0E9] flex items-center justify-center shrink-0 overflow-hidden"
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#FDF0E9] dark:bg-[#342219] flex items-center justify-center shrink-0 overflow-hidden"
                   >
                     <PhotoOrEmoji
                       photoOrEmoji={item.emoji}
@@ -153,7 +153,7 @@ export default function CartPage() {
                       className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground hover:text-primary active:scale-95 transition-all text-xs font-bold"
                       aria-label={`Diminuir quantidade de ${item.name}`}
                     >
-                      <span className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-2xs hover:bg-muted">
+                      <span className="w-8 h-8 rounded-full bg-card dark:bg-[#342219] flex items-center justify-center shadow-2xs hover:bg-muted">
                         <Minus className="w-3.5 h-3.5" />
                       </span>
                     </button>
@@ -166,7 +166,7 @@ export default function CartPage() {
                       className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground hover:text-primary active:scale-95 transition-all text-xs font-bold"
                       aria-label={`Aumentar quantidade de ${item.name}`}
                     >
-                      <span className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-2xs hover:bg-muted">
+                      <span className="w-8 h-8 rounded-full bg-card dark:bg-[#342219] flex items-center justify-center shadow-2xs hover:bg-muted">
                         <Plus className="w-3.5 h-3.5" />
                       </span>
                     </button>

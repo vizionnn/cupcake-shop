@@ -10,25 +10,25 @@ export function FeaturesBar() {
       icon: Sparkles,
       title: "Artesanal do Dia",
       desc: "Assados todas as manhãs com manteiga e cacau nobre",
-      color: "bg-rose-50 text-rose-600 border-rose-200",
+      color: "bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-300 border-rose-200 dark:border-rose-900/50",
     },
     {
       icon: Clock,
       title: "Entrega em até 3h",
       desc: "Preparo imediato com rotas expressas para Recife e RMR",
-      color: "bg-amber-50 text-amber-600 border-amber-200",
+      color: "bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-300 border-amber-200 dark:border-amber-900/50",
     },
     {
       icon: Gift,
       title: "Embalagem Presente",
       desc: "Caixinha rígida decorada com fita de cetim inclusa",
-      color: "bg-emerald-50 text-emerald-600 border-emerald-200",
+      color: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-300 border-emerald-200 dark:border-emerald-900/50",
     },
     {
       icon: ShieldCheck,
       title: "Pagamento 100% Seguro",
       desc: "Pix com confirmação em tempo real ou cartão na entrega",
-      color: "bg-sky-50 text-sky-600 border-sky-200",
+      color: "bg-sky-50 dark:bg-sky-950/40 text-sky-600 dark:text-sky-300 border-sky-200 dark:border-sky-900/50",
     },
   ];
 

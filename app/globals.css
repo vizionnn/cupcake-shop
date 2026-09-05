@@ -34,6 +34,36 @@
 
     --radius: 1rem;
   }
+
+  .dark {
+    --background: 20 28% 10%; /* #1c130e - cacau ganache escuro aveludado */
+    --foreground: 30 35% 95%; /* #faf5f0 - creme baunilha suave */
+
+    --card: 20 24% 14%; /* #281b15 - trufa cacau nobre */
+    --card-foreground: 30 35% 95%;
+
+    --popover: 20 24% 14%;
+    --popover-foreground: 30 35% 95%;
+
+    --primary: 349 74% 63%; /* #E85D75 framboesa viva */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 42 80% 55%; /* #e9b740 caramelo artesanal */
+    --secondary-foreground: 20 42% 12%;
+
+    --muted: 20 18% 20%; /* #3c2a20 */
+    --muted-foreground: 25 15% 72%; /* #b8a9a0 - legível WCAG AA > 5.5:1 */
+
+    --accent: 349 35% 22%;
+    --accent-foreground: 349 80% 85%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 20 18% 22%; /* #422f24 */
+    --input: 20 18% 22%;
+    --ring: 349 74% 63%;
+  }
 }
 
 @layer base {
@@ -84,4 +114,29 @@
   background-color: #C7415A !important;
   transform: translateY(-1px);
 }
+
+.dark [data-sonner-toast] {
+  background-color: #24140E !important;
+  --normal-bg: #24140E !important;
+  --normal-border: rgba(232, 93, 117, 0.45) !important;
+  --normal-text: #faf5f0 !important;
+}
+
+.dark [data-sonner-toast] [data-title] {
+  color: #ea657c !important;
+}
+
+.dark [data-sonner-toast] [data-description] {
+  color: #c4b5ac !important;
+}
+
+/* Compatibilidade de campos de formulário no modo escuro */
+.dark input:not([type="checkbox"]):not([type="radio"]),
+.dark textarea,
+.dark select {
+  background-color: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
 

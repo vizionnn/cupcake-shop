@@ -51,7 +51,7 @@ export function ProductImageGallery({ imageEmoji, name }: ProductImageGalleryPro
   return (
     <div className="space-y-4">
       {/* Moldura Principal com Carrossel */}
-      <div className="relative aspect-square w-full rounded-4xl bg-gradient-to-b from-[#FDF0E9] to-white border border-border flex items-center justify-center overflow-hidden shadow-lg shadow-primary/5 p-8 group">
+      <div className="relative aspect-square w-full rounded-4xl bg-gradient-to-b from-[#FDF0E9] to-white dark:from-[#251812] dark:to-[#1a100a] border border-border/80 dark:border-border/50 flex items-center justify-center overflow-hidden shadow-lg shadow-primary/5 p-8 group">
         {/* Imagem do Slide Atual */}
         <div className="relative w-full h-full flex items-center justify-center transition-all duration-300">
           <PhotoOrEmoji
@@ -64,14 +64,14 @@ export function ProductImageGallery({ imageEmoji, name }: ProductImageGalleryPro
 
         {/* Badge do Slide */}
         <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2">
-          <span className="text-xs font-medium text-muted-foreground bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-border/80 shadow-2xs">
+          <span className="text-xs font-medium text-foreground bg-card/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-border shadow-2xs">
             {currentSlide.tag}
           </span>
         </div>
 
         {/* Indicador Numérico */}
         <div className="absolute top-4 right-4 z-10">
-          <span className="text-[11px] font-semibold text-foreground/80 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-full border border-border/80 shadow-2xs">
+          <span className="text-[11px] font-semibold text-foreground bg-card/90 backdrop-blur-md px-2.5 py-1 rounded-full border border-border shadow-2xs">
             {currentIndex + 1} / {slides.length}
           </span>
         </div>
@@ -81,7 +81,7 @@ export function ProductImageGallery({ imageEmoji, name }: ProductImageGalleryPro
           type="button"
           onClick={prevSlide}
           aria-label="Ver imagem anterior"
-          className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-foreground shadow-md border border-border flex items-center justify-center transition-all opacity-80 hover:opacity-100 hover:scale-110 active:scale-95"
+          className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-card hover:bg-muted text-foreground shadow-md border border-border flex items-center justify-center transition-all opacity-90 hover:opacity-100 hover:scale-110 active:scale-95"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -90,7 +90,7 @@ export function ProductImageGallery({ imageEmoji, name }: ProductImageGalleryPro
           type="button"
           onClick={nextSlide}
           aria-label="Ver próxima imagem"
-          className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-foreground shadow-md border border-border flex items-center justify-center transition-all opacity-80 hover:opacity-100 hover:scale-110 active:scale-95"
+          className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-card hover:bg-muted text-foreground shadow-md border border-border flex items-center justify-center transition-all opacity-90 hover:opacity-100 hover:scale-110 active:scale-95"
         >
           <ChevronRight className="w-5 h-5" />
         </button>
@@ -105,11 +105,11 @@ export function ProductImageGallery({ imageEmoji, name }: ProductImageGalleryPro
             onClick={() => setCurrentIndex(idx)}
             className={`flex items-center gap-2 p-2 rounded-2xl border text-left transition-all ${
               currentIndex === idx
-                ? "border-primary bg-primary/5 shadow-xs ring-2 ring-primary/20"
+                ? "border-primary bg-primary/10 dark:bg-primary/20 shadow-xs ring-2 ring-primary/30"
                 : "border-border/80 bg-card hover:bg-muted/50 hover:border-border"
             }`}
           >
-            <div className="w-10 h-10 rounded-xl bg-white border border-border/60 flex items-center justify-center overflow-hidden shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-muted/60 dark:bg-[#20150f] border border-border/60 flex items-center justify-center overflow-hidden shrink-0">
               <PhotoOrEmoji
                 photoOrEmoji={slide.image}
                 name={slide.title}

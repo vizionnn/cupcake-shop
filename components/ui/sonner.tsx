@@ -38,15 +38,15 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast:
-            "group toast !bg-[#FFF8F9] !border-2 !border-[#E85D75]/35 !shadow-[0_12px_36px_-4px_rgba(232,93,117,0.22),0_4px_12px_rgba(59,35,24,0.06)] !rounded-2xl !p-4 gap-3 text-foreground",
-          title: "!text-[#C7415A] !font-bold !text-sm tracking-tight",
-          description: "!text-[#5C2430] !font-semibold !text-xs",
+            "group toast bg-[#FFF8F9] dark:!bg-[#24140E] border-2 border-[#E85D75]/35 dark:!border-[#E85D75]/50 shadow-[0_12px_36px_-4px_rgba(232,93,117,0.22),0_4px_12px_rgba(59,35,24,0.06)] dark:!shadow-[0_12px_36px_-4px_rgba(0,0,0,0.6)] rounded-2xl p-4 gap-3 text-foreground",
+          title: "!text-[#C7415A] dark:!text-[#FF8FA3] font-bold text-sm tracking-tight",
+          description: "!text-[#5C2430] dark:!text-[#DFCDC5] font-semibold text-xs",
           actionButton:
-            "!bg-[#E85D75] hover:!bg-[#C7415A] !text-white !rounded-full !font-bold !text-xs !px-4 !py-2 !shadow-sm !transition-all active:!scale-95",
+            "!bg-[#E85D75] hover:!bg-[#C7415A] text-white rounded-full font-bold text-xs px-4 py-2 shadow-sm transition-all active:scale-95",
           cancelButton:
-            "!bg-[#FFF0F3] !text-[#C7415A] !rounded-full !font-semibold !text-xs !px-3 !py-1.5",
+            "bg-[#FFF0F3] dark:!bg-[#382017] !text-[#C7415A] dark:!text-[#FF8FA3] rounded-full font-semibold text-xs px-3 py-1.5",
           closeButton:
-            "!bg-[#FFF0F3] !text-[#C7415A] !border-[#E85D75]/30 hover:!bg-[#E85D75]/20",
+            "bg-[#FFF0F3] dark:!bg-[#382017] !text-[#C7415A] dark:!text-[#FF8FA3] border-[#E85D75]/30 hover:bg-[#E85D75]/20",
         },
       }}
       {...props}
