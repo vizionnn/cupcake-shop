@@ -1,12 +1,15 @@
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+const supabaseAnonKey =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+  "";
 
 if (!supabaseUrl || !supabaseAnonKey) {
   if (process.env.NODE_ENV === "development") {
     console.warn(
-      "⚠️ [Supabase] NEXT_PUBLIC_SUPABASE_URL ou NEXT_PUBLIC_SUPABASE_ANON_KEY não encontradas no ambiente. Verifique o arquivo .env.local ou as configurações da Vercel."
+      "⚠️ [Supabase] NEXT_PUBLIC_SUPABASE_URL ou NEXT_PUBLIC_SUPABASE_ANON_KEY / NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY não encontradas no ambiente. Verifique o arquivo .env.local ou as configurações da Vercel."
     );
   }
 }
