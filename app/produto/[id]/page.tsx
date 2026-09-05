@@ -6,7 +6,9 @@ import { formatBRL } from "@/lib/utils";
 import { ProductImageGallery } from "@/components/ProductImageGallery";
 import { RecommendedCarousel } from "@/components/RecommendedCarousel";
 import { ProductDetailClient } from "@/components/ProductDetailClient";
+import { AnimeReveal } from "@/components/AnimeReveal";
 import { Badge } from "@/components/ui/badge";
+
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { ArrowLeft, ShieldCheck, Clock, Sparkles } from "lucide-react";
@@ -92,6 +94,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   return (
+
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-16">
       {/* Breadcrumb e Voltar */}
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -110,98 +113,109 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
         {/* Carrossel de Fotos do Produto em Destaque */}
         <div className="md:col-span-6">
-          <ProductImageGallery
-            imageEmoji={product.image_emoji}
-            name={product.name}
-          />
+          <AnimeReveal variant="scale" delay={80} duration={600}>
+            <ProductImageGallery
+              imageEmoji={product.image_emoji}
+              name={product.name}
+            />
+          </AnimeReveal>
         </div>
 
         {/* Informações e Compra */}
         <div className="md:col-span-6 space-y-6">
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <Badge variant="pastry" className="text-xs uppercase tracking-wider">
-                {product.flavor_tag}
-              </Badge>
-              {product.stock > 0 ? (
-                <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                  ✓ Em estoque hoje
-                </span>
-              ) : (
-                <Badge variant="destructive" className="text-xs">
-                  Esgotado
+          <AnimeReveal variant="up" delay={120} duration={600}>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <Badge variant="pastry" className="text-xs uppercase tracking-wider">
+                  {product.flavor_tag}
                 </Badge>
-              )}
+                {product.stock > 0 ? (
+                  <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                    ✓ Em estoque hoje
+                  </span>
+                ) : (
+                  <Badge variant="destructive" className="text-xs">
+                    Esgotado
+                  </Badge>
+                )}
+              </div>
+
+              <h1 className="font-display font-bold text-3xl sm:text-4xl text-foreground">
+                {product.name}
+              </h1>
+
+              <div className="font-display font-bold text-3xl text-primary">
+                {formatBRL(product.price)}
+              </div>
+
+              <p className="text-muted-foreground text-base leading-relaxed">
+                {product.description}
+              </p>
             </div>
-
-            <h1 className="font-display font-bold text-3xl sm:text-4xl text-foreground">
-              {product.name}
-            </h1>
-
-            <div className="font-display font-bold text-3xl text-primary">
-              {formatBRL(product.price)}
-            </div>
-
-            <p className="text-muted-foreground text-base leading-relaxed">
-              {product.description}
-            </p>
-          </div>
+          </AnimeReveal>
 
           {/* Ações de Quantidade e Adição */}
-          <ProductDetailClient product={product} />
+          <AnimeReveal variant="up" delay={200} duration={600}>
+            <ProductDetailClient product={product} />
+          </AnimeReveal>
 
           {/* Card de Conservação e Alérgenos */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-            <Card className="rounded-2xl border-border bg-card shadow-xs">
-              <CardContent className="p-4 space-y-1">
-                <div className="flex items-center gap-2 text-primary font-semibold text-xs">
-                  <Clock className="w-4 h-4" />
-                  <span>Conservação</span>
-                </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Consumir em até 2 dias sob refrigeração ou até 24h em temperatura ambiente fresca.
-                </p>
-              </CardContent>
-            </Card>
+          <AnimeReveal variant="up" delay={260} duration={600}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+              <Card className="rounded-2xl border-border bg-card shadow-xs">
+                <CardContent className="p-4 space-y-1">
+                  <div className="flex items-center gap-2 text-primary font-semibold text-xs">
+                    <Clock className="w-4 h-4" />
+                    <span>Conservação</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Consumir em até 2 dias sob refrigeração ou até 24h em temperatura ambiente fresca.
+                  </p>
+                </CardContent>
+              </Card>
 
-            <Card className="rounded-2xl border-border bg-card shadow-xs">
-              <CardContent className="p-4 space-y-1">
-                <div className="flex items-center gap-2 text-primary font-semibold text-xs">
-                  <ShieldCheck className="w-4 h-4" />
-                  <span>Alérgenos</span>
-                </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  {product.ingredients || "Contém trigo, leite e ovos. Pode conter traços de nozes."}
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+              <Card className="rounded-2xl border-border bg-card shadow-xs">
+                <CardContent className="p-4 space-y-1">
+                  <div className="flex items-center gap-2 text-primary font-semibold text-xs">
+                    <ShieldCheck className="w-4 h-4" />
+                    <span>Alérgenos</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {product.ingredients || "Contém trigo, leite e ovos. Pode conter traços de nozes."}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </AnimeReveal>
         </div>
       </div>
 
       {/* Carrossel Interativo de Recomendados ("Você também vai amar") */}
       {recommended.length > 0 && (
-        <section className="space-y-6 pt-10 border-t border-border relative">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-primary">
-                Combine Sabores
-              </span>
-              <h2 className="font-display font-bold text-2xl text-foreground">
-                Você também vai amar
-              </h2>
+        <AnimeReveal variant="up" delay={150} duration={600}>
+          <section className="space-y-6 pt-10 border-t border-border relative">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-widest text-primary">
+                  Combine Sabores
+                </span>
+                <h2 className="font-display font-bold text-2xl text-foreground">
+                  Você também vai amar
+                </h2>
+              </div>
+              <Link
+                href="/#cardapio"
+                className="text-xs sm:text-sm font-semibold text-primary hover:underline hidden sm:inline-block mr-24"
+              >
+                Ver cardápio completo →
+              </Link>
             </div>
-            <Link
-              href="/#cardapio"
-              className="text-xs sm:text-sm font-semibold text-primary hover:underline hidden sm:inline-block mr-24"
-            >
-              Ver cardápio completo →
-            </Link>
-          </div>
 
-          <RecommendedCarousel products={recommended} />
-        </section>
+            <RecommendedCarousel products={recommended} />
+          </section>
+        </AnimeReveal>
       )}
     </div>
   );
 }
+

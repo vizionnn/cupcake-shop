@@ -1,18 +1,21 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { animate, createScope } from "animejs";
 
 interface Particle {
   id: number;
   emoji: string;
   left: number;
-  duration: number;
-  delay: number;
   size: number;
+  speed: number;
+  delay: number;
   blur: number;
 }
 
 export function CupcakeRain() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scopeRef = useRef<{ revert: () => void } | null>(null);
   const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {
@@ -22,62 +25,81 @@ export function CupcakeRain() {
     for (let i = 0; i < 22; i++) {
       items.push({
         id: i,
-        emoji: emojis[Math.floor(Math.random() * emojis.length)],
-        left: Math.random() * 96,
-        duration: 12 + Math.random() * 12,
-        delay: Math.random() * 6,
-        size: 1.4 + Math.random() * 1.4,
-        blur: Math.random() > 0.6 ? 1.5 : 0,
+        emoji: emojis[i % emojis.length],
+        left: 3 + Math.random() * 94,
+        size: 1.3 + Math.random() * 1.4,
+        speed: 12000 + Math.random() * 9000,
+        delay: Math.random() * 5000,
+        blur: Math.random() > 0.65 ? 1.5 : 0,
       });
     }
 
     setParticles(items);
   }, []);
 
+  useEffect(() => {
+    if (particles.length === 0 || !containerRef.current) return;
+
+    // Respeito a WCAG 2.2 AA (prefers-reduced-motion)
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion) return;
+
+    try {
+      scopeRef.current = createScope({ root: containerRef }).add(() => {
+        particles.forEach((p) => {
+          // Flutuação ascendente contínua orquestrada com curvas Anime.js
+          animate(`.particle-${p.id}`, {
+            translateY: ["110vh", "-20vh"],
+            translateX: [
+              { to: -15 + Math.random() * 30, duration: p.speed * 0.5, ease: "inOutQuad" },
+              { to: -20 + Math.random() * 40, duration: p.speed * 0.5, ease: "inOutQuad" },
+            ],
+            rotate: -25 + Math.random() * 50,
+            opacity: [
+              { to: 0.5, duration: p.speed * 0.15, ease: "outQuad" },
+              { to: 0.5, duration: p.speed * 0.7 },
+              { to: 0, duration: p.speed * 0.15, ease: "inQuad" },
+            ],
+            duration: p.speed,
+            delay: p.delay,
+            loop: true,
+            ease: "linear",
+          });
+        });
+      });
+    } catch (err) {
+      console.error("Erro no Anime.js CupcakeRain:", err);
+    }
+
+    return () => {
+      if (scopeRef.current?.revert) {
+        scopeRef.current.revert();
+      }
+    };
+  }, [particles]);
+
   return (
     <div
+      ref={containerRef}
       className="fixed inset-0 pointer-events-none overflow-hidden z-0 print:hidden"
       aria-hidden="true"
     >
       {particles.map((p) => (
         <span
           key={p.id}
-          className="absolute select-none opacity-40 will-change-transform animate-float-up"
+          className={`particle-${p.id} absolute select-none opacity-0 will-change-transform`}
           style={{
             left: `${p.left}%`,
             fontSize: `${p.size}rem`,
             filter: p.blur ? `blur(${p.blur}px)` : "none",
-            animationDuration: `${p.duration}s`,
-            animationDelay: `${p.delay}s`,
-            animationIterationCount: "infinite",
-            animationTimingFunction: "ease-in-out",
           }}
         >
           {p.emoji}
         </span>
       ))}
-
-      <style jsx>{`
-        @keyframes floatUp {
-          0% {
-            transform: translateY(110vh) rotate(0deg);
-            opacity: 0;
-          }
-          15% {
-            opacity: 0.5;
-          }
-          85% {
-            opacity: 0.5;
-          }
-          100% {
-            transform: translateY(-20vh) rotate(360deg);
-            opacity: 0;
-          }
-        }
-        .animate-float-up {
-          animation-name: floatUp;
-        }
-      `}</style>
     </div>
   );
 }

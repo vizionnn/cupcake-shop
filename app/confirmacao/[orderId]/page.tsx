@@ -15,6 +15,8 @@ import { notFound } from "next/navigation";
 import { getMemoryOrder } from "@/lib/orders-store";
 import { INITIAL_PRODUCTS } from "@/lib/products-data";
 
+import { AnimatedReceipt } from "@/components/AnimatedReceipt";
+
 export const revalidate = 0;
 
 interface ConfirmationPageProps {
@@ -121,100 +123,111 @@ export default async function ConfirmationPage({ params }: ConfirmationPageProps
 
   return (
     <div className="relative min-h-[80vh] flex items-center justify-center px-4 py-12">
-      {/* Chuva de Cupcakes e Doces Flutuantes no Fundo */}
+      {/* Chuva de Cupcakes e Doces Flutuantes no Fundo (Anime.js) */}
       <CupcakeRain />
 
-      {/* Card do Recibo Comercial em Glassmorphism */}
+      {/* Card do Recibo Comercial em Glassmorphism com Orquestração Anime.js */}
       <div className="relative z-10 w-full max-w-2xl space-y-6">
-        <Card className="rounded-4xl border-border bg-card/95 backdrop-blur-md shadow-2xl p-6 sm:p-10 space-y-6 print:shadow-none print:border-none print:p-0">
-          {/* Topo do Recibo */}
-          <div className="text-center space-y-3">
-            <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center shadow-xs">
-              <CheckCircle2 className="w-9 h-9" />
+        <AnimatedReceipt>
+          <Card className="receipt-card w-full rounded-4xl border-border bg-card/95 backdrop-blur-md shadow-2xl p-6 sm:p-10 space-y-6 print:shadow-none print:border-none print:p-0">
+            {/* Topo do Recibo */}
+            <div className="text-center space-y-3">
+              <div className="success-badge-icon w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center shadow-xs">
+                <CheckCircle2 className="w-9 h-9" />
+              </div>
+
+              <div>
+                <span className="text-xs font-bold uppercase tracking-widest text-emerald-700">
+                  Pedido Realizado com Sucesso
+                </span>
+                <h1 className="font-display font-bold text-3xl sm:text-4xl text-foreground mt-1">
+                  Obrigado, {order.customer_name.split(" ")[0]}!
+                </h1>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Seu pedido <strong className="text-foreground">#{order.id}</strong> foi confirmado e já está sendo preparado com muito carinho.
+                </p>
+              </div>
             </div>
 
-            <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-emerald-700">
-                Pedido Realizado com Sucesso
-              </span>
-              <h1 className="font-display font-bold text-3xl sm:text-4xl text-foreground mt-1">
-                Obrigado, {order.customer_name.split(" ")[0]}!
-              </h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                Seu pedido <strong className="text-foreground">#{order.id}</strong> foi confirmado e já está sendo preparado com muito carinho.
-              </p>
+            <Separator />
+
+            {/* Dados Rápidos da Entrega e Pagamento */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div className="p-3.5 bg-muted/40 rounded-2xl border border-border space-y-1">
+                <span className="text-muted-foreground font-semibold flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-primary" /> Previsão de Entrega
+                </span>
+                <p className="font-bold text-foreground text-sm">
+                  {order.estimated_delivery || "Hoje mesmo (em até 3 horas)"}
+                </p>
+              </div>
+
+              <div className="p-3.5 bg-muted/40 rounded-2xl border border-border space-y-1">
+                <span className="text-muted-foreground font-semibold flex items-center gap-1.5">
+                  <CreditCard className="w-3.5 h-3.5 text-primary" /> Forma de Pagamento
+                </span>
+                <p className="font-bold text-foreground text-sm">
+                  {order.payment_method}
+                </p>
+              </div>
             </div>
-          </div>
 
-          <Separator />
-
-          {/* Dados Rápidos da Entrega e Pagamento */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-            <div className="p-3.5 bg-muted/40 rounded-2xl border border-border space-y-1">
+            {/* Endereço de Entrega */}
+            <div className="p-3.5 bg-muted/30 rounded-2xl border border-border text-xs space-y-1">
               <span className="text-muted-foreground font-semibold flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-primary" /> Previsão de Entrega
+                <MapPin className="w-3.5 h-3.5 text-primary" /> Endereço de Entrega
               </span>
-              <p className="font-bold text-foreground text-sm">
-                {order.estimated_delivery || "Hoje mesmo (em até 3 horas)"}
+              <p className="text-foreground font-medium text-sm leading-relaxed">
+                {order.delivery_address}
+                {order.customer_cep && ` · CEP: ${order.customer_cep}`}
               </p>
             </div>
 
-            <div className="p-3.5 bg-muted/40 rounded-2xl border border-border space-y-1">
-              <span className="text-muted-foreground font-semibold flex items-center gap-1.5">
-                <CreditCard className="w-3.5 h-3.5 text-primary" /> Forma de Pagamento
-              </span>
-              <p className="font-bold text-foreground text-sm">
-                {order.payment_method}
-              </p>
-            </div>
-          </div>
+            <Separator />
 
-          {/* Endereço de Entrega */}
-          <div className="p-3.5 bg-muted/30 rounded-2xl border border-border text-xs space-y-1">
-            <span className="text-muted-foreground font-semibold flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-primary" /> Endereço de Entrega
-            </span>
-            <p className="text-foreground font-medium text-sm leading-relaxed">
-              {order.delivery_address}
-              {order.customer_cep && ` · CEP: ${order.customer_cep}`}
-            </p>
-          </div>
+            {/* Lista de Itens do Recibo */}
+            <div className="space-y-3">
+              <h3 className="font-display font-bold text-base text-foreground">
+                Itens da Caixinha
+              </h3>
 
-          <Separator />
+              <div className="divide-y divide-border/60">
+                {order.items.map((item) => {
+                  const fallbackProduct = INITIAL_PRODUCTS.find(
+                    (p) =>
+                      p.id === item.product_id ||
+                      p.name.toLowerCase() === item.product_name.toLowerCase()
+                  );
+                  const imageSrc = item.image_emoji || fallbackProduct?.image_emoji || "🧁";
 
-          {/* Lista de Itens do Recibo */}
-          <div className="space-y-3">
-            <h3 className="font-display font-bold text-base text-foreground">
-              Itens da Caixinha
-            </h3>
+                  return (
+                    <div key={item.id} className="receipt-item-row py-2.5 flex items-center justify-between gap-3 text-sm">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-10 h-10 rounded-xl bg-[#FDF0E9] flex items-center justify-center shrink-0 overflow-hidden">
+                          <PhotoOrEmoji
+                            photoOrEmoji={imageSrc}
+                            name={item.product_name}
+                            className="w-full h-full object-cover"
+                            emojiClassName="text-base"
+                          />
+                        </div>
+                        <div>
+                          <span className="font-semibold text-foreground">{item.product_name}</span>
+                          <span className="text-xs text-muted-foreground block">
+                            {item.quantity}x {formatBRL(item.unit_price)}
+                          </span>
+                        </div>
+                      </div>
 
-            <div className="divide-y divide-border/60">
-              {order.items.map((item) => (
-                <div key={item.id} className="py-2.5 flex items-center justify-between gap-3 text-sm">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-lg bg-[#FDF0E9] flex items-center justify-center shrink-0">
-                      <PhotoOrEmoji
-                        photoOrEmoji={item.image_emoji || "🧁"}
-                        name={item.product_name}
-                        className="w-full h-full object-cover"
-                        emojiClassName="text-base"
-                      />
-                    </div>
-                    <div>
-                      <span className="font-semibold text-foreground">{item.product_name}</span>
-                      <span className="text-xs text-muted-foreground block">
-                        {item.quantity}x {formatBRL(item.unit_price)}
+                      <span className="font-bold text-foreground">
+                        {formatBRL(item.quantity * item.unit_price)}
                       </span>
                     </div>
-                  </div>
-
-                  <span className="font-bold text-foreground">
-                    {formatBRL(item.quantity * item.unit_price)}
-                  </span>
-                </div>
-              ))}
+                  );
+                })}
+              </div>
             </div>
-          </div>
+
 
           <Separator />
 
@@ -261,7 +274,9 @@ export default async function ConfirmationPage({ params }: ConfirmationPageProps
             </Button>
           </div>
         </Card>
+        </AnimatedReceipt>
       </div>
     </div>
   );
 }
+

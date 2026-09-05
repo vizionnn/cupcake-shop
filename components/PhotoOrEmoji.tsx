@@ -1,7 +1,9 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 
 interface PhotoOrEmojiProps {
-  photoOrEmoji: string;
+  photoOrEmoji?: string | null;
   name: string;
   className?: string;
   emojiClassName?: string;
@@ -13,19 +15,35 @@ export function PhotoOrEmoji({
   className = "w-full h-full object-cover",
   emojiClassName = "text-4xl",
 }: PhotoOrEmojiProps) {
-  if (
-    photoOrEmoji &&
-    (photoOrEmoji.includes(".") || photoOrEmoji.startsWith("http"))
-  ) {
+  const [hasError, setHasError] = useState(false);
+
+  if (!photoOrEmoji || hasError) {
+    return <span className={emojiClassName}>🧁</span>;
+  }
+
+  const isImage =
+    photoOrEmoji.includes(".") ||
+    photoOrEmoji.startsWith("http") ||
+    photoOrEmoji.startsWith("/") ||
+    photoOrEmoji.startsWith("data:");
+
+  if (isImage) {
+    let src = photoOrEmoji;
+    if (!src.startsWith("http") && !src.startsWith("/") && !src.startsWith("data:")) {
+      src = `/${src}`;
+    }
+
     return (
       <img
-        src={photoOrEmoji}
+        src={src}
         alt={name}
         loading="lazy"
+        onError={() => setHasError(true)}
         className={className}
       />
     );
   }
 
-  return <span className={emojiClassName}>{photoOrEmoji || "🧁"}</span>;
+  return <span className={emojiClassName}>{photoOrEmoji}</span>;
 }
+

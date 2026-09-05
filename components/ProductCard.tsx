@@ -11,6 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus, Check } from "lucide-react";
 
+import { animate } from "animejs";
+
 interface ProductCardProps {
   product: Product;
 }
@@ -19,11 +21,20 @@ export function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
 
-  const handleAdd = () => {
+  const handleAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
     addToCart(product);
     setAdded(true);
+
+    const btn = e.currentTarget;
+    animate(btn, {
+      scale: [1, 0.88, 1.15, 1],
+      duration: 500,
+      ease: "outElastic(1.2, .5)",
+    });
+
     setTimeout(() => setAdded(false), 900);
   };
+
 
   const isOutOfStock = product.stock <= 0;
 
