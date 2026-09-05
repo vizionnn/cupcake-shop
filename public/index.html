@@ -42,37 +42,87 @@
   </div>
 
   <main class="container">
-    <section class="hero">
-      <div class="hero-content">
-        <span class="hero-eyebrow">✨ Confeitaria Artesanal</span>
-        <h1 class="hero-title">Cupcakes <span class="text-highlight">feitos à mão</span>, <span class="text-delivery">entregues no mesmo dia.</span></h1>
-        <p class="hero-desc">Oito receitas exclusivas preparadas com cuidado e ingredientes nobres. Escolha seus favoritos, monte sua caixinha e receba com rapidez onde estiver.</p>
-        <div class="hero-cta-group">
-          <a href="#filterRow" class="btn btn-primary hero-btn">
-            Explorar Sabores 🧁
-          </a>
-          <div class="hero-badge-pill">
-            <span class="pulse-dot"></span> Pedidos abertos para entrega hoje
+    <!-- Palco com Efeito Scrollytelling (Sticky Scroll Sequence) -->
+    <div class="hero-scrolly-container" id="heroScrollyContainer">
+      <section class="hero-sticky-stage" id="heroStickyStage">
+        <!-- Indicador de progresso lateral sutil (Passos 1 a 4) -->
+        <nav class="scrolly-progress-dots" aria-label="Progresso da apresentação">
+          <button type="button" class="progress-dot active" data-step="1" aria-label="Passo 1: Título principal"></button>
+          <button type="button" class="progress-dot" data-step="2" aria-label="Passo 2: Nossas receitas"></button>
+          <button type="button" class="progress-dot" data-step="3" aria-label="Passo 3: Adoce seu dia"></button>
+          <button type="button" class="progress-dot" data-step="4" aria-label="Passo 4: Explorar cardápio"></button>
+        </nav>
+
+        <div class="hero-scrolly-content">
+          <!-- Etapa 1: Título Principal -->
+          <div class="scrolly-step step-1 is-active" id="scrollyStep1">
+            <span class="hero-eyebrow">✨ Confeitaria Artesanal</span>
+            <h1 class="hero-title scrolly-title">
+              Cupcakes <span class="text-highlight">feitos à mão</span>,<br>
+              <span class="text-delivery">entregues no mesmo dia.</span>
+            </h1>
+          </div>
+
+          <!-- Etapa 2: Manifesto / Storytelling -->
+          <div class="scrolly-step step-2" id="scrollyStep2">
+            <div class="story-card">
+              <span class="story-tag">Receitas Exclusivas</span>
+              <p class="story-desc">
+                Oito receitas exclusivas preparadas com cuidado e ingredientes nobres. Escolha seus favoritos, monte sua caixinha e receba com rapidez onde estiver.
+              </p>
+            </div>
+          </div>
+
+          <!-- Etapa 3: Cluster de Puffs (Adoce seu dia ❤️) -->
+          <div class="scrolly-step step-3" id="scrollyStep3" aria-hidden="true">
+            <div class="hero-cluster scrolly-cluster">
+              <div class="puff puff-main" title="Nuvem de Açúcar">
+                <span class="puff-emoji">🧁</span>
+                <span class="puff-tag">Adoce seu dia ❤️</span>
+              </div>
+              <div class="puff puff-sub-1" title="Morangos Selecionados">
+                <span class="puff-emoji">🍓</span>
+              </div>
+              <div class="puff puff-sub-2" title="Cacau Nobre">
+                <span class="puff-emoji">🍫</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Etapa 4: Chamada para Ação + Aviso de CEP -->
+          <div class="scrolly-step step-4" id="scrollyStep4">
+            <div class="scrolly-cta-box">
+              <a href="#vitrineSection" class="btn btn-primary hero-btn scrolly-btn" id="btnExploreFlavors">
+                Explorar Sabores 🧁
+              </a>
+              <div class="hero-badge-pill">
+                <span class="pulse-dot"></span> Pedidos abertos para entrega hoje*
+              </div>
+              <span class="hero-cep-disclaimer">*Consulte disponibilidade e prazo para seu CEP</span>
+            </div>
           </div>
         </div>
+
+        <!-- Indicador de rolagem no rodapé do palco -->
+        <div class="scrolly-scroll-hint" id="scrollyHint" aria-hidden="true">
+          <span>Role para saborear</span>
+          <span class="scroll-arrow">↓</span>
+        </div>
+      </section>
+    </div>
+
+    <!-- Nova Seção: Monte sua caixinha! -->
+    <section class="vitrine-section" id="vitrineSection">
+      <div class="vitrine-header reveal-on-scroll">
+        <span class="vitrine-eyebrow">✨ Cardápio Artesanal</span>
+        <h2 class="vitrine-title">Monte sua caixinha!</h2>
+        <p class="vitrine-desc">Escolha seus sabores favoritos, misture clássicos e recheios nobres e monte uma experiência única para presentear ou saborear.</p>
       </div>
-      <div class="hero-cluster" aria-hidden="true">
-        <div class="puff puff-main" title="Nuvem de Açúcar">
-          <span class="puff-emoji">🧁</span>
-          <span class="puff-tag">Adoce seu dia ❤️</span>
-        </div>
-        <div class="puff puff-sub-1" title="Morangos Selecionados">
-          <span class="puff-emoji">🍓</span>
-        </div>
-        <div class="puff puff-sub-2" title="Cacau Nobre">
-          <span class="puff-emoji">🍫</span>
-        </div>
-      </div>
+
+      <div class="filter-row" id="filterRow"></div>
+
+      <div class="product-grid" id="productGrid"></div>
     </section>
-
-    <div class="filter-row" id="filterRow"></div>
-
-    <div class="product-grid" id="productGrid"></div>
   </main>
 
   <!-- Botão Flutuante do Carrinho (surge automaticamente na rolagem) -->

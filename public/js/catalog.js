@@ -130,4 +130,118 @@ function renderProducts() {
   initScrollReveal();
 }
 
-document.addEventListener('DOMContentLoaded', loadProducts);
+/* ========================================================
+   Scrollytelling Interativo da Seção Hero
+   ======================================================== */
+function initHeroScrollytelling() {
+  const container = document.getElementById('heroScrollyContainer');
+  if (!container) return;
+
+  const steps = [
+    document.getElementById('scrollyStep1'),
+    document.getElementById('scrollyStep2'),
+    document.getElementById('scrollyStep3'),
+    document.getElementById('scrollyStep4')
+  ].filter(Boolean);
+
+  const dots = document.querySelectorAll('.scrolly-progress-dots .progress-dot');
+  const scrollHint = document.getElementById('scrollyHint');
+  const btnExploreFlavors = document.getElementById('btnExploreFlavors');
+  const vitrineSection = document.getElementById('vitrineSection');
+
+  const stickyOffset = 76; // Altura aproximada do cabeçalho
+  let ticking = false;
+
+  function updateScrollytelling() {
+    const rect = container.getBoundingClientRect();
+    const totalDistance = container.offsetHeight - (window.innerHeight - stickyOffset);
+
+    if (totalDistance <= 0) return;
+
+    const scrolled = stickyOffset - rect.top;
+    const progress = Math.min(Math.max(scrolled / totalDistance, 0), 1);
+
+    // Determina o passo ativo baseado no progresso da rolagem
+    let activeIdx = 0;
+    if (progress < 0.25) {
+      activeIdx = 0;
+    } else if (progress < 0.52) {
+      activeIdx = 1;
+    } else if (progress < 0.78) {
+      activeIdx = 2;
+    } else {
+      activeIdx = 3;
+    }
+
+    // Aplica classes de transição (ativo, saindo para cima, ou aguardando abaixo)
+    steps.forEach((step, idx) => {
+      if (idx === activeIdx) {
+        step.classList.add('is-active');
+        step.classList.remove('is-exiting');
+        step.removeAttribute('aria-hidden');
+      } else if (idx < activeIdx) {
+        step.classList.remove('is-active');
+        step.classList.add('is-exiting');
+        step.setAttribute('aria-hidden', 'true');
+      } else {
+        step.classList.remove('is-active');
+        step.classList.remove('is-exiting');
+        step.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    // Atualiza os dots de progresso
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === activeIdx);
+    });
+
+    // Esmaece a dica de rolagem quando o usuário chega na etapa final
+    if (scrollHint) {
+      scrollHint.style.opacity = progress > 0.82 ? '0' : '0.85';
+      scrollHint.style.pointerEvents = 'none';
+    }
+  }
+
+  // Otimização a 60fps usando requestAnimationFrame
+  function requestTick() {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        updateScrollytelling();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', requestTick, { passive: true });
+  window.addEventListener('resize', requestTick, { passive: true });
+
+  // Clique nos dots para navegar suavemente entre as etapas
+  const dotTargets = [0, 0.35, 0.65, 0.95];
+  dots.forEach((dot, idx) => {
+    dot.addEventListener('click', () => {
+      const totalDistance = container.offsetHeight - (window.innerHeight - stickyOffset);
+      const targetScroll = container.offsetTop - stickyOffset + dotTargets[idx] * totalDistance;
+      window.scrollTo({
+        top: Math.max(0, targetScroll),
+        behavior: 'smooth'
+      });
+    });
+  });
+
+  // Botão "Explorar Sabores 🧁": scroll suave direto para a vitrine
+  if (btnExploreFlavors && vitrineSection) {
+    btnExploreFlavors.addEventListener('click', (e) => {
+      e.preventDefault();
+      vitrineSection.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
+  // Execução inicial
+  updateScrollytelling();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadProducts();
+  initHeroScrollytelling();
+});
