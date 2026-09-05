@@ -22,9 +22,9 @@ export default async function HomePage() {
       : INITIAL_PRODUCTS;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-16 py-6 sm:py-10">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-8 sm:space-y-12 lg:space-y-16 py-4 sm:py-8">
       {/* Hero Section Artesanal com Animações Anime.js */}
-      <section className="relative overflow-hidden rounded-3xl sm:rounded-4xl bg-gradient-to-b from-[#FDF0E9] to-[#FEFAF6] dark:from-[#251812] dark:to-[#1a100a] border border-border/80 dark:border-border/50 p-8 sm:p-14 shadow-sm">
+      <section className="relative overflow-hidden rounded-3xl sm:rounded-4xl bg-gradient-to-b from-[#FDF0E9] to-[#FEFAF6] dark:from-[#251812] dark:to-[#1a100a] border border-border/80 dark:border-border/50 p-6 sm:p-10 lg:p-14 shadow-sm">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Texto Principal com Reveal */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">

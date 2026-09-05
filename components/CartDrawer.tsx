@@ -73,18 +73,18 @@ export function CartDrawer() {
             {/* Aviso de Frete Grátis com Barra de Progresso */}
             <div className="pt-2 pb-1">
               {shippingFee === 0 ? (
-                <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-2xl text-xs font-medium flex items-center gap-2">
+                <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 text-emerald-900 dark:text-emerald-200 rounded-2xl text-xs font-medium flex items-center gap-2">
                   <span>🎉</span>
                   <span>Parabéns! Você ganhou <strong>Frete Grátis</strong> para este pedido!</span>
                 </div>
               ) : (
-                <div className="p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-2xl text-xs space-y-1.5">
+                <div className="p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 text-amber-900 dark:text-amber-200 rounded-2xl text-xs space-y-1.5">
                   <div className="flex justify-between font-medium">
                     <span>Falta <strong>{formatBRL(diffForFreeShipping)}</strong> para ter <strong>Frete Grátis</strong>!</span>
                   </div>
-                  <div className="w-full bg-amber-200/60 rounded-full h-1.5 overflow-hidden">
+                  <div className="w-full bg-amber-200/60 dark:bg-amber-900/50 rounded-full h-1.5 overflow-hidden">
                     <div
-                      className="bg-amber-500 h-full rounded-full transition-all duration-300"
+                      className="bg-amber-500 dark:bg-amber-400 h-full rounded-full transition-all duration-300"
                       style={{ width: `${Math.min(100, (subtotal / 49.9) * 100)}%` }}
                     />
                   </div>

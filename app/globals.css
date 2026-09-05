@@ -116,7 +116,8 @@
 }
 
 .dark [data-sonner-toast] {
-  --normal-bg: #281b15 !important;
+  background-color: #24140E !important;
+  --normal-bg: #24140E !important;
   --normal-border: rgba(232, 93, 117, 0.45) !important;
   --normal-text: #faf5f0 !important;
 }

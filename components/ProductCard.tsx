@@ -79,7 +79,7 @@ export function ProductCard({ product }: ProductCardProps) {
           href={`/produto/${product.id}`}
           className="group-hover:text-primary transition-colors block"
         >
-          <h3 className="font-display font-semibold text-lg text-foreground line-clamp-1">
+          <h3 className="font-display font-semibold text-base sm:text-lg text-foreground line-clamp-2 min-h-[3rem] sm:min-h-[3.5rem] flex items-center leading-snug">
             {product.name}
           </h3>
         </Link>

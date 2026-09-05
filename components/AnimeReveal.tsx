@@ -47,6 +47,7 @@ export function AnimeReveal({
           if (entry.isIntersecting && !hasRevealed) {
             setHasRevealed(true);
             observer.unobserve(el);
+            el.style.opacity = "1";
 
             if (variant === "stagger-children") {
               const childrenNodes = el.querySelectorAll(".anime-child");
