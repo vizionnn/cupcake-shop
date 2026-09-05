@@ -125,15 +125,17 @@ export function CartDrawer() {
                     </div>
                   </div>
 
-                  {/* Controles de Quantidade acessíveis (Touch target 36x36px) */}
-                  <div className="flex items-center gap-1.5 bg-muted/60 border border-border/80 rounded-full p-1 shrink-0">
+                  {/* Controles de Quantidade acessíveis (Touch target 44×44px conforme WCAG 2.5.8) */}
+                  <div className="flex items-center gap-1 bg-muted/60 border border-border/80 rounded-full p-0.5 shrink-0">
                     <button
                       type="button"
                       onClick={() => updateQuantity(item.product_id, -1)}
-                      className="w-7 h-7 rounded-full bg-white flex items-center justify-center text-foreground hover:bg-muted active:scale-95 transition-all text-xs font-bold shadow-2xs"
+                      className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground hover:text-primary active:scale-95 transition-all text-xs font-bold"
                       aria-label={`Diminuir quantidade de ${item.name}`}
                     >
-                      <Minus className="w-3 h-3" />
+                      <span className="w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-2xs hover:bg-muted">
+                        <Minus className="w-3 h-3" />
+                      </span>
                     </button>
                     <span className="w-5 text-center text-xs font-bold text-foreground">
                       {item.quantity}
@@ -141,17 +143,19 @@ export function CartDrawer() {
                     <button
                       type="button"
                       onClick={() => updateQuantity(item.product_id, 1)}
-                      className="w-7 h-7 rounded-full bg-white flex items-center justify-center text-foreground hover:bg-muted active:scale-95 transition-all text-xs font-bold shadow-2xs"
+                      className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground hover:text-primary active:scale-95 transition-all text-xs font-bold"
                       aria-label={`Aumentar quantidade de ${item.name}`}
                     >
-                      <Plus className="w-3 h-3" />
+                      <span className="w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-2xs hover:bg-muted">
+                        <Plus className="w-3 h-3" />
+                      </span>
                     </button>
                   </div>
 
                   <button
                     type="button"
                     onClick={() => removeFromCart(item.product_id)}
-                    className="p-2 text-muted-foreground hover:text-destructive transition-colors shrink-0"
+                    className="min-w-[44px] min-h-[44px] flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors shrink-0"
                     aria-label={`Remover ${item.name} da sacola`}
                   >
                     <Trash2 className="w-4 h-4" />
@@ -181,7 +185,11 @@ export function CartDrawer() {
                   )}
                 </div>
                 <Separator className="my-1" />
-                <div className="flex justify-between text-base font-bold text-foreground pt-1">
+                <div
+                  aria-live="polite"
+                  aria-atomic="true"
+                  className="flex justify-between text-base font-bold text-foreground pt-1"
+                >
                   <span>Total</span>
                   <span className="text-primary font-display text-lg">{formatBRL(grandTotal)}</span>
                 </div>

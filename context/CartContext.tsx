@@ -12,6 +12,7 @@ interface CartContextType {
   diffForFreeShipping: number;
   grandTotal: number;
   isDrawerOpen: boolean;
+  isLoaded: boolean;
   addToCart: (product: Product, quantity?: number) => void;
   updateQuantity: (productId: number, delta: number) => void;
   removeFromCart: (productId: number) => void;
@@ -136,6 +137,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         diffForFreeShipping,
         grandTotal,
         isDrawerOpen,
+        isLoaded: mounted,
         addToCart,
         updateQuantity,
         removeFromCart,

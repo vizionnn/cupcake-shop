@@ -33,11 +33,17 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${fraunces.variable} ${karla.variable} scroll-smooth`}>
       <body className="min-h-screen flex flex-col bg-background font-sans text-foreground antialiased selection:bg-primary/20 selection:text-primary">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:font-semibold focus:rounded-full focus:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all"
+        >
+          Pular para o conteúdo principal
+        </a>
         <CartProvider>
           <AnnouncementBar />
           <Header />
           <CartDrawer />
-          <main className="flex-1">{children}</main>
+          <main id="main-content" className="flex-1">{children}</main>
           <footer className="border-t border-border bg-card py-8 text-center text-xs text-muted-foreground mt-16">
             <div className="max-w-6xl mx-auto px-4">
               <p className="font-display font-medium text-foreground text-sm mb-1">
