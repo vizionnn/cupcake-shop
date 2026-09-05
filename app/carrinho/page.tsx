@@ -123,7 +123,7 @@ export default function CartPage() {
                 >
                   <Link
                     href={`/produto/${item.product_id}`}
-                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#FDF0E9] flex items-center justify-center shrink-0 overflow-hidden"
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#FDF0E9] dark:bg-[#342219] flex items-center justify-center shrink-0 overflow-hidden"
                   >
                     <PhotoOrEmoji
                       photoOrEmoji={item.emoji}
@@ -153,7 +153,7 @@ export default function CartPage() {
                       className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground hover:text-primary active:scale-95 transition-all text-xs font-bold"
                       aria-label={`Diminuir quantidade de ${item.name}`}
                     >
-                      <span className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-2xs hover:bg-muted">
+                      <span className="w-8 h-8 rounded-full bg-card dark:bg-[#342219] flex items-center justify-center shadow-2xs hover:bg-muted">
                         <Minus className="w-3.5 h-3.5" />
                       </span>
                     </button>
@@ -166,7 +166,7 @@ export default function CartPage() {
                       className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground hover:text-primary active:scale-95 transition-all text-xs font-bold"
                       aria-label={`Aumentar quantidade de ${item.name}`}
                     >
-                      <span className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-2xs hover:bg-muted">
+                      <span className="w-8 h-8 rounded-full bg-card dark:bg-[#342219] flex items-center justify-center shadow-2xs hover:bg-muted">
                         <Plus className="w-3.5 h-3.5" />
                       </span>
                     </button>

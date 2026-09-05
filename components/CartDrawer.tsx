@@ -102,7 +102,7 @@ export function CartDrawer() {
                   <Link
                     href={`/produto/${item.product_id}`}
                     onClick={() => setIsDrawerOpen(false)}
-                    className="w-14 h-14 rounded-xl bg-[#FDF0E9] flex items-center justify-center shrink-0 overflow-hidden"
+                    className="w-14 h-14 rounded-xl bg-[#FDF0E9] dark:bg-[#342219] flex items-center justify-center shrink-0 overflow-hidden"
                   >
                     <PhotoOrEmoji
                       photoOrEmoji={item.emoji}
@@ -133,7 +133,7 @@ export function CartDrawer() {
                       className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground hover:text-primary active:scale-95 transition-all text-xs font-bold"
                       aria-label={`Diminuir quantidade de ${item.name}`}
                     >
-                      <span className="w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-2xs hover:bg-muted">
+                      <span className="w-7 h-7 rounded-full bg-card dark:bg-[#342219] flex items-center justify-center shadow-2xs hover:bg-muted">
                         <Minus className="w-3 h-3" />
                       </span>
                     </button>
@@ -146,7 +146,7 @@ export function CartDrawer() {
                       className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground hover:text-primary active:scale-95 transition-all text-xs font-bold"
                       aria-label={`Aumentar quantidade de ${item.name}`}
                     >
-                      <span className="w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-2xs hover:bg-muted">
+                      <span className="w-7 h-7 rounded-full bg-card dark:bg-[#342219] flex items-center justify-center shadow-2xs hover:bg-muted">
                         <Plus className="w-3 h-3" />
                       </span>
                     </button>

@@ -92,10 +92,10 @@ export function HeroPuffs() {
         type="button"
         onClick={() => handlePuffClick(".hero-main-puff")}
         aria-label="Interagir com cupcake"
-        className="hero-main-puff cursor-pointer w-48 h-48 sm:w-56 sm:h-56 rounded-full bg-white shadow-2xl border-2 border-primary/20 flex flex-col items-center justify-center p-4 z-10 transition-shadow hover:shadow-primary/20"
+        className="hero-main-puff cursor-pointer w-48 h-48 sm:w-56 sm:h-56 rounded-full bg-white dark:bg-[#281b15] shadow-2xl border-2 border-primary/20 dark:border-primary/40 flex flex-col items-center justify-center p-4 z-10 transition-shadow hover:shadow-primary/20 dark:shadow-black/60"
       >
         <span className="text-6xl sm:text-7xl select-none">🧁</span>
-        <span className="text-xs font-bold text-primary mt-2 bg-primary/10 px-3.5 py-1 rounded-full shadow-2xs">
+        <span className="text-xs font-bold text-primary mt-2 bg-primary/10 dark:bg-primary/25 px-3.5 py-1 rounded-full shadow-2xs">
           Adoce seu dia ❤️
         </span>
       </button>
@@ -105,7 +105,7 @@ export function HeroPuffs() {
         type="button"
         onClick={() => handlePuffClick(".hero-strawberry-puff")}
         aria-label="Interagir com morango"
-        className="hero-strawberry-puff cursor-pointer absolute top-2 right-2 w-20 h-20 rounded-full bg-white/95 backdrop-blur-xs shadow-lg border border-red-200 flex items-center justify-center text-3xl z-20 hover:border-red-400"
+        className="hero-strawberry-puff cursor-pointer absolute top-2 right-2 w-20 h-20 rounded-full bg-white/95 dark:bg-[#281b15]/95 backdrop-blur-xs shadow-lg border border-red-200 dark:border-red-900/40 flex items-center justify-center text-3xl z-20 hover:border-red-400"
       >
         <span className="select-none">🍓</span>
       </button>
@@ -115,7 +115,7 @@ export function HeroPuffs() {
         type="button"
         onClick={() => handlePuffClick(".hero-choco-puff")}
         aria-label="Interagir com chocolate"
-        className="hero-choco-puff cursor-pointer absolute bottom-2 left-2 w-20 h-20 rounded-full bg-white/95 backdrop-blur-xs shadow-lg border border-amber-900/20 flex items-center justify-center text-3xl z-20 hover:border-amber-700"
+        className="hero-choco-puff cursor-pointer absolute bottom-2 left-2 w-20 h-20 rounded-full bg-white/95 dark:bg-[#281b15]/95 backdrop-blur-xs shadow-lg border border-amber-900/20 dark:border-amber-900/40 flex items-center justify-center text-3xl z-20 hover:border-amber-700"
       >
         <span className="select-none">🍫</span>
       </button>
