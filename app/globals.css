@@ -139,4 +139,69 @@
   border-color: hsl(var(--border)) !important;
 }
 
+/* ==========================================================================
+   Fluent Reveal Highlight (Spotlight Card & Mouse-tracking Border Glow)
+   Inspirado no Microsoft Fluent Design System, Linear e Vercel
+   ========================================================================== */
+.fluent-card-wrapper {
+  --mouse-x: -999px;
+  --mouse-y: -999px;
+  --spotlight-opacity: 0;
+  position: relative;
+  border-radius: 1.5rem;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Camada da borda dinâmica (Border Reveal) */
+.fluent-border-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--spotlight-opacity, 0);
+  transition: opacity 0.3s ease;
+  background: radial-gradient(
+    280px circle at var(--mouse-x) var(--mouse-y),
+    rgba(232, 93, 117, 0.65),
+    rgba(242, 193, 78, 0.3) 45%,
+    transparent 80%
+  );
+  z-index: 0;
+}
+
+.dark .fluent-border-glow {
+  background: radial-gradient(
+    320px circle at var(--mouse-x) var(--mouse-y),
+    rgba(232, 93, 117, 0.75),
+    rgba(242, 193, 78, 0.4) 40%,
+    transparent 80%
+  );
+}
+
+/* Camada da superfície iluminada (Spotlight) */
+.fluent-surface-spotlight {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--spotlight-opacity, 0);
+  transition: opacity 0.3s ease;
+  background: radial-gradient(
+    340px circle at var(--mouse-x) var(--mouse-y),
+    rgba(232, 93, 117, 0.07),
+    rgba(242, 193, 78, 0.04) 40%,
+    transparent 80%
+  );
+  z-index: 1;
+}
+
+.dark .fluent-surface-spotlight {
+  background: radial-gradient(
+    360px circle at var(--mouse-x) var(--mouse-y),
+    rgba(232, 93, 117, 0.14),
+    rgba(242, 193, 78, 0.08) 40%,
+    transparent 80%
+  );
+}
+
 

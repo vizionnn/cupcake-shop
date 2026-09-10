@@ -85,12 +85,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
     .from("products")
     .select("*")
     .neq("id", product.id)
-    .limit(6);
+    .limit(12);
 
   if (recData && recData.length > 0) {
     recommended = recData as Product[];
   } else {
-    recommended = getRecommendedProducts(product.id, 6);
+    recommended = getRecommendedProducts(product.id, 12);
   }
 
   return (

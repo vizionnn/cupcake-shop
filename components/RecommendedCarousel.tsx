@@ -68,17 +68,17 @@ export function RecommendedCarousel({ products }: RecommendedCarouselProps) {
         </Button>
       </div>
 
-      {/* Trilho de Cards do Carrossel com Snap suave */}
+      {/* Trilho de Cards do Carrossel com Snap suave e suporte a expansão sem cortes */}
       <div
         ref={scrollRef}
         onScroll={checkScroll}
-        className="flex items-stretch gap-6 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar"
+        className="flex items-start gap-5 sm:gap-6 overflow-x-auto min-h-[440px] pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar transition-all duration-300"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {products.map((item) => (
           <div
             key={item.id}
-            className="w-72 sm:w-80 shrink-0 snap-start flex flex-col"
+            className="w-[320px] sm:w-[350px] shrink-0 snap-start flex flex-col relative hover:z-30 focus-within:z-30"
           >
             <ProductCard product={item} />
           </div>
