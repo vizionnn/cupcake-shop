@@ -61,7 +61,7 @@ export function CatalogClient({ initialProducts }: CatalogClientProps) {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 items-start pb-28">
           {filteredProducts.map((product, index) => (
             <AnimeReveal
               key={`${product.id}-${activeFilter}`}
@@ -69,6 +69,7 @@ export function CatalogClient({ initialProducts }: CatalogClientProps) {
               delay={(index % 4) * 60}
               duration={600}
               threshold={0.06}
+              className="relative hover:z-30 focus-within:z-30"
             >
               <ProductCard product={product} />
             </AnimeReveal>
