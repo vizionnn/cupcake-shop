@@ -14,6 +14,8 @@ export function RecommendedCarousel({ products }: RecommendedCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  // Coordenação de card único ativo no carrossel
+  const [activeExpandedId, setActiveExpandedId] = useState<number | null>(null);
 
   const checkScroll = () => {
     if (scrollRef.current) {
@@ -41,7 +43,7 @@ export function RecommendedCarousel({ products }: RecommendedCarouselProps) {
 
   return (
     <div className="relative group">
-      {/* Controles de navegação do carrossel */}
+      {/* Controles de navegação do carrossel (Touch Targets de 44px conforme WCAG 2.2 AA) */}
       <div className="hidden sm:flex items-center gap-2 absolute -top-14 right-0 z-10">
         <Button
           type="button"
@@ -50,7 +52,7 @@ export function RecommendedCarousel({ products }: RecommendedCarouselProps) {
           onClick={() => scroll("left")}
           disabled={!canScrollLeft}
           aria-label="Rolar carrossel para a esquerda"
-          className="w-9 h-9 rounded-full border-border bg-card hover:bg-muted shadow-xs disabled:opacity-30 transition-all"
+          className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full border-border bg-card hover:bg-muted shadow-xs disabled:opacity-30 transition-all active:scale-95 cursor-pointer"
         >
           <ChevronLeft className="w-4 h-4" />
         </Button>
@@ -62,27 +64,44 @@ export function RecommendedCarousel({ products }: RecommendedCarouselProps) {
           onClick={() => scroll("right")}
           disabled={!canScrollRight}
           aria-label="Rolar carrossel para a direita"
-          className="w-9 h-9 rounded-full border-border bg-card hover:bg-muted shadow-xs disabled:opacity-30 transition-all"
+          className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full border-border bg-card hover:bg-muted shadow-xs disabled:opacity-30 transition-all active:scale-95 cursor-pointer"
         >
           <ChevronRight className="w-4 h-4" />
         </Button>
       </div>
 
-      {/* Trilho de Cards do Carrossel com Snap suave e suporte a expansão sem cortes */}
+      {/* 
+        Trilho de Cards do Carrossel:
+        - Largura fluida 'w-[84vw] max-w-[340px] sm:w-[350px]' (Regra Antiquebra Mobile: Zero Horizontal Overflow).
+        - 'min-h-[460px] pb-6 pt-2' para garantir que os cards expandidos de 430px com sombras e feixes não sofram corte.
+      */}
       <div
         ref={scrollRef}
         onScroll={checkScroll}
-        className="flex items-start gap-5 sm:gap-6 overflow-x-auto min-h-[440px] pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar transition-all duration-300"
+        className="flex items-start gap-4 sm:gap-6 overflow-x-auto min-h-[460px] pb-6 pt-2 snap-x snap-mandatory scroll-smooth no-scrollbar transition-all duration-300 px-1"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        {products.map((item) => (
-          <div
-            key={item.id}
-            className="w-[320px] sm:w-[350px] shrink-0 snap-start flex flex-col relative hover:z-30 focus-within:z-30"
-          >
-            <ProductCard product={item} />
-          </div>
-        ))}
+        {products.map((item) => {
+          const isThisExpanded = activeExpandedId === item.id;
+
+          return (
+            <div
+              key={item.id}
+              className={`w-[84vw] max-w-[340px] sm:w-[350px] shrink-0 snap-start flex flex-col relative ${
+                isThisExpanded ? "z-40" : "z-0 hover:z-20"
+              } focus-within:z-40 transition-[z-index] duration-300`}
+            >
+              <ProductCard
+                product={item}
+                isExpandedControlled={isThisExpanded}
+                onExpandControlled={() => setActiveExpandedId(item.id)}
+                onCollapseControlled={() => {
+                  setActiveExpandedId((current) => (current === item.id ? null : current));
+                }}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
