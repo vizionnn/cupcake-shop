@@ -5,6 +5,7 @@ import { Product } from "@/types";
 import { useCart } from "@/context/CartContext";
 import { formatBRL } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import { Plus, Minus, ShoppingBag, Check } from "lucide-react";
 
 interface ProductDetailClientProps {
@@ -60,13 +61,14 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         )}
       </div>
 
-      {/* Botão de Adicionar com Preço Total Dinâmico */}
-      <Button
+      {/* Botão de Adicionar em Vidro Líquido com Preço Total Dinâmico */}
+      <LiquidButton
         type="button"
+        preset="berry"
+        size="lg"
         onClick={handleAdd}
         disabled={isOutOfStock}
-        size="lg"
-        className="w-full sm:w-auto min-w-[260px] bg-primary hover:bg-[#C7415A] text-white rounded-full py-6 text-base font-semibold shadow-lg shadow-primary/25 gap-2"
+        className="w-full sm:w-auto min-w-[280px] py-6 text-base font-bold shadow-xl shadow-primary/30 gap-2.5"
       >
         {added ? (
           <>
@@ -81,7 +83,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             <span>Adicionar à Sacola · {formatBRL(totalPrice)}</span>
           </>
         )}
-      </Button>
+      </LiquidButton>
     </div>
   );
 }

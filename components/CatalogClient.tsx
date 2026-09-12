@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Product } from "@/types";
 import { ProductCard } from "@/components/ProductCard";
 import { AnimeReveal } from "@/components/AnimeReveal";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 
 interface CatalogClientProps {
   initialProducts: Product[];
@@ -34,18 +35,20 @@ export function CatalogClient({ initialProducts }: CatalogClientProps) {
         {tags.map((tag) => {
           const isActive = tag === activeFilter;
           return (
-            <button
+            <LiquidButton
               key={tag}
               type="button"
+              variant={isActive ? "default" : "light"}
+              preset="berry"
+              hasBeam={isActive}
+              size="default"
               onClick={() => handleFilterChange(tag)}
-              className={`rounded-full px-5 py-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center text-sm font-semibold transition-all cursor-pointer select-none ${
-                isActive
-                  ? "bg-primary text-white shadow-md shadow-primary/25 scale-105"
-                  : "bg-card border border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:bg-muted/40 active:scale-95"
+              className={`px-5 font-semibold text-sm ${
+                isActive ? "scale-105 shadow-md shadow-primary/25" : "text-muted-foreground"
               }`}
             >
               {tag}
-            </button>
+            </LiquidButton>
           );
         })}
       </div>
@@ -60,13 +63,15 @@ export function CatalogClient({ initialProducts }: CatalogClientProps) {
           <p className="text-sm text-muted-foreground">
             Que tal conferir todos os sabores disponíveis no momento?
           </p>
-          <button
+          <LiquidButton
             type="button"
+            variant="light"
+            size="default"
             onClick={() => handleFilterChange("Todos")}
-            className="text-primary hover:underline text-sm font-semibold inline-flex items-center justify-center min-h-[44px] px-4 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 cursor-pointer"
+            className="text-primary font-semibold inline-flex items-center justify-center mx-auto"
           >
             Ver todos os sabores →
-          </button>
+          </LiquidButton>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 items-start pb-28">

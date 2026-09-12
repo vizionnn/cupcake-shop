@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function Header() {
@@ -42,24 +43,24 @@ export function Header() {
             Sacola
           </Link>
 
-          {/* Botão para abrir o Slide-over Drawer */}
-          <Button
+          {/* Botão para abrir o Slide-over Drawer em Vidro Líquido com Feixe Berry */}
+          <LiquidButton
             type="button"
-            variant="default"
+            preset="berry"
             size="default"
             onClick={openDrawer}
-            className="relative gap-2 bg-primary hover:bg-[#C7415A] text-white rounded-full px-5 py-2.5 shadow-md shadow-primary/20"
+            className="relative gap-2 px-5 py-2.5 shadow-md shadow-primary/25 min-h-[44px]"
             aria-label={`Ver carrinho com ${count} itens`}
           >
-            <ShoppingBag className="w-4 h-4" />
-            <span className="font-medium text-sm">Sacola</span>
+            <ShoppingBag className="w-4 h-4 text-white" />
+            <span className="font-semibold text-sm text-white">Sacola</span>
             <span
-              className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold bg-white text-primary rounded-full ml-0.5"
+              className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold bg-white text-primary rounded-full ml-0.5 shadow-2xs"
               aria-live="polite"
             >
               {count}
             </span>
-          </Button>
+          </LiquidButton>
         </div>
       </div>
     </header>

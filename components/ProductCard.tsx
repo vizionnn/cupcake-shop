@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Check, ChevronDown, ChevronUp, ArrowRight } from "lucide-react";
 import { animate } from "animejs";
 import { BorderBeam } from "@/components/ui/border-beam";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 
 interface ProductCardProps {
   product: Product;
@@ -353,16 +354,18 @@ export function ProductCard({
 
             {/* Lado Direito: Botão Espiar e Preço */}
             <div className="shrink-0 flex flex-col items-end justify-between self-stretch py-0.5">
-              <button
+              <LiquidButton
                 type="button"
+                variant="light"
+                size="sm"
                 tabIndex={isExpanded ? -1 : 0}
                 onClick={handleOpenMobile}
-                className="inline-flex items-center justify-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-primary px-3 py-1.5 rounded-full bg-muted/60 hover:bg-muted/90 transition-all cursor-pointer min-h-[44px] min-w-[44px] active:scale-95"
+                className="inline-flex items-center justify-center gap-1 text-[11px] font-semibold px-3.5 py-1.5 min-h-[44px] min-w-[44px]"
                 aria-label={`Espiar detalhes do ${product.name}`}
               >
                 <span>Espiar</span>
                 <ChevronDown className="w-3.5 h-3.5 text-primary" />
-              </button>
+              </LiquidButton>
 
               <div className="mt-auto">
                 <span className="font-display font-bold text-xs sm:text-sm text-primary block text-right whitespace-nowrap">
@@ -433,16 +436,18 @@ export function ProductCard({
                 </Link>
 
                 {/* Botão de Fechar no Mobile (Touch Target 44x44px conforme WCAG 2.2 AA) */}
-                <button
+                <LiquidButton
                   type="button"
+                  variant="light"
+                  size="sm"
                   tabIndex={isExpanded ? 0 : -1}
                   onClick={handleCloseMobile}
-                  className="text-xs font-semibold text-foreground hover:text-primary flex items-center justify-center gap-1 px-3 py-2 rounded-full bg-muted/80 hover:bg-muted transition-all min-h-[44px] min-w-[44px] shrink-0 cursor-pointer active:scale-95"
+                  className="text-xs font-semibold px-3.5 py-2 min-h-[44px] min-w-[44px] gap-1 shrink-0"
                   aria-label={`Recolher detalhes do ${product.name}`}
                 >
                   <span>Fechar</span>
                   <ChevronUp className="w-4 h-4 text-primary" />
-                </button>
+                </LiquidButton>
               </div>
 
               <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
@@ -462,40 +467,45 @@ export function ProductCard({
               </div>
 
               <div className="flex items-center gap-2">
-                <button
+                <LiquidButton
                   type="button"
+                  preset="berry"
+                  size="default"
                   tabIndex={isExpanded ? 0 : -1}
                   onClick={handleAdd}
                   disabled={isOutOfStock}
-                  className="relative overflow-hidden inline-flex items-center justify-center rounded-full px-4.5 py-2 text-xs font-bold gap-1.5 bg-gradient-to-b from-primary via-[#d13b56] to-[#a3223b] hover:from-[#f43f5e] hover:to-[#be123c] text-white shadow-md shadow-primary/25 border border-white/20 transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none min-h-[44px] cursor-pointer select-none group"
+                  className="px-5 py-2 text-xs font-bold gap-1.5 min-h-[44px] shadow-lg shadow-primary/25"
                 >
-                  {!isOutOfStock && <BorderBeam preset="berry" duration={4} borderWidth={1.5} />}
-                  <span className="relative z-10 flex items-center gap-1.5">
-                    {added ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-white" />
-                        <span>Adicionado</span>
-                      </>
-                    ) : isOutOfStock ? (
-                      <span>Esgotado</span>
-                    ) : (
-                      <>
-                        <Plus className="w-3.5 h-3.5" />
-                        <span>Adicionar</span>
-                      </>
-                    )}
-                  </span>
-                </button>
+                  {added ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-white" />
+                      <span>Adicionado</span>
+                    </>
+                  ) : isOutOfStock ? (
+                    <span>Esgotado</span>
+                  ) : (
+                    <>
+                      <Plus className="w-3.5 h-3.5 text-white" />
+                      <span>Adicionar</span>
+                    </>
+                  )}
+                </LiquidButton>
 
-                <Link
-                  href={`/produto/${product.id}`}
+                <LiquidButton
+                  asChild
+                  variant="outline"
+                  size="icon"
                   tabIndex={isExpanded ? 0 : -1}
-                  className="w-11 h-11 rounded-full border border-border/70 hover:border-primary flex items-center justify-center text-muted-foreground hover:text-primary transition-colors min-w-[44px] min-h-[44px] active:scale-95"
-                  title="Ver detalhes completos do cupcake"
-                  aria-label={`Ver detalhes completos do ${product.name}`}
+                  className="w-11 h-11 rounded-full min-w-[44px] min-h-[44px]"
                 >
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+                  <Link
+                    href={`/produto/${product.id}`}
+                    title="Ver detalhes completos do cupcake"
+                    aria-label={`Ver detalhes completos do ${product.name}`}
+                  >
+                    <ArrowRight className="w-4 h-4 text-foreground hover:text-primary" />
+                  </Link>
+                </LiquidButton>
               </div>
             </div>
           </div>

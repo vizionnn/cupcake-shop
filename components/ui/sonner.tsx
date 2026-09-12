@@ -42,7 +42,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           title: "!text-[#C7415A] dark:!text-[#FF8FA3] font-bold text-sm tracking-tight",
           description: "!text-[#5C2430] dark:!text-[#DFCDC5] font-semibold text-xs",
           actionButton:
-            "!bg-[#E85D75] hover:!bg-[#C7415A] text-white rounded-full font-bold text-xs px-4 py-2 shadow-sm transition-all active:scale-95",
+            "group relative overflow-hidden !bg-gradient-to-b !from-[#f43f5e]/90 !via-[#e85d75]/95 !to-[#be123c]/95 !border !border-white/30 !shadow-[0_4px_14px_rgba(232,93,117,0.35),inset_0_1px_1.5px_rgba(255,255,255,0.6)] hover:!from-[#fb7185] hover:!to-[#a3223b] !text-white !rounded-full !font-bold !text-xs !px-4 !py-2.5 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.96] hover:-translate-y-0.5 hover:brightness-105 cursor-pointer before:pointer-events-none before:absolute before:inset-x-2 before:top-[1px] before:h-[35%] before:rounded-t-full before:bg-gradient-to-b before:from-white/40 before:to-transparent before:opacity-80 group-hover:before:opacity-100",
           cancelButton:
             "bg-[#FFF0F3] dark:!bg-[#382017] !text-[#C7415A] dark:!text-[#FF8FA3] rounded-full font-semibold text-xs px-3 py-1.5",
           closeButton:
