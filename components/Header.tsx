@@ -13,10 +13,10 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
         {/* Logo */}
-        <Link href="/" className="flex items-baseline gap-2.5 group">
-          <span className="font-display font-bold text-2xl sm:text-3xl text-foreground tracking-tight group-hover:text-primary transition-colors">
+        <Link href="/" className="flex items-baseline gap-2 group shrink-0">
+          <span className="font-display font-bold text-lg sm:text-3xl text-foreground tracking-tight group-hover:text-primary transition-colors whitespace-nowrap">
             Nuvem de Açúcar
           </span>
           <span className="hidden sm:inline-block text-xs font-medium text-muted-foreground uppercase tracking-widest">
@@ -25,7 +25,7 @@ export function Header() {
         </Link>
 
         {/* Navegação, Switch iOS de Tema e Botão da Sacola */}
-        <div className="flex items-center gap-2.5 sm:gap-5">
+        <div className="flex items-center gap-2 sm:gap-4 shrink-0">
           <Link
             href="/#cardapio"
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden sm:inline-block"
@@ -47,19 +47,22 @@ export function Header() {
           <LiquidButton
             type="button"
             preset="berry"
-            size="default"
+            hasBeam={true}
+            duration={4}
             onClick={openDrawer}
-            className="relative gap-2 px-5 py-2.5 shadow-md shadow-primary/25 min-h-[44px]"
+            className="relative p-0 sm:px-5 sm:py-2.5 min-w-[42px] min-h-[42px] sm:min-w-[44px] sm:min-h-[44px] w-10 h-10 sm:w-auto sm:h-11 shadow-md shadow-primary/25 rounded-full shrink-0"
             aria-label={`Ver carrinho com ${count} itens`}
           >
-            <ShoppingBag className="w-4 h-4 text-white" />
-            <span className="font-semibold text-sm text-white">Sacola</span>
-            <span
-              className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold bg-white text-primary rounded-full ml-0.5 shadow-2xs"
-              aria-live="polite"
-            >
-              {count}
-            </span>
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <ShoppingBag className="w-4 h-4 text-white shrink-0" />
+              <span className="font-semibold text-sm text-white hidden sm:inline">Sacola</span>
+              <span
+                className="inline-flex items-center justify-center min-w-[19px] h-[19px] px-1 text-[11px] font-bold bg-white text-primary rounded-full shadow-2xs"
+                aria-live="polite"
+              >
+                {count}
+              </span>
+            </div>
           </LiquidButton>
         </div>
       </div>
