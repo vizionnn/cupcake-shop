@@ -1,19 +1,21 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import { Printer } from "lucide-react";
 
 export function PrintReceiptButton() {
   return (
-    <Button
+    <LiquidButton
       type="button"
-      variant="outline"
+      variant="light"
+      preset="silver"
+      size="default"
       onClick={() => window.print()}
-      className="rounded-full px-6 gap-2 font-semibold border-border bg-card hover:bg-muted text-foreground shadow-xs transition-colors print:hidden"
+      className="px-6 gap-2 font-semibold print:hidden shadow-xs"
     >
       <Printer className="w-4 h-4" />
       <span>Imprimir Recibo / Salvar PDF</span>
-    </Button>
+    </LiquidButton>
   );
 }

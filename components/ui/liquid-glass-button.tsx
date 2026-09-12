@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { BorderBeamPreset, PRESET_GRADIENTS, BorderBeam } from "./border-beam";
 
 const buttonVariants = cva(
-  "inline-flex items-center cursor-pointer justify-center gap-2 whitespace-nowrap rounded-2xl text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[0.98]",
+  "inline-flex items-center cursor-pointer justify-center gap-2 whitespace-nowrap rounded-2xl text-sm font-medium transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[0.96]",
   {
     variants: {
       variant: {
@@ -56,33 +56,50 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = "Button";
 
+/* ==========================================================================
+   Liquid Glass Button Variants (taste-skill + transitions.dev + ux-designer)
+   Paleta artesanal: Framboesa Glaciada, Baunilha Porcelana e Vidro Fosco
+   ========================================================================== */
 const liquidbuttonVariants = cva(
-  "inline-flex items-center transition-all justify-center cursor-pointer gap-2 whitespace-nowrap rounded-full text-sm font-semibold transition-[color,box-shadow,transform] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 active:scale-[0.97]",
+  "relative inline-flex items-center justify-center cursor-pointer gap-2 whitespace-nowrap rounded-full text-sm font-semibold transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 active:scale-[0.96] hover:-translate-y-0.5 hover:brightness-105 select-none",
   {
     variants: {
       variant: {
+        // Framboesa Glaciada Líquida (CTA Principal com alto impacto gastronômico)
         default:
-          "bg-transparent text-slate-100 hover:text-white",
-        dark:
-          "bg-transparent text-slate-100 hover:text-white",
+          "bg-transparent text-white shadow-lg shadow-primary/25",
+        berry:
+          "bg-transparent text-white shadow-lg shadow-primary/25",
+        // Baunilha Porcelana (Superfícies claras, texto cacau nobre #3B2318)
         light:
-          "bg-transparent text-slate-800 hover:text-slate-950 focus-visible:ring-primary/40",
-        destructive:
-          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
+          "bg-transparent text-[#3B2318] dark:text-[#faf5f0] shadow-sm",
+        cream:
+          "bg-transparent text-[#3B2318] dark:text-[#faf5f0] shadow-sm",
+        // Vidro Fosco Aveludado (Backdrop blur)
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "bg-transparent text-foreground shadow-xs",
+        frosted:
+          "bg-transparent text-foreground shadow-xs",
+        // Caramelo Artesanal
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "bg-transparent text-[#3B2318] shadow-md shadow-amber-500/20",
+        // Ganache de Cacau Noturno
+        dark:
+          "bg-transparent text-white shadow-lg shadow-black/40",
+        destructive:
+          "bg-transparent text-white shadow-md shadow-destructive/25",
+        ghost:
+          "bg-transparent text-muted-foreground hover:text-primary",
+        link:
+          "bg-transparent text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-11 px-5 py-2.5 has-[>svg]:px-3 min-h-[44px]",
-        sm: "h-9 text-xs gap-1.5 px-4 has-[>svg]:px-4 min-h-[36px]",
-        lg: "h-12 rounded-full px-6 has-[>svg]:px-4 min-h-[48px] text-base",
-        xl: "h-13 rounded-full px-8 has-[>svg]:px-6 min-h-[52px] text-base",
-        xxl: "h-14 rounded-full px-10 has-[>svg]:px-8 min-h-[56px] text-lg",
-        icon: "size-11 min-h-[44px] min-w-[44px]",
+        default: "h-11 px-5 py-2.5 has-[>svg]:px-3.5 min-h-[44px]",
+        sm: "h-9 text-xs gap-1.5 px-3.5 has-[>svg]:px-3 min-h-[36px]",
+        lg: "h-12 rounded-full px-7 has-[>svg]:px-5 min-h-[48px] text-base",
+        xl: "h-14 rounded-full px-9 has-[>svg]:px-6 min-h-[56px] text-base font-bold",
+        xxl: "h-16 rounded-full px-10 has-[>svg]:px-8 min-h-[64px] text-lg font-bold",
+        icon: "size-11 min-h-[44px] min-w-[44px] rounded-full p-0",
       },
     },
     defaultVariants: {
@@ -100,67 +117,156 @@ export interface LiquidButtonProps
   hasBeam?: boolean;
   duration?: number;
   tone?: "dark" | "light" | "auto";
+  contentClassName?: string;
 }
 
-function LiquidButton({
-  className,
-  variant = "default",
-  size,
-  asChild = false,
-  children,
-  preset = "berry",
-  hasBeam = true,
-  duration = 4,
-  tone,
-  ...props
-}: LiquidButtonProps) {
-  const Comp = asChild ? Slot : "button";
-  const isLight = variant === "light" || tone === "light";
+const LiquidButton = React.forwardRef<HTMLButtonElement, LiquidButtonProps>(
+  (
+    {
+      className,
+      variant = "default",
+      size,
+      asChild = false,
+      children,
+      preset = "berry",
+      hasBeam = true,
+      duration = 4,
+      tone,
+      contentClassName,
+      ...props
+    },
+    ref
+  ) => {
+    const isLight = variant === "light" || variant === "cream" || tone === "light";
+    const isFrosted = variant === "outline" || variant === "frosted";
+    const isDark = variant === "dark";
+    const isSecondary = variant === "secondary";
+    const isDestructive = variant === "destructive";
+    const isGhost = variant === "ghost" || variant === "link";
 
-  return (
-    <Comp
-      data-slot="button"
-      className={cn(
-        "relative inline-flex items-center justify-center overflow-hidden rounded-full transition-all group cursor-pointer select-none",
-        liquidbuttonVariants({ variant, size, className })
-      )}
-      {...props}
-    >
-      {/* 1. Feixe rotativo estritamente na borda via BorderBeam mascarado */}
-      {hasBeam && (
-        <BorderBeam
-          preset={preset}
-          duration={duration}
-          borderWidth={1.5}
-          className="z-20"
-        />
-      )}
+    // Preset selecionado de forma harmoniosa com a paleta
+    const activePreset: BorderBeamPreset =
+      preset ||
+      (isLight ? "gold" : isSecondary ? "gold" : isDark ? "silver" : "berry");
 
-      {/* 2. Miolo com acabamento adaptado:
-          - isLight: acabamento claro para superfícies claras (fundo branco/creme, texto cacau escuro)
-          - default / dark: acabamento vidro líquido translúcido para temas escuros
-      */}
-      <div
-        className={cn(
-          "absolute inset-[1.5px] z-0 rounded-full transition-all duration-300",
-          isLight
-            ? "bg-white/95 text-slate-800 border border-slate-200/90 shadow-[0_2px_6px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,0.95)] group-hover:bg-slate-50"
-            : "bg-slate-900/90 text-slate-100 border border-white/10 shadow-[0_2px_8px_rgba(0,0,0,0.4)] group-hover:bg-slate-800/90"
+    const renderInnerContent = (content: React.ReactNode) => (
+      <>
+        {/* 1. Feixe rotativo perimetral via BorderBeam mascarado */}
+        {hasBeam && !isGhost && (
+          <BorderBeam
+            preset={activePreset}
+            duration={duration}
+            borderWidth={1.5}
+            className="z-20"
+          />
         )}
-      />
 
-      {/* 3. Conteúdo com contraste e feedback tátil */}
-      <div
-        className={cn(
-          "relative z-30 flex items-center justify-center gap-2 font-semibold",
-          isLight ? "text-slate-800 group-hover:text-slate-950" : "text-slate-100 group-hover:text-white"
+        {/* 2. Miolo com textura e acabamento artesanal gastronômico (taste-skill):
+            - isLight / cream: porcelana baunilha aveludada com brilho sutil
+            - isFrosted: vidro fosco com backdrop-blur-md
+            - default / berry: framboesa glaciada translúcida rica com specular highlight
+            - isSecondary: caramelo e manteiga artesanal
+            - isDark: ganache cacau nobre
+        */}
+        {!isGhost && (
+          <span
+            aria-hidden="true"
+            className={cn(
+              "pointer-events-none absolute inset-[1.5px] z-0 rounded-[inherit] transition-all duration-300",
+              isLight
+                ? "bg-white/95 dark:bg-[#281b15]/90 border border-[#EBD9CC] dark:border-border/60 shadow-[0_2px_8px_rgba(59,35,24,0.06),inset_0_1px_1.5px_rgba(255,255,255,0.95)] group-hover:bg-[#FDF6F0] dark:group-hover:bg-[#34241c]"
+                : isFrosted
+                ? "bg-white/50 dark:bg-card/50 backdrop-blur-md border border-border/80 shadow-[inset_0_1px_1px_rgba(255,255,255,0.6)] group-hover:bg-white/80 dark:group-hover:bg-card/80"
+                : isSecondary
+                ? "bg-gradient-to-b from-[#fde68a] to-[#f59e0b] border border-white/30 shadow-[0_2px_8px_rgba(245,158,11,0.3),inset_0_1px_1.5px_rgba(255,255,255,0.8)] group-hover:brightness-105"
+                : isDark
+                ? "bg-[#1c130e]/95 border border-white/10 shadow-[0_2px_8px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.15)] group-hover:bg-[#261a14]"
+                : isDestructive
+                ? "bg-gradient-to-b from-destructive/90 to-destructive border border-white/20 shadow-[0_2px_8px_rgba(239,68,68,0.35),inset_0_1px_1.5px_rgba(255,255,255,0.4)]"
+                : "bg-gradient-to-b from-[#f43f5e]/90 via-[#e85d75]/95 to-[#be123c]/95 border border-white/25 shadow-[0_4px_14px_rgba(232,93,117,0.35),inset_0_1px_1.5px_rgba(255,255,255,0.55)] group-hover:from-[#fb7185] group-hover:to-[#a3223b]"
+            )}
+          />
         )}
+
+        {/* 3. Camada de brilho especular líquido de topo (Gloss Sheen) */}
+        {!isGhost && (
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-2 top-[2px] h-[35%] rounded-t-[inherit] bg-gradient-to-b from-white/30 to-transparent opacity-80 group-hover:opacity-100 transition-opacity z-10"
+          />
+        )}
+
+        {/* 4. Conteúdo elevado com contraste nítido e feedback tátil */}
+        <span
+          className={cn(
+            "relative z-30 flex items-center justify-center gap-2 font-semibold",
+            contentClassName,
+            isLight
+              ? "text-[#3B2318] dark:text-[#faf5f0] group-hover:text-primary transition-colors"
+              : isFrosted
+              ? "text-foreground group-hover:text-primary transition-colors"
+              : isSecondary
+              ? "text-[#3B2318]"
+              : "text-white"
+          )}
+        >
+          {content}
+        </span>
+      </>
+    );
+
+    if (asChild && React.isValidElement(children)) {
+      const child = children as React.ReactElement<any>;
+      const childProps = child.props || {};
+
+      const assignRef = (node: any) => {
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref && "current" in ref) {
+          (ref as React.MutableRefObject<any>).current = node;
+        }
+        const childRef = (child as any).ref;
+        if (typeof childRef === "function") {
+          childRef(node);
+        } else if (childRef && "current" in childRef) {
+          childRef.current = node;
+        }
+      };
+
+      return React.cloneElement(child, {
+        ...props,
+        ...childProps,
+        ref: assignRef,
+        "data-slot": "button",
+        className: cn(
+          liquidbuttonVariants({ variant, size, className }),
+          "group relative overflow-hidden",
+          childProps.className
+        ),
+        onClick: (e: React.MouseEvent) => {
+          childProps.onClick?.(e);
+          (props as any).onClick?.(e);
+        },
+        children: renderInnerContent(childProps.children),
+      });
+    }
+
+    return (
+      <button
+        ref={ref}
+        data-slot="button"
+        className={cn(
+          liquidbuttonVariants({ variant, size, className }),
+          "group relative overflow-hidden"
+        )}
+        {...props}
       >
-        {children}
-      </div>
-    </Comp>
-  );
-}
+        {renderInnerContent(children)}
+      </button>
+    );
+  }
+);
+LiquidButton.displayName = "LiquidButton";
 
 type ColorVariant =
   | "default"

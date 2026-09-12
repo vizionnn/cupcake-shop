@@ -5,6 +5,7 @@ import { getDeliveryEstimateByCep } from "@/lib/delivery";
 import { DeliveryEstimate } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import { Truck, MapPin, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -109,16 +110,17 @@ export function CepCalculator({ onEstimateChange, compact = false }: CepCalculat
           maxLength={9}
           aria-label="CEP para cálculo de entrega"
         />
-        <Button
+        <LiquidButton
           type="button"
           onClick={handleSearch}
           disabled={loading}
-          variant="outline"
+          variant="light"
+          preset="berry"
           size="sm"
-          className="h-10 px-4 font-semibold shrink-0"
+          className="h-10 px-4 font-semibold shrink-0 min-h-[40px]"
         >
           {loading ? "Buscando..." : "Calcular"}
-        </Button>
+        </LiquidButton>
       </div>
 
       {estimate && (

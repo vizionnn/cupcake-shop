@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import Link from "next/link";
 import { CheckCircle2, Clock, MapPin, CreditCard, ArrowRight, ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
@@ -266,12 +267,12 @@ export default async function ConfirmationPage({ params }: ConfirmationPageProps
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 print:hidden">
             <PrintReceiptButton />
 
-            <Button asChild size="default" className="rounded-full px-6 gap-2 font-semibold">
+            <LiquidButton asChild size="default" preset="berry" className="px-6 gap-2 font-bold shadow-md shadow-primary/25">
               <Link href="/#cardapio">
                 <span>Pedir Mais Doces</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
-            </Button>
+            </LiquidButton>
           </div>
         </Card>
         </AnimatedReceipt>

@@ -7,6 +7,7 @@ import { HeroPuffs } from "@/components/HeroPuffs";
 import { FeaturesBar } from "@/components/FeaturesBar";
 import { AnimeReveal } from "@/components/AnimeReveal";
 import { Sparkles } from "lucide-react";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 
 export const revalidate = 0; // Dados dinâmicos do Supabase
 
@@ -50,13 +51,17 @@ export default async function HomePage() {
 
             <AnimeReveal variant="up" delay={350} duration={600}>
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-                <a
-                  href="#cardapio"
-                  className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-[#C7415A] text-white font-semibold text-base px-8 py-4 rounded-full shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all hover:scale-105 active:scale-95 w-full sm:w-auto cursor-pointer"
+                <LiquidButton
+                  asChild
+                  size="xl"
+                  preset="berry"
+                  className="w-full sm:w-auto px-9 py-4 font-bold text-base shadow-xl shadow-primary/30"
                 >
-                  <span>Explorar Sabores</span>
-                  <span className="text-lg">🧁</span>
-                </a>
+                  <a href="#cardapio">
+                    <span>Explorar Sabores</span>
+                    <span className="text-xl">🧁</span>
+                  </a>
+                </LiquidButton>
 
                 <div className="inline-flex items-center gap-2 text-xs font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-100/80 dark:bg-emerald-950/40 px-4 py-3 rounded-full border border-emerald-200 dark:border-emerald-800/50">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />

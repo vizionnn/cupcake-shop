@@ -14,6 +14,7 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import { Separator } from "@/components/ui/separator";
 import { Plus, Minus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 
@@ -60,13 +61,15 @@ export function CartDrawer() {
                 Nossos cupcakes são assados diariamente com amor e ingredientes nobres. Escolha seus sabores favoritos!
               </p>
             </div>
-            <Button
+            <LiquidButton
               type="button"
+              preset="berry"
+              size="default"
               onClick={() => setIsDrawerOpen(false)}
-              className="mt-2 bg-primary hover:bg-[#C7415A] text-white rounded-full px-6 py-2.5 font-semibold"
+              className="mt-2 px-7 py-3 font-semibold shadow-md shadow-primary/25"
             >
               Explorar Cardápio 🧁
-            </Button>
+            </LiquidButton>
           </div>
         ) : (
           <>
@@ -195,15 +198,17 @@ export function CartDrawer() {
                 </div>
               </div>
 
-              <Button
+              <LiquidButton
                 asChild
-                className="w-full bg-primary hover:bg-[#C7415A] text-white rounded-full py-6 text-base font-semibold shadow-lg shadow-primary/25 gap-2"
+                size="lg"
+                preset="berry"
+                className="w-full py-6 text-base font-bold shadow-xl shadow-primary/30 gap-2"
               >
                 <Link href="/checkout" onClick={() => setIsDrawerOpen(false)}>
                   <span>Finalizar Pedido</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
-              </Button>
+              </LiquidButton>
             </div>
           </>
         )}

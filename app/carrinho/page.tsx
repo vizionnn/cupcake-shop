@@ -7,6 +7,7 @@ import { formatBRL } from "@/lib/utils";
 import { PhotoOrEmoji } from "@/components/PhotoOrEmoji";
 import { CepCalculator } from "@/components/CepCalculator";
 import { Button } from "@/components/ui/button";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -84,11 +85,11 @@ export default function CartPage() {
               Que tal escolher agora mesmo os seus sabores favoritos da nossa fornada artesanal?
             </p>
           </div>
-          <Button asChild size="lg" className="rounded-full px-8 font-semibold shadow-lg shadow-primary/25">
+          <LiquidButton asChild size="lg" preset="berry" className="px-9 py-4 font-bold shadow-xl shadow-primary/30">
             <Link href="/#cardapio">
               <span>Explorar Cardápio 🧁</span>
             </Link>
-          </Button>
+          </LiquidButton>
         </Card>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -221,16 +222,17 @@ export default function CartPage() {
                 </div>
               </div>
 
-              <Button
+              <LiquidButton
                 asChild
                 size="lg"
-                className="w-full bg-primary hover:bg-[#C7415A] text-white rounded-full py-6 text-base font-semibold shadow-lg shadow-primary/25 gap-2"
+                preset="berry"
+                className="w-full py-6 text-base font-bold shadow-xl shadow-primary/30 gap-2.5"
               >
                 <Link href="/checkout">
                   <span>Continuar para o Checkout</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
-              </Button>
+              </LiquidButton>
 
               <p className="text-center text-xs text-muted-foreground">
                 🔒 Pagamento 100% seguro via Pix ou Cartão no Checkout.

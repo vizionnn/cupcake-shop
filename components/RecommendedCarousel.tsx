@@ -5,6 +5,7 @@ import { Product } from "@/types";
 import { ProductCard } from "@/components/ProductCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 
 interface RecommendedCarouselProps {
   products: Product[];
@@ -45,29 +46,31 @@ export function RecommendedCarousel({ products }: RecommendedCarouselProps) {
     <div className="relative group">
       {/* Controles de navegação do carrossel (Touch Targets de 44px conforme WCAG 2.2 AA) */}
       <div className="hidden sm:flex items-center gap-2 absolute -top-14 right-0 z-10">
-        <Button
+        <LiquidButton
           type="button"
-          variant="outline"
+          variant="light"
           size="icon"
+          preset="gold"
           onClick={() => scroll("left")}
           disabled={!canScrollLeft}
           aria-label="Rolar carrossel para a esquerda"
-          className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full border-border bg-card hover:bg-muted shadow-xs disabled:opacity-30 transition-all active:scale-95 cursor-pointer"
+          className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full shadow-xs disabled:opacity-30"
         >
-          <ChevronLeft className="w-4 h-4" />
-        </Button>
+          <ChevronLeft className="w-4 h-4 text-foreground" />
+        </LiquidButton>
 
-        <Button
+        <LiquidButton
           type="button"
-          variant="outline"
+          variant="light"
           size="icon"
+          preset="gold"
           onClick={() => scroll("right")}
           disabled={!canScrollRight}
           aria-label="Rolar carrossel para a direita"
-          className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full border-border bg-card hover:bg-muted shadow-xs disabled:opacity-30 transition-all active:scale-95 cursor-pointer"
+          className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full shadow-xs disabled:opacity-30"
         >
-          <ChevronRight className="w-4 h-4" />
-        </Button>
+          <ChevronRight className="w-4 h-4 text-foreground" />
+        </LiquidButton>
       </div>
 
       {/* 

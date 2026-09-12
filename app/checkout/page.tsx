@@ -3,12 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
-import { formatBRL } from "@/lib/utils";
+import { formatBRL, cn } from "@/lib/utils";
 import { getDeliveryEstimateByCep } from "@/lib/delivery";
 import { DeliveryEstimate } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
@@ -304,12 +305,13 @@ export default function CheckoutPage() {
                     placeholder="Ex: 50010-000"
                     className="h-11 bg-card dark:bg-[#20150f] text-foreground"
                   />
-                  <Button
+                  <LiquidButton
                     type="button"
-                    variant="outline"
+                    variant="light"
+                    preset="berry"
                     onClick={handleSearchCep}
                     disabled={loadingCep}
-                    className="h-11 px-5 shrink-0 font-semibold gap-1.5"
+                    className="h-11 px-5 shrink-0 font-semibold gap-1.5 min-h-[44px]"
                   >
                     {loadingCep ? (
                       <>
@@ -319,7 +321,7 @@ export default function CheckoutPage() {
                     ) : (
                       "Buscar CEP"
                     )}
-                  </Button>
+                  </LiquidButton>
                 </div>
               </div>
 
@@ -367,41 +369,84 @@ export default function CheckoutPage() {
               onValueChange={setPaymentMethod}
               className="grid grid-cols-1 sm:grid-cols-3 gap-3"
             >
-              <div>
-                <RadioGroupItem value="Pix" id="pay-pix" className="peer sr-only" />
-                <label
-                  htmlFor="pay-pix"
-                  className="flex flex-col items-center justify-center p-4 rounded-2xl border-2 border-border bg-card hover:bg-muted/30 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all text-center gap-2"
-                >
-                  <QrCode className="w-6 h-6 text-primary" />
-                  <span className="text-sm font-bold text-foreground">Pix</span>
-                  <span className="text-[11px] text-muted-foreground">Aprovação imediata</span>
-                </label>
-              </div>
+              {[
+                {
+                  id: "Pix",
+                  icon: QrCode,
+                  title: "Pix",
+                  desc: "Aprovação imediata",
+                },
+                {
+                  id: "Cartão",
+                  icon: CreditCard,
+                  title: "Cartão",
+                  desc: "Crédito ou Débito",
+                },
+                {
+                  id: "Na entrega",
+                  icon: Banknote,
+                  title: "Na entrega",
+                  desc: "Dinheiro ou Cartão",
+                },
+              ].map((method) => {
+                const isSelected = paymentMethod === method.id;
+                const IconComponent = method.icon;
 
-              <div>
-                <RadioGroupItem value="Cartão" id="pay-card" className="peer sr-only" />
-                <label
-                  htmlFor="pay-card"
-                  className="flex flex-col items-center justify-center p-4 rounded-2xl border-2 border-border bg-card hover:bg-muted/30 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all text-center gap-2"
-                >
-                  <CreditCard className="w-6 h-6 text-primary" />
-                  <span className="text-sm font-bold text-foreground">Cartão</span>
-                  <span className="text-[11px] text-muted-foreground">Crédito ou Débito</span>
-                </label>
-              </div>
-
-              <div>
-                <RadioGroupItem value="Na entrega" id="pay-delivery" className="peer sr-only" />
-                <label
-                  htmlFor="pay-delivery"
-                  className="flex flex-col items-center justify-center p-4 rounded-2xl border-2 border-border bg-card hover:bg-muted/30 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all text-center gap-2"
-                >
-                  <Banknote className="w-6 h-6 text-primary" />
-                  <span className="text-sm font-bold text-foreground">Na entrega</span>
-                  <span className="text-[11px] text-muted-foreground">Dinheiro ou Cartão</span>
-                </label>
-              </div>
+                return (
+                  <div key={method.id} className="relative">
+                    <RadioGroupItem
+                      value={method.id}
+                      id={`pay-${method.id}`}
+                      className="peer sr-only"
+                    />
+                    <LiquidButton
+                      asChild
+                      variant={isSelected ? "default" : "light"}
+                      preset={isSelected ? "berry" : "gold"}
+                      hasBeam={isSelected}
+                      duration={3.5}
+                      contentClassName="flex-col gap-1.5 text-center whitespace-normal py-1"
+                      onClick={() => setPaymentMethod(method.id)}
+                      className={cn(
+                        "w-full h-auto min-h-[96px] p-4 rounded-2xl transition-all duration-300 cursor-pointer select-none",
+                        isSelected
+                          ? "shadow-lg shadow-primary/30 ring-2 ring-primary ring-offset-2 ring-offset-background"
+                          : "border border-border/80 hover:border-primary/50"
+                      )}
+                    >
+                      <label
+                        htmlFor={`pay-${method.id}`}
+                        className="cursor-pointer w-full flex flex-col items-center justify-center"
+                      >
+                        <IconComponent
+                          className={cn(
+                            "w-6 h-6 transition-colors",
+                            isSelected ? "text-white" : "text-primary"
+                          )}
+                        />
+                        <span
+                          className={cn(
+                            "text-sm font-bold leading-tight transition-colors",
+                            isSelected ? "text-white" : "text-foreground"
+                          )}
+                        >
+                          {method.title}
+                        </span>
+                        <span
+                          className={cn(
+                            "text-[11px] leading-tight transition-colors",
+                            isSelected
+                              ? "text-white/90 font-medium"
+                              : "text-muted-foreground"
+                          )}
+                        >
+                          {method.desc}
+                        </span>
+                      </label>
+                    </LiquidButton>
+                  </div>
+                );
+              })}
             </RadioGroup>
           </Card>
         </div>
@@ -456,26 +501,30 @@ export default function CheckoutPage() {
                   disabled={appliedCoupon !== null}
                 />
                 {appliedCoupon ? (
-                  <Button
+                  <LiquidButton
                     type="button"
-                    variant="outline"
+                    variant="destructive"
+                    size="sm"
+                    hasBeam={false}
                     onClick={() => {
                       setAppliedCoupon(null);
                       setCouponCode("");
                     }}
-                    className="h-10 px-4 text-xs font-bold text-destructive"
+                    className="h-10 px-4 text-xs font-bold min-h-[40px]"
                   >
                     Remover
-                  </Button>
+                  </LiquidButton>
                 ) : (
-                  <Button
+                  <LiquidButton
                     type="button"
-                    variant="outline"
+                    variant="light"
+                    preset="berry"
+                    size="sm"
                     onClick={handleApplyCoupon}
-                    className="h-10 px-4 text-xs font-bold shrink-0"
+                    className="h-10 px-4 text-xs font-bold shrink-0 min-h-[40px]"
                   >
                     Aplicar
-                  </Button>
+                  </LiquidButton>
                 )}
               </div>
               {appliedCoupon && (
@@ -522,14 +571,15 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            <Button
+            <LiquidButton
               type="submit"
               disabled={submitting}
               size="lg"
-              className="w-full bg-primary hover:bg-[#C7415A] text-white rounded-full py-6 text-base font-semibold shadow-lg shadow-primary/25"
+              preset="berry"
+              className="w-full py-6 text-base font-bold shadow-xl shadow-primary/30"
             >
               {submitting ? "Processando seu pedido..." : "Confirmar e Finalizar Pedido"}
-            </Button>
+            </LiquidButton>
           </Card>
         </div>
       </form>
