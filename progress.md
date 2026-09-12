@@ -78,4 +78,7 @@
     - Por ser renderizado no `AdminSidebar`, a mudança aplica-se automaticamente tanto na Sidebar fixa de Desktop quanto no Drawer móvel (`SheetContent`).
   - **Validações:**
     - `npx.cmd tsc --noEmit`: 0 erros de tipagem em ambos os projetos.
+  - **Pull Requests Criados:**
+    - Repositório `cupcake-shop`: [PR #9](https://github.com/vizionnn/cupcake-shop/pull/9)
+    - Repositório `e-commerce` (com rota admin): [PR #6](https://github.com/vizionnn/e-commerce/pull/6)
 
