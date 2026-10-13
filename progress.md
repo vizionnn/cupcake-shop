@@ -82,3 +82,17 @@
     - Repositório `cupcake-shop`: [PR #9](https://github.com/vizionnn/cupcake-shop/pull/9)
     - Repositório `e-commerce` (com rota admin): [PR #6](https://github.com/vizionnn/e-commerce/pull/6)
 
+
+---
+
+### Task: Redesign profissional da vitrine (remover aparência genérica de IA)
+
+- **Solicitado:** melhorar o front da vitrine para tirar a cara genérica gerada por IA, mais profissional, usando como base de código e identidade `_landing-base` (Nidor) e `automação clickup`, e a estrutura das capturas `nitor-tech-*.png`.
+- **Realizado:**
+  - **Sistema editorial (`app/globals.css`, `tailwind.config.ts`, `app/layout.tsx`):** raio base 1rem para 0.5rem; rótulos `.eyebrow` em JetBrains Mono caixa-alta (da landing-base); botões `.nb-btn` (um CTA sólido por seção, 44px mínimo, `active:scale-95`, `motion-reduce`); `.nb-link`; `.no-scrollbar`, `.pb-safe`; revelação ao rolar em CSS puro, ativa só em `prefers-reduced-motion: no-preference` (`components/Reveal.tsx`, com o zigue-zague como assinatura do nitor.tech).
+  - **Estrutura da home (`app/page.tsx`), seguindo nitor.tech:** hero em 2 colunas com foto real em arco e dados reais do catálogo; faixa cacau com 3 colunas e a central em framboesa; Cardápio; "Como fazemos" com foto circular e passos com traço. Removidos emojis, selo pulsante e puffs flutuantes (`HeroPuffs`, `FeaturesBar` apagados).
+  - **Vitrine (`ShowcaseCard`, `CatalogClient`):** cards foto-primeiro (quadrados, 2 colunas no mobile, 4 no desktop) no lugar das miniaturas com "Espiar"; filtros como abas com sublinhado e rolagem horizontal. O `ProductCard` antigo foi mantido porque o carrossel da página de produto usa ele.
+  - **Header, aviso e rodapé:** sem emojis, nav com Cardápio/Como fazemos/Sacola, rodapé em 3 colunas. No 320px o cabeçalho cabe sem overflow (marca "N" oculta abaixo de `sm`). `app/loading.tsx` refeito para espelhar a nova estrutura.
+  - **Paleta e fontes mantidas** (creme, framboesa, cacau, manteiga; Fraunces e Karla). Contraste dos textos verificado visualmente em modo escuro.
+  - **Validação:** `npx tsc --noEmit` sem erros; capturas via Chrome headless em 1440px, 390px e 320px. Não rodei Lighthouse nem `npm run build`.
+  - **Fora do escopo (não alteradas):** produto, carrinho, checkout, confirmação e CartDrawer só herdam tokens (raio, cores). Ainda usam LiquidButton e cantos arredondados, então ficam visualmente diferentes da home.

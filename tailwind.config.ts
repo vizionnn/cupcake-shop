@@ -67,6 +67,7 @@ const config = {
       fontFamily: {
         display: ['var(--font-fraunces)', 'serif'],
         sans: ['var(--font-karla)', 'sans-serif'],
+        mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
       },
       borderRadius: {
         lg: "var(--radius)",

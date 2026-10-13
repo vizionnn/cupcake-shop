@@ -32,7 +32,7 @@
     --input: 24 35% 86%;
     --ring: 349 74% 63%;
 
-    --radius: 1rem;
+    --radius: 0.5rem;
   }
 
   .dark {
@@ -228,3 +228,51 @@
 }
 
 
+
+/* ==========================================================================
+   Sistema editorial (vitrine) — estrutura inspirada em nitor.tech e
+   código/tokens da landing-base: rótulos mono, fios finos, cantos retos,
+   um único CTA sólido por seção, zigue-zague como assinatura gráfica.
+   ========================================================================== */
+@layer components {
+  .eyebrow {
+    @apply font-mono text-[0.6875rem] font-medium uppercase tracking-[0.16em] text-[#B8324D] dark:text-[#F28BA0];
+  }
+  .nb-btn {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md px-6 text-sm font-bold uppercase tracking-[0.06em] whitespace-nowrap transition-[background-color,border-color,transform,color] duration-200 ease-out active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-60;
+  }
+  .nb-btn-primary {
+    @apply bg-[#C7415A] text-white hover:bg-[#A9334A];
+  }
+  .nb-btn-ghost {
+    @apply border border-foreground/25 text-foreground hover:border-foreground hover:bg-foreground/5;
+  }
+  .nb-link {
+    @apply inline-flex min-h-[44px] items-center gap-2 text-sm font-bold text-[#B8324D] dark:text-[#F28BA0] transition-[gap] duration-200 ease-out hover:gap-3 motion-reduce:transition-none;
+  }
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Revelação ao rolar (CSS puro, ativada por IntersectionObserver em <Reveal>) */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+}
