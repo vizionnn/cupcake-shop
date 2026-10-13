@@ -4,63 +4,61 @@ import React from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { ShoppingBag } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import { ThemeToggle } from "@/components/ThemeToggle";
+
+const NAV = [
+  { href: "/#cardapio", label: "Cardápio" },
+  { href: "/#abordagem", label: "Como fazemos" },
+  { href: "/carrinho", label: "Sacola" },
+];
 
 export function Header() {
   const { count, openDrawer } = useCart();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
-        {/* Logo */}
-        <Link href="/" className="flex items-baseline gap-2.5 group">
-          <span className="font-display font-bold text-2xl sm:text-3xl text-foreground tracking-tight group-hover:text-primary transition-colors">
-            Nuvem de Açúcar
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:h-20 sm:px-6">
+        <Link
+          href="/"
+          className="flex min-h-[44px] shrink-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <span aria-hidden className="hidden h-8 w-8 place-items-center bg-primary font-display text-lg font-bold text-white sm:grid">
+            N
           </span>
-          <span className="hidden sm:inline-block text-xs font-medium text-muted-foreground uppercase tracking-widest">
-            Confeitaria
+          <span className="font-display text-base font-bold leading-none tracking-tight text-foreground sm:text-xl">
+            Nuvem de Açúcar
           </span>
         </Link>
 
-        {/* Navegação, Switch iOS de Tema e Botão da Sacola */}
-        <div className="flex items-center gap-2.5 sm:gap-5">
-          <Link
-            href="/#cardapio"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden sm:inline-block"
-          >
-            Cardápio
-          </Link>
+        <nav aria-label="Principal" className="hidden items-center gap-1 md:flex">
+          {NAV.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="inline-flex min-h-[44px] items-center px-4 text-sm font-bold text-foreground/80 transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
 
-          {/* Chave seletora de Modo Escuro/Claro estilo iOS com Anime.js */}
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <ThemeToggle />
-
-          <Link
-            href="/carrinho"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden md:inline-block"
-          >
-            Sacola
-          </Link>
-
-          {/* Botão para abrir o Slide-over Drawer em Vidro Líquido com Feixe Berry */}
-          <LiquidButton
+          <button
             type="button"
-            preset="berry"
-            size="default"
             onClick={openDrawer}
-            className="relative gap-2 px-5 py-2.5 shadow-md shadow-primary/25 min-h-[44px]"
-            aria-label={`Ver carrinho com ${count} itens`}
+            aria-label={`Abrir sacola, ${count} ${count === 1 ? "item" : "itens"}`}
+            className="nb-btn nb-btn-primary gap-2 px-3 sm:px-5"
           >
-            <ShoppingBag className="w-4 h-4 text-white" />
-            <span className="font-semibold text-sm text-white">Sacola</span>
+            <ShoppingBag className="h-4 w-4" aria-hidden />
+            <span className="hidden sm:inline">Sacola</span>
             <span
-              className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold bg-white text-primary rounded-full ml-0.5 shadow-2xs"
-              aria-live="polite"
+              aria-hidden
+              className="inline-grid h-5 min-w-5 place-items-center bg-white px-1 font-mono text-[11px] font-bold text-[#A9334A]"
             >
               {count}
             </span>
-          </LiquidButton>
+          </button>
         </div>
       </div>
     </header>

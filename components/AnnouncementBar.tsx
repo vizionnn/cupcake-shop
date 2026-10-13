@@ -10,43 +10,28 @@ export function AnnouncementBar() {
   const copyCoupon = () => {
     navigator.clipboard.writeText("NUVEM10");
     setCopied(true);
-    toast.success("Cupom NUVEM10 copiado com sucesso! 🎉", {
+    toast.success("Cupom NUVEM10 copiado", {
       description: "Cole no checkout para garantir 10% de desconto.",
     });
     setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <aside
-      className="bg-primary text-primary-foreground py-2.5 px-4 text-xs font-medium border-b border-primary/20 shadow-sm"
-      aria-label="Avisos e promoções em destaque"
-    >
-      <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-center">
-        <div className="flex items-center gap-1.5">
-          <span>✨ Ganhe 10% OFF na primeira caixinha:</span>
-          <button
-            type="button"
-            onClick={copyCoupon}
-            className="inline-flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white px-2 py-0.5 rounded-full font-mono font-bold tracking-wider transition-colors active:scale-95"
-            title="Clique para copiar o cupom NUVEM10"
-            aria-label="Copiar cupom de desconto NUVEM10"
-          >
-            <span>NUVEM10</span>
-            {copied ? <Check className="w-3 h-3 text-emerald-300" /> : <Copy className="w-3 h-3 opacity-80" />}
-          </button>
-        </div>
-
-        <span className="opacity-40 hidden sm:inline">•</span>
-
-        <div className="flex items-center gap-1">
-          <span>🚚 <strong>Frete Grátis</strong> para compras acima de R$ 49,90</span>
-        </div>
-
-        <span className="opacity-40 hidden md:inline">•</span>
-
-        <div className="hidden md:flex items-center gap-1">
-          <span>🧁 Assados diariamente com ingredientes nobres</span>
-        </div>
+    <aside className="bg-[#3B2318] text-[#FDF6F0]" aria-label="Avisos e promoções">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-6 gap-y-0 px-4 text-center font-mono text-[0.6875rem] uppercase tracking-[0.12em] sm:px-6">
+        <button
+          type="button"
+          onClick={copyCoupon}
+          className="inline-flex min-h-[44px] items-center gap-2 transition-colors duration-200 hover:text-[#F2C14E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F2C14E] motion-reduce:transition-none"
+          aria-label="Copiar cupom de desconto NUVEM10"
+        >
+          <span>10% off na 1ª caixinha</span>
+          <span className="inline-flex items-center gap-1.5 border border-[#F2C14E] px-2 py-0.5 font-bold text-[#F2C14E]">
+            NUVEM10
+            {copied ? <Check className="h-3 w-3" aria-hidden /> : <Copy className="h-3 w-3" aria-hidden />}
+          </span>
+        </button>
+        <span className="hidden sm:inline">Frete grátis acima de R$ 49,90</span>
       </div>
     </aside>
   );

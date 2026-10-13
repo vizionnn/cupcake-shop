@@ -2,9 +2,8 @@
 
 import React, { useState } from "react";
 import { Product } from "@/types";
-import { ProductCard } from "@/components/ProductCard";
-import { AnimeReveal } from "@/components/AnimeReveal";
-import { LiquidButton } from "@/components/ui/liquid-glass-button";
+import { ShowcaseCard } from "@/components/ShowcaseCard";
+import { Reveal } from "@/components/Reveal";
 
 interface CatalogClientProps {
   initialProducts: Product[];
@@ -12,95 +11,57 @@ interface CatalogClientProps {
 
 export function CatalogClient({ initialProducts }: CatalogClientProps) {
   const [activeFilter, setActiveFilter] = useState("Todos");
-  // Coordenação centralizada: apenas 1 card expandido por vez na vitrine inteira
-  const [activeExpandedId, setActiveExpandedId] = useState<number | null>(null);
-
   const tags = ["Todos", ...Array.from(new Set(initialProducts.map((p) => p.flavor_tag)))];
-
-  const filteredProducts =
-    activeFilter === "Todos"
-      ? initialProducts
-      : initialProducts.filter((p) => p.flavor_tag === activeFilter);
-
-  const handleFilterChange = (tag: string) => {
-    setActiveFilter(tag);
-    // Fecha qualquer card aberto ao mudar de categoria para preservar o alinhamento
-    setActiveExpandedId(null);
-  };
+  const filtered =
+    activeFilter === "Todos" ? initialProducts : initialProducts.filter((p) => p.flavor_tag === activeFilter);
 
   return (
     <div className="space-y-8" id="cardapio">
-      {/* Filtros de Categoria em Pílulas com Touch Targets de 44px */}
-      <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+      {/* Filtros: abas com sublinhado, rolagem horizontal no mobile */}
+      <div
+        role="tablist"
+        aria-label="Filtrar por categoria"
+        className="no-scrollbar -mx-4 flex gap-1 overflow-x-auto border-b border-border px-4 sm:mx-0 sm:px-0"
+      >
         {tags.map((tag) => {
           const isActive = tag === activeFilter;
           return (
-            <LiquidButton
+            <button
               key={tag}
               type="button"
-              variant={isActive ? "default" : "light"}
-              preset="berry"
-              hasBeam={isActive}
-              size="default"
-              onClick={() => handleFilterChange(tag)}
-              className={`px-5 font-semibold text-sm ${
-                isActive ? "scale-105 shadow-md shadow-primary/25" : "text-muted-foreground"
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => setActiveFilter(tag)}
+              className={`-mb-px min-h-[44px] shrink-0 border-b-2 px-4 text-sm font-bold transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${
+                isActive
+                  ? "border-primary text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
               }`}
             >
               {tag}
-            </LiquidButton>
+            </button>
           );
         })}
       </div>
 
-      {/* Grid de Produtos com Reveal on Scroll e Coordenação Dinâmica de Z-Index */}
-      {filteredProducts.length === 0 ? (
-        <div className="text-center py-16 px-4 bg-card rounded-3xl border border-border space-y-3">
-          <div className="text-4xl">🧁🔍</div>
-          <h3 className="font-display font-semibold text-lg text-foreground">
-            Nenhum cupcake nesta categoria
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            Que tal conferir todos os sabores disponíveis no momento?
-          </p>
-          <LiquidButton
-            type="button"
-            variant="light"
-            size="default"
-            onClick={() => handleFilterChange("Todos")}
-            className="text-primary font-semibold inline-flex items-center justify-center mx-auto"
-          >
-            Ver todos os sabores →
-          </LiquidButton>
+      {filtered.length === 0 ? (
+        <div className="border border-dashed border-border px-4 py-16 text-center">
+          <h3 className="font-display text-lg font-semibold text-foreground">Nenhum cupcake nesta categoria</h3>
+          <p className="mt-1 text-sm text-muted-foreground">Veja todos os sabores disponíveis no momento.</p>
+          <button type="button" onClick={() => setActiveFilter("Todos")} className="nb-btn nb-btn-ghost mt-5">
+            Ver todos os sabores
+          </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 items-start pb-28">
-          {filteredProducts.map((product, index) => {
-            const isThisExpanded = activeExpandedId === product.id;
-
-            return (
-              <AnimeReveal
-                key={`${product.id}-${activeFilter}`}
-                variant="up"
-                delay={(index % 4) * 60}
-                duration={600}
-                threshold={0.06}
-                className={`relative ${
-                  isThisExpanded ? "z-40" : "z-0 hover:z-20"
-                } focus-within:z-40 transition-[z-index] duration-300`}
-              >
-                <ProductCard
-                  product={product}
-                  isExpandedControlled={isThisExpanded}
-                  onExpandControlled={() => setActiveExpandedId(product.id)}
-                  onCollapseControlled={() => {
-                    setActiveExpandedId((current) => (current === product.id ? null : current));
-                  }}
-                />
-              </AnimeReveal>
-            );
-          })}
-        </div>
+        <ul className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+          {filtered.map((product, index) => (
+            <li key={`${product.id}-${activeFilter}`}>
+              <Reveal delay={(index % 4) * 60} className="h-full">
+                <ShowcaseCard product={product} />
+              </Reveal>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );

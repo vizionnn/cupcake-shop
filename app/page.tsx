@@ -1,15 +1,38 @@
 import React from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { INITIAL_PRODUCTS } from "@/lib/products-data";
 import { Product } from "@/types";
 import { CatalogClient } from "@/components/CatalogClient";
-import { HeroPuffs } from "@/components/HeroPuffs";
-import { FeaturesBar } from "@/components/FeaturesBar";
-import { AnimeReveal } from "@/components/AnimeReveal";
-import { Sparkles } from "lucide-react";
-import { LiquidButton } from "@/components/ui/liquid-glass-button";
+import { Reveal, Zigzag } from "@/components/Reveal";
+import { formatBRL } from "@/lib/utils";
 
 export const revalidate = 0; // Dados dinâmicos do Supabase
+
+const PILLARS = [
+  {
+    n: "01",
+    title: "Assados na manhã",
+    text: "Cada fornada sai do forno no mesmo dia, com manteiga, cacau nobre e frutas frescas. Nada de estoque congelado.",
+  },
+  {
+    n: "02",
+    title: "Entrega em até 3 horas",
+    text: "Rotas diretas para Recife e Região Metropolitana. Frete grátis acima de R$ 49,90, calculado pelo seu CEP.",
+  },
+  {
+    n: "03",
+    title: "Caixinha de presente",
+    text: "Embalagem rígida decorada, com fita de cetim inclusa, pronta para entregar a quem você quer agradar.",
+  },
+];
+
+const STEPS = [
+  "Você escolhe os sabores e monta a caixinha pelo cardápio.",
+  "Informa o CEP e vê o frete e o prazo antes de pagar, sem surpresas.",
+  "Assamos, embalamos e levamos até a sua porta, com Pix ou cartão.",
+];
 
 export default async function HomePage() {
   const { data: productsData } = await supabase
@@ -18,91 +41,161 @@ export default async function HomePage() {
     .order("id", { ascending: true });
 
   const products: Product[] =
-    productsData && productsData.length > 0
-      ? (productsData as Product[])
-      : INITIAL_PRODUCTS;
+    productsData && productsData.length > 0 ? (productsData as Product[]) : INITIAL_PRODUCTS;
+
+  const featured = products.find((p) => p.name === "Red Velvet") ?? products[0];
+  const approachPhoto = products.find((p) => p.name.startsWith("Ninho")) ?? products[0];
+  const mostAffordable = [...products].sort((a, b) => a.price - b.price)[0];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-8 sm:space-y-12 lg:space-y-16 py-4 sm:py-8">
-      {/* Hero Section Artesanal com Animações Anime.js */}
-      <section className="relative overflow-hidden rounded-3xl sm:rounded-4xl bg-gradient-to-b from-[#FDF0E9] to-[#FEFAF6] dark:from-[#251812] dark:to-[#1a100a] border border-border/80 dark:border-border/50 p-6 sm:p-10 lg:p-14 shadow-sm">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          {/* Texto Principal com Reveal */}
-          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            <AnimeReveal variant="up" delay={50} duration={500}>
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 dark:bg-card/80 border border-primary/20 dark:border-primary/30 text-xs font-semibold text-primary backdrop-blur-xs shadow-2xs">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Confeitaria Artesanal</span>
-              </div>
-            </AnimeReveal>
-
-            <AnimeReveal variant="up" delay={150} duration={600}>
-              <h1 className="font-display font-bold text-3xl sm:text-5xl lg:text-6xl text-foreground leading-[1.1] tracking-tight">
-                Cupcakes <span className="text-primary italic">feitos à mão</span>,<br />
-                <span className="text-[#A33448] dark:text-[#f8718a]">entregues no mesmo dia.</span>
-              </h1>
-            </AnimeReveal>
-
-            <AnimeReveal variant="up" delay={250} duration={600}>
-              <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                Oito receitas exclusivas preparadas com cuidado e ingredientes nobres. Escolha seus favoritos, monte sua caixinha e receba com rapidez onde estiver.
-              </p>
-            </AnimeReveal>
-
-            <AnimeReveal variant="up" delay={350} duration={600}>
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-                <LiquidButton
-                  asChild
-                  size="xl"
-                  preset="berry"
-                  className="w-full sm:w-auto px-9 py-4 font-bold text-base shadow-xl shadow-primary/30"
-                >
-                  <a href="#cardapio">
-                    <span>Explorar Sabores</span>
-                    <span className="text-xl">🧁</span>
-                  </a>
-                </LiquidButton>
-
-                <div className="inline-flex items-center gap-2 text-xs font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-100/80 dark:bg-emerald-950/40 px-4 py-3 rounded-full border border-emerald-200 dark:border-emerald-800/50">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                  <span>Pedidos abertos para entrega hoje</span>
+    <>
+      {/* HERO: texto à esquerda, foto em arco à direita */}
+      <section className="mx-auto grid max-w-6xl gap-12 px-4 pb-20 pt-10 sm:px-6 sm:pt-16 lg:grid-cols-12 lg:items-center lg:gap-12 lg:pb-24">
+        <div className="lg:col-span-7">
+          <Reveal>
+            <p className="eyebrow">Confeitaria artesanal · Recife/PE</p>
+          </Reveal>
+          <Reveal delay={80}>
+            <h1 className="mt-5 text-balance font-display text-[2.5rem] font-bold leading-[1.05] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
+              Cupcakes feitos à mão, <span className="text-primary">entregues no mesmo dia.</span>
+            </h1>
+          </Reveal>
+          <Reveal delay={160}>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
+              {products.length} receitas autorais, assadas todas as manhãs. Escolha seus sabores, monte a caixinha e
+              receba em até 3 horas.
+            </p>
+          </Reveal>
+          <Reveal delay={240}>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
+              <a href="#cardapio" className="nb-btn nb-btn-primary w-full sm:w-auto">
+                Ver cardápio
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </a>
+              <Link href="/#abordagem" className="nb-link">
+                Como fazemos
+              </Link>
+            </div>
+          </Reveal>
+          <Reveal delay={320}>
+            <dl className="mt-12 grid grid-cols-3 border-t border-border pt-6">
+              {[
+                [String(products.length), "receitas"],
+                ["3h", "entrega máx."],
+                [formatBRL(mostAffordable.price), "a partir de"],
+              ].map(([value, label]) => (
+                <div key={label} className="pr-3">
+                  <dt className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted-foreground">{label}</dt>
+                  <dd className="mt-1 font-display text-2xl font-bold text-foreground sm:text-3xl">{value}</dd>
                 </div>
-              </div>
-            </AnimeReveal>
-          </div>
+              ))}
+            </dl>
+          </Reveal>
+        </div>
 
-          {/* Cluster de Puffs Flutuantes com Física do Anime.js */}
-          <div className="lg:col-span-5 flex items-center justify-center relative py-6">
-            <AnimeReveal variant="scale" delay={200} duration={700}>
-              <HeroPuffs />
-            </AnimeReveal>
-          </div>
+        <Reveal delay={120} className="lg:col-span-5">
+          <Link
+            href={`/produto/${featured.id}`}
+            className="group relative mx-auto block w-full max-w-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            aria-label={`Ver ${featured.name}`}
+          >
+            <div className="aspect-[4/5] overflow-hidden rounded-t-[999px] bg-muted">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={featured.image_emoji}
+                alt={`${featured.name}, cupcake artesanal`}
+                className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none"
+              />
+            </div>
+            <div className="absolute -bottom-4 left-4 right-4 flex items-center justify-between gap-3 bg-background px-4 py-3 shadow-[0_0_0_1px_hsl(var(--border))] sm:left-auto sm:right-[-1rem] sm:min-w-[16rem]">
+              <div className="min-w-0">
+                <p className="eyebrow">Destaque</p>
+                <p className="truncate font-display text-lg font-semibold text-foreground">{featured.name}</p>
+              </div>
+              <span className="font-display text-lg font-bold text-foreground">{formatBRL(featured.price)}</span>
+            </div>
+          </Link>
+        </Reveal>
+      </section>
+
+      {/* PILARES: faixa cacau em 3 colunas, centro em destaque */}
+      <section className="bg-[#3B2318] text-[#FDF6F0]" aria-labelledby="pilares-titulo">
+        <h2 id="pilares-titulo" className="sr-only">
+          Por que Nuvem de Açúcar
+        </h2>
+        <div className="mx-auto grid max-w-6xl md:grid-cols-3">
+          {PILLARS.map((item, i) => (
+            <Reveal key={item.n} delay={i * 80}>
+              <div
+                className={`h-full px-6 py-10 sm:px-8 sm:py-14 ${
+                  i === 1 ? "bg-[#C7415A]" : ""
+                } ${i > 0 ? "border-t border-[#FDF6F0]/15 md:border-l md:border-t-0" : ""}`}
+              >
+                <p className="font-mono text-xs tracking-[0.16em] text-[#F2C14E]">{item.n}</p>
+                <h3 className="mt-4 font-display text-2xl font-semibold">{item.title}</h3>
+                <p className="mt-3 text-base leading-relaxed text-[#FDF6F0]/85">{item.text}</p>
+              </div>
+            </Reveal>
+          ))}
         </div>
       </section>
 
-      {/* Faixa de Benefícios e Diferenciais com Reveal on Scroll */}
-      <FeaturesBar />
-
-      {/* Seção da Vitrine de Produtos */}
-      <section className="space-y-6">
-        <AnimeReveal variant="up" delay={100} duration={600}>
-          <div className="text-center space-y-2">
-            <span className="text-xs font-bold uppercase tracking-widest text-primary">
-              Cardápio Fresquinho
-            </span>
-            <h2 className="font-display font-bold text-3xl sm:text-4xl text-foreground">
-              Monte sua caixinha dos sonhos
-            </h2>
-            <p className="text-muted-foreground text-sm sm:text-base max-w-lg mx-auto">
-              Selecione entre sabores clássicos e recheios especiais para presentear ou saborear hoje mesmo.
-            </p>
-          </div>
-        </AnimeReveal>
-
-        {/* Cliente Interativo com Filtros e Stagger Anime.js */}
-        <CatalogClient initialProducts={products} />
+      {/* CARDÁPIO */}
+      <section className="mx-auto max-w-6xl scroll-mt-24 px-4 pt-20 sm:px-6 sm:pt-28">
+        <Reveal>
+          <Zigzag />
+          <h2 className="mt-4 font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl">Cardápio</h2>
+          <p className="mt-3 max-w-xl text-base leading-relaxed text-muted-foreground">
+            Clássicos e receitas especiais. Toque no cupcake para ver ingredientes e alérgenos.
+          </p>
+        </Reveal>
+        <div className="mt-8">
+          <CatalogClient initialProducts={products} />
+        </div>
       </section>
-    </div>
+
+      {/* ABORDAGEM */}
+      <section id="abordagem" className="mx-auto max-w-6xl scroll-mt-24 px-4 pt-24 sm:px-6 sm:pt-32">
+        <div className="grid items-center gap-12 lg:grid-cols-12">
+          <Reveal className="lg:col-span-5">
+            <Zigzag />
+            <h2 className="mt-4 font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+              Como fazemos
+            </h2>
+            <p className="mt-5 max-w-md text-lg leading-relaxed text-muted-foreground">
+              Uma confeitaria pequena, com poucas receitas e muito cuidado. Cada fornada é assada no dia da entrega.
+            </p>
+          </Reveal>
+          <Reveal delay={100} className="lg:col-span-3">
+            <div className="mx-auto aspect-square w-full max-w-xs overflow-hidden rounded-full bg-muted">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={approachPhoto.image_emoji}
+                alt={`${approachPhoto.name}, cupcake artesanal`}
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            </div>
+          </Reveal>
+          <Reveal delay={180} className="lg:col-span-4">
+            <ol className="space-y-6">
+              {STEPS.map((step, i) => (
+                <li key={step} className="flex gap-4">
+                  <span aria-hidden className="mt-3 h-0.5 w-6 shrink-0 bg-primary" />
+                  <p className="text-base leading-relaxed text-muted-foreground">
+                    <span className="sr-only">Passo {i + 1}: </span>
+                    {step}
+                  </p>
+                </li>
+              ))}
+            </ol>
+            <a href="#cardapio" className="nb-link mt-4">
+              Montar minha caixinha
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </a>
+          </Reveal>
+        </div>
+      </section>
+    </>
   );
 }
-
